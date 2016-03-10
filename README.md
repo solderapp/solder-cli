@@ -7,6 +7,8 @@
 [![Join the chat at https://gitter.im/solderapp/solder](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solderapp/solder)
 ![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
 
+**This project is under heavy development, it's not in a working state yet!**
+
 This project acts as a CLI client implementation to interact with an
 alternative Solder API implementation. You can find the sources of the Solder
 API at https://github.com/solderapp/solder.
