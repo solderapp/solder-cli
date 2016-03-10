@@ -5,7 +5,7 @@ import (
 	"runtime"
 
 	"github.com/codegangsta/cli"
-	"github.com/solderapp/solder-cli/cmd"
+	"gopkg.in/solderapp/solder-cli.v0/cmd"
 )
 
 var (
