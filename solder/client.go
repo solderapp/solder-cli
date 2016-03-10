@@ -12,7 +12,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-//go:generate mockery -all
+//go:generate mockery -all -case=underscore
 
 const (
 	pathForge     = "%s/api/forge"
