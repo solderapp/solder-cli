@@ -26,6 +26,10 @@ version `>= 1.6`
 
 ```bash
 go get -d github.com/solderapp/solder-cli
+cd $GOPATH/src/github.com/solderapp/solder-cli
+make deps build
+
+bin/drone-cli -h
 ```
 
 Later on we will also provide a download of prebuilt binaries for various
