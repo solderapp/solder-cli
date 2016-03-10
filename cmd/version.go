@@ -3,9 +3,11 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"text/tabwriter"
+	"strconv"
+	"time"
 
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/solderapp/solder-cli/solder"
 )
 
@@ -36,6 +38,11 @@ func Version() cli.Command {
 				Usage: "Display a version",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Version ID or slug to show",
@@ -50,9 +57,24 @@ func Version() cli.Command {
 				Usage: "Update a version",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Version ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Define an optional slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Define a required name",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -64,6 +86,11 @@ func Version() cli.Command {
 				Aliases: []string{"rm"},
 				Usage:   "Delete a version",
 				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -77,6 +104,23 @@ func Version() cli.Command {
 			{
 				Name:  "create",
 				Usage: "Create a version",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Define an optional slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Define a required name",
+					},
+				},
 				Action: func(c *cli.Context) {
 					Handle(c, VersionCreate)
 				},
@@ -87,45 +131,131 @@ func Version() cli.Command {
 
 // VersionList provides the sub-command to list all versions.
 func VersionList(c *cli.Context, client solder.API) error {
-	mod := c.GlobalString("mod")
+	records, err := client.VersionList(
+		GetModParam(c),
+	)
 
-	if mod == "" {
-		fmt.Println("Error: you must provide a mod ID or slug.")
-		os.Exit(1)
-	}
-
-	records, err := client.VersionList(mod)
-
-	if err != nil || len(records) == 0 {
+	if err != nil {
 		return err
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
-
-	for _, record := range records {
-		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		return nil
 	}
 
-	w.Flush()
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // VersionShow provides the sub-command to show version details.
 func VersionShow(c *cli.Context, client solder.API) error {
-	return nil
-}
+	record, err := client.VersionGet(
+		GetModParam(c),
+		GetIdentifierParam(c),
+	)
 
-// VersionUpdate provides the sub-command to update a version.
-func VersionUpdate(c *cli.Context, client solder.API) error {
+	if err != nil {
+		return err
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"Key", "Value"})
+
+	table.AppendBulk(
+		[][]string{
+			[]string{"ID", strconv.FormatInt(record.ID, 10)},
+			[]string{"Slug", record.Slug},
+			[]string{"Name", record.Name},
+			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
+			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+		},
+	)
+
+	table.Render()
 	return nil
 }
 
 // VersionDelete provides the sub-command to delete a version.
 func VersionDelete(c *cli.Context, client solder.API) error {
+	err := client.VersionDelete(
+		GetModParam(c),
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully delete\n")
+	return nil
+}
+
+// VersionUpdate provides the sub-command to update a version.
+func VersionUpdate(c *cli.Context, client solder.API) error {
+	record, err := client.VersionGet(
+		GetModParam(c),
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if val := c.String("slug"); val != "" {
+		record.Slug = val
+	}
+
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	}
+
+	_, patch := client.VersionPatch(GetModParam(c), record)
+
+	if patch != nil {
+		return patch
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
 // VersionCreate provides the sub-command to create a version.
 func VersionCreate(c *cli.Context, client solder.API) error {
+	record := &solder.Version{}
+
+	if val := c.String("slug"); val != "" {
+		record.Slug = val
+	}
+
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		fmt.Println("Error: You must provide a name.")
+		os.Exit(1)
+	}
+
+	_, err := client.VersionPost(GetModParam(c), record)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully created\n")
 	return nil
 }

@@ -3,9 +3,11 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"text/tabwriter"
+	"strconv"
+	"time"
 
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/solderapp/solder-cli/solder"
 )
 
@@ -36,6 +38,11 @@ func Build() cli.Command {
 				Usage: "Display a build",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Version ID or slug to show",
@@ -50,9 +57,24 @@ func Build() cli.Command {
 				Usage: "Update a build",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Version ID or slug to update",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Define an optional slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Define a required name",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -65,9 +87,14 @@ func Build() cli.Command {
 				Usage:   "Delete a build",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Version ID or slug to delete",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -77,6 +104,23 @@ func Build() cli.Command {
 			{
 				Name:  "create",
 				Usage: "Create a build",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Define an optional slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Define a required name",
+					},
+				},
 				Action: func(c *cli.Context) {
 					Handle(c, BuildCreate)
 				},
@@ -87,45 +131,131 @@ func Build() cli.Command {
 
 // BuildList provides the sub-command to list all builds.
 func BuildList(c *cli.Context, client solder.API) error {
-	pack := c.GlobalString("pack")
+	records, err := client.BuildList(
+		GetPackParam(c),
+	)
 
-	if pack == "" {
-		fmt.Println("Error: you must provide a pack ID or slug.")
-		os.Exit(1)
-	}
-
-	records, err := client.BuildList(pack)
-
-	if err != nil || len(records) == 0 {
+	if err != nil {
 		return err
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
-
-	for _, record := range records {
-		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		return nil
 	}
 
-	w.Flush()
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // BuildShow provides the sub-command to show build details.
 func BuildShow(c *cli.Context, client solder.API) error {
-	return nil
-}
+	record, err := client.BuildGet(
+		GetPackParam(c),
+		GetIdentifierParam(c),
+	)
 
-// BuildUpdate provides the sub-command to update a build.
-func BuildUpdate(c *cli.Context, client solder.API) error {
+	if err != nil {
+		return err
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"Key", "Value"})
+
+	table.AppendBulk(
+		[][]string{
+			[]string{"ID", strconv.FormatInt(record.ID, 10)},
+			[]string{"Slug", record.Slug},
+			[]string{"Name", record.Name},
+			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
+			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+		},
+	)
+
+	table.Render()
 	return nil
 }
 
 // BuildDelete provides the sub-command to delete a build.
 func BuildDelete(c *cli.Context, client solder.API) error {
+	err := client.BuildDelete(
+		GetPackParam(c),
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully delete\n")
+	return nil
+}
+
+// BuildUpdate provides the sub-command to update a build.
+func BuildUpdate(c *cli.Context, client solder.API) error {
+	record, err := client.BuildGet(
+		GetPackParam(c),
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if val := c.String("slug"); val != "" {
+		record.Slug = val
+	}
+
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	}
+
+	_, patch := client.BuildPatch(GetPackParam(c), record)
+
+	if patch != nil {
+		return patch
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
 // BuildCreate provides the sub-command to create a build.
 func BuildCreate(c *cli.Context, client solder.API) error {
+	record := &solder.Build{}
+
+	if val := c.String("slug"); val != "" {
+		record.Slug = val
+	}
+
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		fmt.Println("Error: You must provide a name.")
+		os.Exit(1)
+	}
+
+	_, err := client.BuildPost(GetPackParam(c), record)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully created\n")
 	return nil
 }

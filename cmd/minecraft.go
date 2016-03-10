@@ -40,8 +40,13 @@ func Minecraft() cli.Command {
 func MinecraftList(c *cli.Context, client solder.API) error {
 	records, err := client.MinecraftList()
 
-	if err != nil || len(records) == 0 {
+	if err != nil {
 		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		return nil
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
@@ -64,12 +69,12 @@ func MinecraftList(c *cli.Context, client solder.API) error {
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
 func MinecraftRefresh(c *cli.Context, client solder.API) error {
-	msg, err := client.MinecraftRefresh()
+	err := client.MinecraftRefresh()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(msg.Message)
+	fmt.Println("Successfully refreshed")
 	return nil
 }

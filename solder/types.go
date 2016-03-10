@@ -13,6 +13,8 @@ type Message struct {
 // Build represents a build API response.
 type Build struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -54,6 +56,8 @@ type Minecraft struct {
 // Mod represents a mod API response.
 type Mod struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -61,6 +65,8 @@ type Mod struct {
 // Pack represents a pack API response.
 type Pack struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -75,6 +81,8 @@ type User struct {
 // Version represents a version API response.
 type Version struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

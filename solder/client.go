@@ -19,19 +19,19 @@ const (
 	pathMinecraft = "%s/api/minecraft"
 	pathProfile   = "%s/api/profile"
 	pathUsers     = "%s/api/users"
-	pathUser      = "%s/api/users/%s"
+	pathUser      = "%s/api/users/%v"
 	pathClients   = "%s/api/clients"
-	pathClient    = "%s/api/clients/%s"
+	pathClient    = "%s/api/clients/%v"
 	pathKeys      = "%s/api/keys"
-	pathKey       = "%s/api/keys/%s"
+	pathKey       = "%s/api/keys/%v"
 	pathPacks     = "%s/api/packs"
-	pathPack      = "%s/api/packs/%s"
-	pathBuilds    = "%s/api/packs/%s/builds"
-	pathBuild     = "%s/api/packs/%s/builds/%s"
+	pathPack      = "%s/api/packs/%v"
+	pathBuilds    = "%s/api/packs/%v/builds"
+	pathBuild     = "%s/api/packs/%v/builds/%v"
 	pathMods      = "%s/api/mods"
-	pathMod       = "%s/api/mods/%s"
-	pathVersions  = "%s/api/mods/%s/versions"
-	pathVersion   = "%s/api/mods/%s/versions/%s"
+	pathMod       = "%s/api/mods/%v"
+	pathVersions  = "%s/api/mods/%v/versions"
+	pathVersion   = "%s/api/mods/%v/versions/%v"
 )
 
 type defaultClient struct {
@@ -103,13 +103,11 @@ func (c *defaultClient) ForgeList() ([]*Forge, error) {
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
-func (c *defaultClient) ForgeRefresh() (*Message, error) {
-	msg := &Message{}
-
+func (c *defaultClient) ForgeRefresh() error {
 	uri := fmt.Sprintf(pathForge, c.base)
-	err := c.patch(uri, nil, msg)
+	err := c.patch(uri, nil, nil)
 
-	return msg, err
+	return err
 }
 
 // MinecraftList returns a list of all Minecraft versions.
@@ -123,13 +121,11 @@ func (c *defaultClient) MinecraftList() ([]*Minecraft, error) {
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
-func (c *defaultClient) MinecraftRefresh() (*Message, error) {
-	msg := &Message{}
-
+func (c *defaultClient) MinecraftRefresh() error {
 	uri := fmt.Sprintf(pathMinecraft, c.base)
-	err := c.patch(uri, nil, msg)
+	err := c.patch(uri, nil, nil)
 
-	return msg, err
+	return err
 }
 
 // UserList returns a list of all users.
@@ -554,7 +550,14 @@ func (c *defaultClient) stream(rawurl, method string, in, out interface{}) (io.R
 		defer resp.Body.Close()
 		out, _ := ioutil.ReadAll(resp.Body)
 
-		return nil, fmt.Errorf(string(out))
+		msg := &Message{}
+		parse := json.Unmarshal(out, msg)
+
+		if parse != nil {
+			return nil, fmt.Errorf(string(out))
+		} else {
+			return nil, fmt.Errorf(msg.Message)
+		}
 	}
 
 	return resp.Body, nil

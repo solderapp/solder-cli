@@ -40,8 +40,13 @@ func Forge() cli.Command {
 func ForgeList(c *cli.Context, client solder.API) error {
 	records, err := client.ForgeList()
 
-	if err != nil || len(records) == 0 {
+	if err != nil {
 		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		return nil
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
@@ -64,12 +69,12 @@ func ForgeList(c *cli.Context, client solder.API) error {
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
 func ForgeRefresh(c *cli.Context, client solder.API) error {
-	msg, err := client.ForgeRefresh()
+	err := client.ForgeRefresh()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(msg.Message)
+	fmt.Println("Successfully refreshed")
 	return nil
 }
