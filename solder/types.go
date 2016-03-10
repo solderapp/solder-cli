@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+// Message represents a standard response.
+type Message struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}
+
 // Build represents a build API response.
 type Build struct {
 	ID        int64     `json:"id"`

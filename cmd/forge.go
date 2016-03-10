@@ -64,12 +64,12 @@ func ForgeList(c *cli.Context, client solder.API) error {
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
 func ForgeRefresh(c *cli.Context, client solder.API) error {
-	err := client.ForgeRefresh()
+	msg, err := client.ForgeRefresh()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Successfully refreshed Forge versions")
+	fmt.Println(msg.Message)
 	return nil
 }

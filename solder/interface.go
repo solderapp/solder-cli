@@ -12,13 +12,13 @@ type API interface {
 	ForgeList() ([]*Forge, error)
 
 	// ForgeRefresh refreshs the available Forge versions.
-	ForgeRefresh() error
+	ForgeRefresh() (*Message, error)
 
 	// MinecraftList returns a list of all Minecraft versions.
 	MinecraftList() ([]*Minecraft, error)
 
 	// MinecraftRefresh refreshs the available Minecraft versions.
-	MinecraftRefresh() error
+	MinecraftRefresh() (*Message, error)
 
 	// UserList returns a list of all users.
 	UserList() ([]*User, error)

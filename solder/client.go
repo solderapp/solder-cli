@@ -103,11 +103,13 @@ func (c *defaultClient) ForgeList() ([]*Forge, error) {
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
-func (c *defaultClient) ForgeRefresh() error {
-	uri := fmt.Sprintf(pathForge, c.base)
-	err := c.patch(uri, struct{}{}, struct{}{})
+func (c *defaultClient) ForgeRefresh() (*Message, error) {
+	msg := &Message{}
 
-	return err
+	uri := fmt.Sprintf(pathForge, c.base)
+	err := c.patch(uri, nil, msg)
+
+	return msg, err
 }
 
 // MinecraftList returns a list of all Minecraft versions.
@@ -121,11 +123,13 @@ func (c *defaultClient) MinecraftList() ([]*Minecraft, error) {
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
-func (c *defaultClient) MinecraftRefresh() error {
-	uri := fmt.Sprintf(pathMinecraft, c.base)
-	err := c.patch(uri, struct{}{}, struct{}{})
+func (c *defaultClient) MinecraftRefresh() (*Message, error) {
+	msg := &Message{}
 
-	return err
+	uri := fmt.Sprintf(pathMinecraft, c.base)
+	err := c.patch(uri, nil, msg)
+
+	return msg, err
 }
 
 // UserList returns a list of all users.

@@ -64,12 +64,12 @@ func MinecraftList(c *cli.Context, client solder.API) error {
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
 func MinecraftRefresh(c *cli.Context, client solder.API) error {
-	err := client.MinecraftRefresh()
+	msg, err := client.MinecraftRefresh()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Successfully refreshed Minecraft versions")
+	fmt.Println(msg.Message)
 	return nil
 }
