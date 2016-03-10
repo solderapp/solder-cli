@@ -1,0 +1,38 @@
+clone:
+  path: github.com/solderapp/solder
+
+build:
+  testing:
+    image: webhippie/golang:latest
+    commands:
+      - make clean
+      - make deps
+      - make build
+      - make test
+
+  release:
+    image: webhippie/golang:latest
+    commands:
+      - make release
+    when:
+      event: tag
+
+publish:
+  coverage:
+    when:
+      branch: master
+
+  github_release:
+    api_key: $$GITHUB_APIKEY
+    files:
+      - dist/*
+    when:
+      event: tag
+
+notify:
+  gitter:
+    webhook_url: $$GITTER_WEBHOOK
+    when:
+      success: false
+      failure: true
+      change: true
