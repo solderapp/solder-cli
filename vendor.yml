@@ -1,8 +1,20 @@
 vendors:
 - path: github.com/codegangsta/cli
   rev: aca5b047ed14d17224157c3434ea93bf6cdaadee
+- path: github.com/davecgh/go-spew
+  rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
   rev: b9504f23731d0b61ccfff7370a161d6c857ca00d
+- path: github.com/mattn/go-runewidth
+  rev: d037b52ae5c0338c2bb18da01fb7ddf0e8be9aa1
+- path: github.com/olekukonko/tablewriter
+  rev: cca8bbc0798408af109aaaa239cbd2634846b340
+- path: github.com/pmezard/go-difflib
+  rev: 792786c7400a136282c1664665ae0a8db921c6c2
+- path: github.com/stretchr/objx
+  rev: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
+- path: github.com/stretchr/testify
+  rev: 6fe211e493929a8aac0469b93f28b1d0688a9a3a
 - path: golang.org/x/net
   rev: 3e5cd1ed149001198e582f9d3f5bfd564cde2896
 - path: golang.org/x/oauth2
