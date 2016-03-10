@@ -11,7 +11,7 @@
 
 This project acts as a CLI client implementation to interact with an
 alternative Solder API implementation. You can find the sources of the Solder
-API at https://github.com/solderapp/solder.
+API at https://github.com/solderapp/solder-api.
 
 The structure of the code base is heavily inspired by Drone, so those credits
 are getting to [bradrydzewski](https://github.com/bradrydzewski), thank you for
