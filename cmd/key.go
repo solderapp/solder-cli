@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+
 	"github.com/codegangsta/cli"
 	"github.com/solderapp/solder-cli/solder"
 )
@@ -76,6 +80,19 @@ func Key() cli.Command {
 
 // KeyList provides the sub-command to list all keys.
 func KeyList(c *cli.Context, client solder.API) error {
+	records, err := client.KeyList()
+
+	if err != nil || len(records) == 0 {
+		return err
+	}
+
+	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
+
+	for _, record := range records {
+		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	}
+
+	w.Flush()
 	return nil
 }
 

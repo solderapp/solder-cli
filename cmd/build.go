@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+
 	"github.com/codegangsta/cli"
 	"github.com/solderapp/solder-cli/solder"
 )
@@ -16,6 +20,13 @@ func Build() cli.Command {
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all builds",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+				},
 				Action: func(c *cli.Context) {
 					Handle(c, BuildList)
 				},
@@ -76,6 +87,26 @@ func Build() cli.Command {
 
 // BuildList provides the sub-command to list all builds.
 func BuildList(c *cli.Context, client solder.API) error {
+	pack := c.GlobalString("pack")
+
+	if pack == "" {
+		fmt.Println("Error: you must provide a pack ID or slug.")
+		os.Exit(1)
+	}
+
+	records, err := client.BuildList(pack)
+
+	if err != nil || len(records) == 0 {
+		return err
+	}
+
+	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
+
+	for _, record := range records {
+		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	}
+
+	w.Flush()
 	return nil
 }
 

@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+
 	"github.com/codegangsta/cli"
 	"github.com/solderapp/solder-cli/solder"
 )
@@ -16,6 +20,13 @@ func Version() cli.Command {
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all versions",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+				},
 				Action: func(c *cli.Context) {
 					Handle(c, VersionList)
 				},
@@ -76,6 +87,26 @@ func Version() cli.Command {
 
 // VersionList provides the sub-command to list all versions.
 func VersionList(c *cli.Context, client solder.API) error {
+	mod := c.GlobalString("mod")
+
+	if mod == "" {
+		fmt.Println("Error: you must provide a mod ID or slug.")
+		os.Exit(1)
+	}
+
+	records, err := client.VersionList(mod)
+
+	if err != nil || len(records) == 0 {
+		return err
+	}
+
+	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
+
+	for _, record := range records {
+		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	}
+
+	w.Flush()
 	return nil
 }
 

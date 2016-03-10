@@ -1,7 +1,12 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/solderapp/solder-cli/solder"
 )
 
@@ -33,10 +38,38 @@ func Forge() cli.Command {
 
 // ForgeList provides the sub-command to list all Forge versions.
 func ForgeList(c *cli.Context, client solder.API) error {
+	records, err := client.ForgeList()
+
+	if err != nil || len(records) == 0 {
+		return err
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Version", "Minecraft"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Version,
+				record.Minecraft,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
 func ForgeRefresh(c *cli.Context, client solder.API) error {
+	err := client.ForgeRefresh()
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Successfully refreshed Forge versions")
 	return nil
 }
