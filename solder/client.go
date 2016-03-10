@@ -17,29 +17,21 @@ import (
 const (
 	pathForge     = "%s/api/forge"
 	pathMinecraft = "%s/api/minecraft"
-
-	pathProfile = "%s/api/profile"
-
-	pathUsers = "%s/api/users"
-	pathUser  = "%s/api/users/%s"
-
-	pathClients = "%s/api/clients"
-	pathClient  = "%s/api/clients/%s"
-
-	pathKeys = "%s/api/keys"
-	pathKey  = "%s/api/keys/%s"
-
-	pathPacks = "%s/api/packs"
-	pathPack  = "%s/api/packs/%s"
-
-	pathBuilds = "%s/api/packs/%s/builds"
-	pathBuild  = "%s/api/packs/%s/builds/%s"
-
-	pathMods = "%s/api/mods"
-	pathMod  = "%s/api/mods/%s"
-
-	pathVersions = "%s/api/mods/%s/versions"
-	pathVersion  = "%s/api/mods/%s/versions/%s"
+	pathProfile   = "%s/api/profile"
+	pathUsers     = "%s/api/users"
+	pathUser      = "%s/api/users/%s"
+	pathClients   = "%s/api/clients"
+	pathClient    = "%s/api/clients/%s"
+	pathKeys      = "%s/api/keys"
+	pathKey       = "%s/api/keys/%s"
+	pathPacks     = "%s/api/packs"
+	pathPack      = "%s/api/packs/%s"
+	pathBuilds    = "%s/api/packs/%s/builds"
+	pathBuild     = "%s/api/packs/%s/builds/%s"
+	pathMods      = "%s/api/mods"
+	pathMod       = "%s/api/mods/%s"
+	pathVersions  = "%s/api/mods/%s/versions"
+	pathVersion   = "%s/api/mods/%s/versions/%s"
 )
 
 type defaultClient struct {
