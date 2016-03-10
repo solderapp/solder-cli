@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Mod provides the sub-command for the mod API.
@@ -74,26 +75,26 @@ func Mod() cli.Command {
 }
 
 // ModList provides the sub-command to list all mods.
-func ModList(c *cli.Context, client solder.Client) error {
+func ModList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ModShow provides the sub-command to show mod details.
-func ModShow(c *cli.Context, client solder.Client) error {
+func ModShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ModUpdate provides the sub-command to update a mod.
-func ModUpdate(c *cli.Context, client solder.Client) error {
+func ModUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ModDelete provides the sub-command to delete a mod.
-func ModDelete(c *cli.Context, client solder.Client) error {
+func ModDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ModCreate provides the sub-command to create a mod.
-func ModCreate(c *cli.Context, client solder.Client) error {
+func ModCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Forge provides the sub-command for the forge API.
@@ -31,11 +32,11 @@ func Forge() cli.Command {
 }
 
 // ForgeList provides the sub-command to list all Forge versions.
-func ForgeList() cli.Command {
+func ForgeList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
-func ForgeRefresh() cli.Command {
+func ForgeRefresh(c *cli.Context, client solder.API) error {
 	return nil
 }

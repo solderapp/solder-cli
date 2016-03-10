@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Build provides the sub-command for the build API.
@@ -74,26 +75,26 @@ func Build() cli.Command {
 }
 
 // BuildList provides the sub-command to list all builds.
-func BuildList(c *cli.Context, client solder.Client) error {
+func BuildList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // BuildShow provides the sub-command to show build details.
-func BuildShow(c *cli.Context, client solder.Client) error {
+func BuildShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // BuildUpdate provides the sub-command to update a build.
-func BuildUpdate(c *cli.Context, client solder.Client) error {
+func BuildUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // BuildDelete provides the sub-command to delete a build.
-func BuildDelete(c *cli.Context, client solder.Client) error {
+func BuildDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // BuildCreate provides the sub-command to create a build.
-func BuildCreate(c *cli.Context, client solder.Client) error {
+func BuildCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

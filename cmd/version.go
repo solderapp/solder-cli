@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Version provides the sub-command for the version API.
@@ -74,26 +75,26 @@ func Version() cli.Command {
 }
 
 // VersionList provides the sub-command to list all versions.
-func VersionList(c *cli.Context, client solder.Client) error {
+func VersionList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // VersionShow provides the sub-command to show version details.
-func VersionShow(c *cli.Context, client solder.Client) error {
+func VersionShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // VersionUpdate provides the sub-command to update a version.
-func VersionUpdate(c *cli.Context, client solder.Client) error {
+func VersionUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // VersionDelete provides the sub-command to delete a version.
-func VersionDelete(c *cli.Context, client solder.Client) error {
+func VersionDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // VersionCreate provides the sub-command to create a version.
-func VersionCreate(c *cli.Context, client solder.Client) error {
+func VersionCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Profile provides the sub-command for the profile API.
@@ -29,11 +30,11 @@ func Profile() cli.Command {
 }
 
 // ProfileShow provides the sub-command to show profile details.
-func ProfileShow() cli.Command {
+func ProfileShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ProfileUpdate provides the sub-command to update the profile.
-func ProfileUpdate() cli.Command {
+func ProfileUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }

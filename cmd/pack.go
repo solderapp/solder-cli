@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Pack provides the sub-command for the pack API.
@@ -74,26 +75,26 @@ func Pack() cli.Command {
 }
 
 // PackList provides the sub-command to list all packs.
-func PackList(c *cli.Context, client solder.Client) error {
+func PackList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // PackShow provides the sub-command to show pack details.
-func PackShow(c *cli.Context, client solder.Client) error {
+func PackShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // PackUpdate provides the sub-command to update a pack.
-func PackUpdate(c *cli.Context, client solder.Client) error {
+func PackUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // PackDelete provides the sub-command to delete a pack.
-func PackDelete(c *cli.Context, client solder.Client) error {
+func PackDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // PackCreate provides the sub-command to create a pack.
-func PackCreate(c *cli.Context, client solder.Client) error {
+func PackCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // User provides the sub-command for the user API.
@@ -74,26 +75,26 @@ func User() cli.Command {
 }
 
 // UserList provides the sub-command to list all users.
-func UserList(c *cli.Context, client solder.Client) error {
+func UserList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // UserShow provides the sub-command to show user details.
-func UserShow(c *cli.Context, client solder.Client) error {
+func UserShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // UserUpdate provides the sub-command to update a user.
-func UserUpdate(c *cli.Context, client solder.Client) error {
+func UserUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // UserDelete provides the sub-command to delete a user.
-func UserDelete(c *cli.Context, client solder.Client) error {
+func UserDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // UserCreate provides the sub-command to create a user.
-func UserCreate(c *cli.Context, client solder.Client) error {
+func UserCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

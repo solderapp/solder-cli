@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Key provides the sub-command for the key API.
@@ -74,26 +75,26 @@ func Key() cli.Command {
 }
 
 // KeyList provides the sub-command to list all keys.
-func KeyList(c *cli.Context, client solder.Client) error {
+func KeyList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // KeyShow provides the sub-command to show key details.
-func KeyShow(c *cli.Context, client solder.Client) error {
+func KeyShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // KeyUpdate provides the sub-command to update a key.
-func KeyUpdate(c *cli.Context, client solder.Client) error {
+func KeyUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // KeyDelete provides the sub-command to delete a key.
-func KeyDelete(c *cli.Context, client solder.Client) error {
+func KeyDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // KeyCreate provides the sub-command to create a key.
-func KeyCreate(c *cli.Context, client solder.Client) error {
+func KeyCreate(c *cli.Context, client solder.API) error {
 	return nil
 }

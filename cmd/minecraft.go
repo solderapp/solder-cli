@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Minecraft provides the sub-command for the minecraft API.
@@ -31,11 +32,11 @@ func Minecraft() cli.Command {
 }
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList() cli.Command {
+func MinecraftList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh() cli.Command {
+func MinecraftRefresh(c *cli.Context, client solder.API) error {
 	return nil
 }

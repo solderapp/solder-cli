@@ -9,10 +9,10 @@ import (
 )
 
 // HandleFunc is the real handle implementation.
-type HandleFunc func(*cli.Context, solder.Client) error
+type HandleFunc func(c *cli.Context, client solder.API) error
 
 // Handle wraps the command function handler.
-func Handle(c *cli.Context, fn handleFunc) {
+func Handle(c *cli.Context, fn HandleFunc) {
 	token := c.GlobalString("token")
 	server := c.GlobalString("server")
 

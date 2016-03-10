@@ -1,7 +1,7 @@
 package solder
 
-// Client describes a Solder client.
-type Client interface {
+// API describes a Solder API client.
+type API interface {
 	// ProfileGet returns a profile.
 	ProfileGet() (*Profile, error)
 

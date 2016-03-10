@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/codegangsta/cli"
+	"github.com/solderapp/solder-cli/solder"
 )
 
 // Client provides the sub-command for the client API.
@@ -74,26 +75,26 @@ func Client() cli.Command {
 }
 
 // ClientList provides the sub-command to list all clients.
-func ClientList(c *cli.Context, client solder.Client) error {
+func ClientList(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ClientShow provides the sub-command to show client details.
-func ClientShow(c *cli.Context, client solder.Client) error {
+func ClientShow(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ClientUpdate provides the sub-command to update a client.
-func ClientUpdate(c *cli.Context, client solder.Client) error {
+func ClientUpdate(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ClientDelete provides the sub-command to delete a client.
-func ClientDelete(c *cli.Context, client solder.Client) error {
+func ClientDelete(c *cli.Context, client solder.API) error {
 	return nil
 }
 
 // ClientCreate provides the sub-command to create a client.
-func ClientCreate(c *cli.Context, client solder.Client) error {
+func ClientCreate(c *cli.Context, client solder.API) error {
 	return nil
 }
