@@ -11,7 +11,7 @@ func Client() cli.Command {
 		Aliases: []string{"c"},
 		Usage:   "Client related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all clients",
@@ -19,7 +19,7 @@ func Client() cli.Command {
 					Handle(c, ClientList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a build",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Client() cli.Command {
 					Handle(c, ClientShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a client",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Client() cli.Command {
 					Handle(c, ClientUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a client",
@@ -62,7 +62,7 @@ func Client() cli.Command {
 					Handle(c, ClientDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a client",
 				Action: func(c *cli.Context) {

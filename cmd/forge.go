@@ -10,7 +10,7 @@ func Forge() cli.Command {
 		Name:  "forge",
 		Usage: "Forge related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all Forge versions",
@@ -18,7 +18,7 @@ func Forge() cli.Command {
 					Handle(c, ForgeList)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "refresh",
 				Aliases: []string{"ref"},
 				Usage:   "Refresh the Forge versions",

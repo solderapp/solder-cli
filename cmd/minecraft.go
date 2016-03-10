@@ -10,7 +10,7 @@ func Minecraft() cli.Command {
 		Name:  "minecraft",
 		Usage: "Minecraft related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all Minecraft versions",
@@ -18,7 +18,7 @@ func Minecraft() cli.Command {
 					Handle(c, MinecraftList)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "refresh",
 				Aliases: []string{"ref"},
 				Usage:   "Refresh the Minecraft versions",

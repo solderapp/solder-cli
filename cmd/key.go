@@ -11,7 +11,7 @@ func Key() cli.Command {
 		Aliases: []string{"k"},
 		Usage:   "Key related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all keys",
@@ -19,7 +19,7 @@ func Key() cli.Command {
 					Handle(c, KeyList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a key",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Key() cli.Command {
 					Handle(c, KeyShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a key",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Key() cli.Command {
 					Handle(c, KeyUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a key",
@@ -62,7 +62,7 @@ func Key() cli.Command {
 					Handle(c, KeyDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a key",
 				Action: func(c *cli.Context) {

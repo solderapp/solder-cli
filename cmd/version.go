@@ -11,7 +11,7 @@ func Version() cli.Command {
 		Aliases: []string{"v"},
 		Usage:   "Version related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all versions",
@@ -19,7 +19,7 @@ func Version() cli.Command {
 					Handle(c, VersionList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a version",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Version() cli.Command {
 					Handle(c, VersionShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a version",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Version() cli.Command {
 					Handle(c, VersionUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a version",
@@ -62,7 +62,7 @@ func Version() cli.Command {
 					Handle(c, VersionDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a version",
 				Action: func(c *cli.Context) {

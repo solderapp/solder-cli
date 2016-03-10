@@ -11,7 +11,7 @@ func User() cli.Command {
 		Aliases: []string{"u"},
 		Usage:   "User related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all users",
@@ -19,7 +19,7 @@ func User() cli.Command {
 					Handle(c, UserList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a user",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func User() cli.Command {
 					Handle(c, UserShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a user",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func User() cli.Command {
 					Handle(c, UserUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a user",
@@ -62,7 +62,7 @@ func User() cli.Command {
 					Handle(c, UserDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a user",
 				Action: func(c *cli.Context) {

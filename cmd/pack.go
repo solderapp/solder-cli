@@ -11,7 +11,7 @@ func Pack() cli.Command {
 		Aliases: []string{"p"},
 		Usage:   "Pack related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all packs",
@@ -19,7 +19,7 @@ func Pack() cli.Command {
 					Handle(c, PackList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a pack",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Pack() cli.Command {
 					Handle(c, PackShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a pack",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Pack() cli.Command {
 					Handle(c, PackUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a pack",
@@ -62,7 +62,7 @@ func Pack() cli.Command {
 					Handle(c, PackDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a pack",
 				Action: func(c *cli.Context) {

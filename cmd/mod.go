@@ -11,7 +11,7 @@ func Mod() cli.Command {
 		Aliases: []string{"m"},
 		Usage:   "Mod related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all mods",
@@ -19,7 +19,7 @@ func Mod() cli.Command {
 					Handle(c, ModList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a mod",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Mod() cli.Command {
 					Handle(c, ModShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a mod",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Mod() cli.Command {
 					Handle(c, ModUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a mod",
@@ -62,7 +62,7 @@ func Mod() cli.Command {
 					Handle(c, ModDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a mod",
 				Action: func(c *cli.Context) {

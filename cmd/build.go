@@ -11,7 +11,7 @@ func Build() cli.Command {
 		Aliases: []string{"b"},
 		Usage:   "Build related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:    "list",
 				Aliases: []string{"ls"},
 				Usage:   "List all builds",
@@ -19,7 +19,7 @@ func Build() cli.Command {
 					Handle(c, BuildList)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Display a build",
 				Flags: []cli.Flag{
@@ -33,7 +33,7 @@ func Build() cli.Command {
 					Handle(c, BuildShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update a build",
 				Flags: []cli.Flag{
@@ -47,7 +47,7 @@ func Build() cli.Command {
 					Handle(c, BuildUpdate)
 				},
 			},
-			cli.Command{
+			{
 				Name:    "delete",
 				Aliases: []string{"rm"},
 				Usage:   "Delete a build",
@@ -62,7 +62,7 @@ func Build() cli.Command {
 					Handle(c, BuildDelete)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "create",
 				Usage: "Create a build",
 				Action: func(c *cli.Context) {

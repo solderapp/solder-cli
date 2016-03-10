@@ -10,14 +10,14 @@ func Profile() cli.Command {
 		Name:  "profile",
 		Usage: "Profile related sub-commands",
 		Subcommands: []cli.Command{
-			cli.Command{
+			{
 				Name:  "show",
 				Usage: "Show profile details",
 				Action: func(c *cli.Context) {
 					Handle(c, ProfileShow)
 				},
 			},
-			cli.Command{
+			{
 				Name:  "update",
 				Usage: "Update your profile",
 				Action: func(c *cli.Context) {
