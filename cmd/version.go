@@ -38,11 +38,6 @@ func Version() cli.Command {
 				Usage: "Display a version",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
-					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Version ID or slug to show",
@@ -56,11 +51,6 @@ func Version() cli.Command {
 				Name:  "update",
 				Usage: "Update a version",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -96,11 +86,6 @@ func Version() cli.Command {
 				Aliases: []string{"rm"},
 				Usage:   "Delete a version",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -150,11 +135,6 @@ func Version() cli.Command {
 				Usage: "List assigned builds",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
-					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Version ID or slug to list builds",
@@ -168,11 +148,6 @@ func Version() cli.Command {
 				Name:  "build-append",
 				Usage: "Append a mod version to build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -192,11 +167,6 @@ func Version() cli.Command {
 				Name:  "build-remove",
 				Usage: "Remove a mod version from build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -252,7 +222,6 @@ func VersionList(c *cli.Context, client solder.API) error {
 // VersionShow provides the sub-command to show version details.
 func VersionShow(c *cli.Context, client solder.API) error {
 	record, err := client.VersionGet(
-		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -267,6 +236,7 @@ func VersionShow(c *cli.Context, client solder.API) error {
 	table.AppendBulk(
 		[][]string{
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
+			[]string{"Mod", record.Mod},
 			[]string{"Slug", record.Slug},
 			[]string{"Name", record.Name},
 			[]string{"File", record.File},
@@ -282,7 +252,6 @@ func VersionShow(c *cli.Context, client solder.API) error {
 // VersionDelete provides the sub-command to delete a version.
 func VersionDelete(c *cli.Context, client solder.API) error {
 	err := client.VersionDelete(
-		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -297,7 +266,6 @@ func VersionDelete(c *cli.Context, client solder.API) error {
 // VersionUpdate provides the sub-command to update a version.
 func VersionUpdate(c *cli.Context, client solder.API) error {
 	record, err := client.VersionGet(
-		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -323,7 +291,7 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 	// 	record.FilePath = val
 	// }
 
-	_, patch := client.VersionPatch(GetModParam(c), record)
+	_, patch := client.VersionPatch(record)
 
 	if patch != nil {
 		return patch
@@ -336,6 +304,12 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 // VersionCreate provides the sub-command to create a version.
 func VersionCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Version{}
+
+	if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
+		record.ModID = val
+	} else {
+		return fmt.Errorf("You must provide a mod.")
+	}
 
 	if val := c.String("name"); val != "" {
 		record.Name = val
@@ -358,7 +332,7 @@ func VersionCreate(c *cli.Context, client solder.API) error {
 	// 	record.FilePath = val
 	// }
 
-	_, err := client.VersionPost(GetModParam(c), record)
+	_, err := client.VersionPost(record)
 
 	if err != nil {
 		return err

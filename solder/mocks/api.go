@@ -3,6 +3,7 @@ package mocks
 import "github.com/solderapp/solder-cli/solder"
 import "github.com/stretchr/testify/mock"
 
+// API describes a Solder API client.
 type API struct {
 	mock.Mock
 }

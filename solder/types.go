@@ -13,6 +13,8 @@ type Message struct {
 // Build represents a build API response.
 type Build struct {
 	ID          int64     `json:"id"`
+	Pack        string    `json:"pack"`
+	PackID      int64     `json:"pack_id"`
 	Minecraft   string    `json:"minecraft"`
 	MinecraftID int64     `json:"minecraft_id"`
 	Forge       string    `json:"forge"`
@@ -113,6 +115,8 @@ type User struct {
 // Version represents a version API response.
 type Version struct {
 	ID        int64     `json:"id"`
+	Mod       string    `json:"mod"`
+	ModID     int64     `json:"mod_id"`
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
 	File      string    `json:"file"`

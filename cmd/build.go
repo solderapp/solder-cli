@@ -38,11 +38,6 @@ func Build() cli.Command {
 				Usage: "Display a build",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
-					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Build ID or slug to show",
@@ -56,11 +51,6 @@ func Build() cli.Command {
 				Name:  "update",
 				Usage: "Update a build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -114,11 +104,6 @@ func Build() cli.Command {
 				Aliases: []string{"rm"},
 				Usage:   "Delete a build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -186,11 +171,6 @@ func Build() cli.Command {
 				Usage: "List assigned versions",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
-					cli.StringFlag{
 						Name:  "id",
 						Value: "",
 						Usage: "Build ID or slug to list versions",
@@ -204,11 +184,6 @@ func Build() cli.Command {
 				Name:  "version-append",
 				Usage: "Append a version to build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -228,11 +203,6 @@ func Build() cli.Command {
 				Name:  "version-remove",
 				Usage: "Remove a version from build",
 				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "ID or slug of the related pack",
-					},
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
@@ -288,7 +258,6 @@ func BuildList(c *cli.Context, client solder.API) error {
 // BuildShow provides the sub-command to show build details.
 func BuildShow(c *cli.Context, client solder.API) error {
 	record, err := client.BuildGet(
-		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -305,6 +274,7 @@ func BuildShow(c *cli.Context, client solder.API) error {
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
 			[]string{"Slug", record.Slug},
 			[]string{"Name", record.Name},
+			[]string{"Pack", record.Pack},
 			[]string{"Minecraft", record.Minecraft},
 			[]string{"Forge", record.Forge},
 			[]string{"Java", record.MinJava},
@@ -323,7 +293,6 @@ func BuildShow(c *cli.Context, client solder.API) error {
 // BuildDelete provides the sub-command to delete a build.
 func BuildDelete(c *cli.Context, client solder.API) error {
 	err := client.BuildDelete(
-		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -338,7 +307,6 @@ func BuildDelete(c *cli.Context, client solder.API) error {
 // BuildUpdate provides the sub-command to update a build.
 func BuildUpdate(c *cli.Context, client solder.API) error {
 	record, err := client.BuildGet(
-		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -378,7 +346,7 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		record.Private = val
 	}
 
-	_, patch := client.BuildPatch(GetPackParam(c), record)
+	_, patch := client.BuildPatch(record)
 
 	if patch != nil {
 		return patch
@@ -391,6 +359,12 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 // BuildCreate provides the sub-command to create a build.
 func BuildCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Build{}
+
+	if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
+		record.PackID = val
+	} else {
+		return fmt.Errorf("You must provide a pack.")
+	}
 
 	if val := c.String("name"); val != "" {
 		record.Name = val
@@ -426,7 +400,7 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 		record.Private = val
 	}
 
-	_, err := client.BuildPost(GetPackParam(c), record)
+	_, err := client.BuildPost(record)
 
 	if err != nil {
 		return err
