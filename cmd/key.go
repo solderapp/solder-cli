@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"text/tabwriter"
 
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
 	"github.com/solderapp/solder-cli/solder"
 )
 
@@ -31,7 +31,7 @@ func Key() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Key ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -45,7 +45,22 @@ func Key() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Key ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "key",
+						Value: "",
+						Usage: "Provide a key",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -60,7 +75,7 @@ func Key() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Key ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -70,6 +85,23 @@ func Key() cli.Command {
 			{
 				Name:  "create",
 				Usage: "Create a key",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "key",
+						Value: "",
+						Usage: "Provide a key",
+					},
+				},
 				Action: func(c *cli.Context) {
 					Handle(c, KeyCreate)
 				},
@@ -82,36 +114,132 @@ func Key() cli.Command {
 func KeyList(c *cli.Context, client solder.API) error {
 	records, err := client.KeyList()
 
-	if err != nil || len(records) == 0 {
+	if err != nil {
 		return err
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 8, 0, '\t', 0)
-
-	for _, record := range records {
-		fmt.Fprintf(w, "%s\t%s\t%s\n", record.ID, record.CreatedAt, record.UpdatedAt)
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
 	}
 
-	w.Flush()
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // KeyShow provides the sub-command to show key details.
 func KeyShow(c *cli.Context, client solder.API) error {
-	return nil
-}
+	record, err := client.KeyGet(
+		GetIdentifierParam(c),
+	)
 
-// KeyUpdate provides the sub-command to update a key.
-func KeyUpdate(c *cli.Context, client solder.API) error {
+	if err != nil {
+		return err
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"Key", "Value"})
+
+	table.AppendBulk(
+		[][]string{
+			[]string{"ID", strconv.FormatInt(record.ID, 10)},
+			[]string{"Slug", record.Slug},
+			[]string{"Name", record.Name},
+			[]string{"Key", record.Value},
+			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
+			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+		},
+	)
+
+	table.Render()
 	return nil
 }
 
 // KeyDelete provides the sub-command to delete a key.
 func KeyDelete(c *cli.Context, client solder.API) error {
+	err := client.KeyDelete(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully delete\n")
+	return nil
+}
+
+// KeyUpdate provides the sub-command to update a key.
+func KeyUpdate(c *cli.Context, client solder.API) error {
+	record, err := client.KeyGet(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if val := c.String("name"); val != record.Name {
+		record.Name = val
+	}
+
+	if val := c.String("slug"); val != record.Slug {
+		record.Slug = val
+	}
+
+	if val := c.String("key"); val != record.Value {
+		record.Value = val
+	}
+
+	_, patch := client.KeyPatch(record)
+
+	if patch != nil {
+		return patch
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
 // KeyCreate provides the sub-command to create a key.
 func KeyCreate(c *cli.Context, client solder.API) error {
+	record := &solder.Key{}
+
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		return fmt.Errorf("You must provide a name.")
+	}
+
+	if val := c.String("slug"); val != "" {
+		record.Slug = val
+	}
+
+	if val := c.String("key"); val != "" {
+		record.Value = val
+	}
+
+	_, err := client.KeyPost(record)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully created\n")
 	return nil
 }

@@ -45,7 +45,7 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Build ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -64,17 +64,45 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to update",
+						Usage: "Build ID or slug to update",
 					},
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "min-java",
+						Value: "",
+						Usage: "Minimal Java version",
+					},
+					cli.StringFlag{
+						Name:  "min-memory",
+						Value: "",
+						Usage: "Minimal memory alloc",
+					},
+					cli.StringFlag{
+						Name:  "minecraft",
+						Value: "",
+						Usage: "Provide a Minecraft ID",
+					},
+					cli.StringFlag{
+						Name:  "forge",
+						Value: "",
+						Usage: "Provide a Forge ID",
+					},
+					cli.BoolFlag{
+						Name:  "published",
+						Usage: "Mark build published",
+					},
+					cli.BoolFlag{
+						Name:  "private",
+						Usage: "Mark build private",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -94,7 +122,7 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to delete",
+						Usage: "Build ID or slug to delete",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -113,12 +141,40 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "min-java",
+						Value: "",
+						Usage: "Minimal Java version",
+					},
+					cli.StringFlag{
+						Name:  "min-memory",
+						Value: "",
+						Usage: "Minimal memory alloc",
+					},
+					cli.StringFlag{
+						Name:  "minecraft",
+						Value: "",
+						Usage: "Provide a Minecraft ID",
+					},
+					cli.StringFlag{
+						Name:  "forge",
+						Value: "",
+						Usage: "Provide a Forge ID",
+					},
+					cli.BoolFlag{
+						Name:  "published",
+						Usage: "Mark build published",
+					},
+					cli.BoolFlag{
+						Name:  "private",
+						Usage: "Mark build private",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -140,7 +196,7 @@ func BuildList(c *cli.Context, client solder.API) error {
 	}
 
 	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
@@ -182,6 +238,12 @@ func BuildShow(c *cli.Context, client solder.API) error {
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
 			[]string{"Slug", record.Slug},
 			[]string{"Name", record.Name},
+			[]string{"Minecraft", record.Minecraft},
+			[]string{"Forge", record.Forge},
+			[]string{"Java", record.MinJava},
+			[]string{"Memory", record.MinMemory},
+			[]string{"Published", strconv.FormatBool(record.Published)},
+			[]string{"Private", strconv.FormatBool(record.Private)},
 			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
 			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
@@ -217,12 +279,36 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("name"); val != record.Name {
+		record.Name = val
+	}
+
+	if val := c.String("slug"); val != record.Slug {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
+	if val := c.String("minecraft"); val != record.MinecraftID {
+		record.MinecraftID = val
+	}
+
+	if val := c.String("forge"); val != record.ForgeID {
+		record.ForgeID = val
+	}
+
+	if val := c.String("min-java"); val != record.MinJava {
+		record.MinJava = val
+	}
+
+	if val := c.String("min-memory"); val != record.MinMemory {
+		record.MinMemory = val
+	}
+
+	if val := c.String("published"); val != record.Published {
+		record.Published = val
+	}
+
+	if val := c.String("private"); val != record.Private {
+		record.Private = val
 	}
 
 	_, patch := client.BuildPatch(GetPackParam(c), record)
@@ -239,15 +325,38 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 func BuildCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Build{}
 
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		return fmt.Errorf("You must provide a name.")
+	}
+
 	if val := c.String("slug"); val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
-	} else {
-		fmt.Println("Error: You must provide a name.")
-		os.Exit(1)
+	if val := c.String("minecraft"); val != "" {
+		record.MinecraftID = val
+	}
+
+	if val := c.String("forge"); val != "" {
+		record.ForgeID = val
+	}
+
+	if val := c.String("min-java"); val != "" {
+		record.MinJava = val
+	}
+
+	if val := c.String("min-memory"); val != "" {
+		record.MinMemory = val
+	}
+
+	if val := c.String("published"); val != false {
+		record.Published = val
+	}
+
+	if val := c.String("private"); val != false {
+		record.Private = val
 	}
 
 	_, err := client.BuildPost(GetPackParam(c), record)

@@ -69,12 +69,22 @@ func Version() cli.Command {
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "file-url",
+						Value: "",
+						Usage: "Provide a file URL",
+					},
+					cli.StringFlag{
+						Name:  "file-path",
+						Value: "",
+						Usage: "Provide a file path",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -113,12 +123,22 @@ func Version() cli.Command {
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "file-url",
+						Value: "",
+						Usage: "Provide a file URL",
+					},
+					cli.StringFlag{
+						Name:  "file-path",
+						Value: "",
+						Usage: "Provide a file path",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -140,7 +160,7 @@ func VersionList(c *cli.Context, client solder.API) error {
 	}
 
 	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
@@ -182,6 +202,7 @@ func VersionShow(c *cli.Context, client solder.API) error {
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
 			[]string{"Slug", record.Slug},
 			[]string{"Name", record.Name},
+			[]string{"File", record.File},
 			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
 			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
@@ -217,12 +238,20 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("name"); val != record.Name {
+		record.Name = val
+	}
+
+	if val := c.String("slug"); val != record.Slug {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
+	if val := c.String("file-url"); val != record.FileURL {
+		record.FileURL = val
+	}
+
+	if val := c.String("file-path"); val != record.FilePath {
+		record.FilePath = val
 	}
 
 	_, patch := client.VersionPatch(GetModParam(c), record)
@@ -239,15 +268,23 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 func VersionCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Version{}
 
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		return fmt.Errorf("You must provide a name.")
+		os.Exit(1)
+	}
+
 	if val := c.String("slug"); val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
-	} else {
-		fmt.Println("Error: You must provide a name.")
-		os.Exit(1)
+	if val := c.String("file-url"); val != "" {
+		record.FileURL = val
+	}
+
+	if val := c.String("file-path"); val != "" {
+		record.FilePath = val
 	}
 
 	_, err := client.VersionPost(GetModParam(c), record)

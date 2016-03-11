@@ -33,7 +33,7 @@ func Mod() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to show",
+						Usage: "Mod ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -47,17 +47,37 @@ func Mod() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to update",
+						Usage: "Mod ID or slug to update",
 					},
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "description",
+						Value: "",
+						Usage: "Provide a description",
+					},
+					cli.StringFlag{
+						Name:  "author",
+						Value: "",
+						Usage: "Provide an author",
+					},
+					cli.StringFlag{
+						Name:  "website-link",
+						Value: "",
+						Usage: "Provide a website link",
+					},
+					cli.StringFlag{
+						Name:  "donate-link",
+						Value: "",
+						Usage: "Provide a donate link",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -72,7 +92,7 @@ func Mod() cli.Command {
 					cli.StringFlag{
 						Name:  "id",
 						Value: "",
-						Usage: "Version ID or slug to delete",
+						Usage: "Mod ID or slug to delete",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -86,12 +106,32 @@ func Mod() cli.Command {
 					cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Define an optional slug",
+						Usage: "Provide a slug",
 					},
 					cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Define a required name",
+						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "description",
+						Value: "",
+						Usage: "Provide a description",
+					},
+					cli.StringFlag{
+						Name:  "author",
+						Value: "",
+						Usage: "Provide an author",
+					},
+					cli.StringFlag{
+						Name:  "website-link",
+						Value: "",
+						Usage: "Provide a website link",
+					},
+					cli.StringFlag{
+						Name:  "donate-link",
+						Value: "",
+						Usage: "Provide a donate link",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -111,7 +151,7 @@ func ModList(c *cli.Context, client solder.API) error {
 	}
 
 	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
@@ -152,6 +192,10 @@ func ModShow(c *cli.Context, client solder.API) error {
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
 			[]string{"Slug", record.Slug},
 			[]string{"Name", record.Name},
+			[]string{"Description", record.Description},
+			[]string{"Author", record.Author},
+			[]string{"Website", record.Website},
+			[]string{"Donate", record.Donate},
 			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
 			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
@@ -185,12 +229,28 @@ func ModUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("name"); val != record.Name {
+		record.Name = val
+	}
+
+	if val := c.String("slug"); val != record.Slug {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
+	if val := c.String("description"); val != record.Description {
+		record.Description = val
+	}
+
+	if val := c.String("author"); val != record.Author {
+		record.Author = val
+	}
+
+	if val := c.String("website"); val != record.Website {
+		record.Website = val
+	}
+
+	if val := c.String("donate"); val != record.Donate {
+		record.Donate = val
 	}
 
 	_, patch := client.ModPatch(record)
@@ -207,15 +267,30 @@ func ModUpdate(c *cli.Context, client solder.API) error {
 func ModCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Mod{}
 
+	if val := c.String("name"); val != "" {
+		record.Name = val
+	} else {
+		return fmt.Errorf("You must provide a name.")
+	}
+
 	if val := c.String("slug"); val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("name"); val != "" {
-		record.Name = val
-	} else {
-		fmt.Println("Error: You must provide a name.")
-		os.Exit(1)
+	if val := c.String("description"); val != "" {
+		record.Description = val
+	}
+
+	if val := c.String("author"); val != "" {
+		record.Author = val
+	}
+
+	if val := c.String("website"); val != "" {
+		record.Website = val
+	}
+
+	if val := c.String("donate"); val != "" {
+		record.Donate = val
 	}
 
 	_, err := client.ModPost(record)

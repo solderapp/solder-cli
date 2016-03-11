@@ -12,11 +12,19 @@ type Message struct {
 
 // Build represents a build API response.
 type Build struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID          int64     `json:"id"`
+	Minecraft   string    `json:"minecraft"`
+	MinecraftID int64     `json:"minecraft_id"`
+	Forge       string    `json:"forge"`
+	ForgeID     int64     `json:"forge_id"`
+	Slug        string    `json:"slug"`
+	Name        string    `json:"name"`
+	MinJava     string    `json:"min_java"`
+	MinMemory   string    `json:"min_memory"`
+	Published   bool      `json:"published"`
+	Private     bool      `json:"private"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // Client represents a client API response.

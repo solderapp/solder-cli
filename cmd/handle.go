@@ -17,13 +17,13 @@ func Handle(c *cli.Context, fn HandleFunc) {
 	server := c.GlobalString("server")
 
 	if server == "" {
-		fmt.Println("Error: You must provide the server address.")
+		fmt.Fprintf(os.Stderr, "Error: You must provide the server address.\n")
 		os.Exit(1)
 	}
 
 	if token == "" {
-		fmt.Println("Error: You must provide your access token.")
-		os.Exit(1)
+		fmt.Fprintf(os.Stderr, "Error: You must provide your access token.\n")
+		os.Exit(2)
 	}
 
 	client := solder.NewClientToken(
@@ -32,7 +32,7 @@ func Handle(c *cli.Context, fn HandleFunc) {
 	)
 
 	if err := fn(c, client); err != nil {
-		println(err.Error())
-		os.Exit(1)
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
+		os.Exit(3)
 	}
 }

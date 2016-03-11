@@ -27,7 +27,7 @@ func Forge() cli.Command {
 			{
 				Name:    "refresh",
 				Aliases: []string{"ref"},
-				Usage:   "Refresh the Forge versions",
+				Usage:   "Refresh Forge versions",
 				Action: func(c *cli.Context) {
 					Handle(c, ForgeRefresh)
 				},
@@ -45,18 +45,19 @@ func ForgeList(c *cli.Context, client solder.API) error {
 	}
 
 	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Error: Empty result\n")
+		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Version", "Minecraft"})
+	table.SetHeader([]string{"ID", "Slug", "Version", "Minecraft"})
 
 	for _, record := range records {
 		table.Append(
 			[]string{
 				strconv.FormatInt(record.ID, 10),
+				record.Slug,
 				record.Version,
 				record.Minecraft,
 			},
@@ -75,6 +76,6 @@ func ForgeRefresh(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	fmt.Println("Successfully refreshed")
+	fmt.Fprintf(os.Stderr, "Successfully refreshed\n")
 	return nil
 }
