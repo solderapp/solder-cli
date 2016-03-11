@@ -235,13 +235,13 @@ func VersionShow(c *cli.Context, client solder.API) error {
 
 	table.AppendBulk(
 		[][]string{
-			[]string{"ID", strconv.FormatInt(record.ID, 10)},
-			[]string{"Mod", record.Mod},
-			[]string{"Slug", record.Slug},
-			[]string{"Name", record.Name},
-			[]string{"File", record.File},
-			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
-			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+			{"ID", strconv.FormatInt(record.ID, 10)},
+			{"Mod", record.Mod},
+			{"Slug", record.Slug},
+			{"Name", record.Name},
+			{"File", record.File},
+			{"Created", record.CreatedAt.Format(time.UnixDate)},
+			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
 	)
 

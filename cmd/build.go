@@ -271,18 +271,18 @@ func BuildShow(c *cli.Context, client solder.API) error {
 
 	table.AppendBulk(
 		[][]string{
-			[]string{"ID", strconv.FormatInt(record.ID, 10)},
-			[]string{"Slug", record.Slug},
-			[]string{"Name", record.Name},
-			[]string{"Pack", record.Pack},
-			[]string{"Minecraft", record.Minecraft},
-			[]string{"Forge", record.Forge},
-			[]string{"Java", record.MinJava},
-			[]string{"Memory", record.MinMemory},
-			[]string{"Published", strconv.FormatBool(record.Published)},
-			[]string{"Private", strconv.FormatBool(record.Private)},
-			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
-			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+			{"ID", strconv.FormatInt(record.ID, 10)},
+			{"Slug", record.Slug},
+			{"Name", record.Name},
+			{"Pack", record.Pack},
+			{"Minecraft", record.Minecraft},
+			{"Forge", record.Forge},
+			{"Java", record.MinJava},
+			{"Memory", record.MinMemory},
+			{"Published", strconv.FormatBool(record.Published)},
+			{"Private", strconv.FormatBool(record.Private)},
+			{"Created", record.CreatedAt.Format(time.UnixDate)},
+			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
 	)
 

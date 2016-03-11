@@ -189,15 +189,15 @@ func ModShow(c *cli.Context, client solder.API) error {
 
 	table.AppendBulk(
 		[][]string{
-			[]string{"ID", strconv.FormatInt(record.ID, 10)},
-			[]string{"Slug", record.Slug},
-			[]string{"Name", record.Name},
-			[]string{"Description", record.Description},
-			[]string{"Author", record.Author},
-			[]string{"Website", record.Website},
-			[]string{"Donate", record.Donate},
-			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
-			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+			{"ID", strconv.FormatInt(record.ID, 10)},
+			{"Slug", record.Slug},
+			{"Name", record.Name},
+			{"Description", record.Description},
+			{"Author", record.Author},
+			{"Website", record.Website},
+			{"Donate", record.Donate},
+			{"Created", record.CreatedAt.Format(time.UnixDate)},
+			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
 	)
 

@@ -147,12 +147,12 @@ func UserShow(c *cli.Context, client solder.API) error {
 
 	table.AppendBulk(
 		[][]string{
-			[]string{"ID", strconv.FormatInt(record.ID, 10)},
-			[]string{"Slug", record.Slug},
-			[]string{"Username", record.Username},
-			[]string{"Email", record.Email},
-			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
-			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+			{"ID", strconv.FormatInt(record.ID, 10)},
+			{"Slug", record.Slug},
+			{"Username", record.Username},
+			{"Email", record.Email},
+			{"Created", record.CreatedAt.Format(time.UnixDate)},
+			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
 	)
 

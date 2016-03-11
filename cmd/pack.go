@@ -307,19 +307,19 @@ func PackShow(c *cli.Context, client solder.API) error {
 
 	table.AppendBulk(
 		[][]string{
-			[]string{"ID", strconv.FormatInt(record.ID, 10)},
-			[]string{"Slug", record.Slug},
-			[]string{"Name", record.Name},
-			[]string{"Website", record.Website},
-			[]string{"Recommended", record.Recommended},
-			[]string{"Latest", record.Latest},
-			[]string{"Icon", record.Icon},
-			[]string{"Logo", record.Logo},
-			[]string{"Background", record.Background},
-			[]string{"Hidden", strconv.FormatBool(record.Hidden)},
-			[]string{"Private", strconv.FormatBool(record.Private)},
-			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
-			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+			{"ID", strconv.FormatInt(record.ID, 10)},
+			{"Slug", record.Slug},
+			{"Name", record.Name},
+			{"Website", record.Website},
+			{"Recommended", record.Recommended},
+			{"Latest", record.Latest},
+			{"Icon", record.Icon},
+			{"Logo", record.Logo},
+			{"Background", record.Background},
+			{"Hidden", strconv.FormatBool(record.Hidden)},
+			{"Private", strconv.FormatBool(record.Private)},
+			{"Created", record.CreatedAt.Format(time.UnixDate)},
+			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
 	)
 
