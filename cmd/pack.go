@@ -204,6 +204,58 @@ func Pack() cli.Command {
 					Handle(c, PackCreate)
 				},
 			},
+			{
+				Name:  "client-list",
+				Usage: "List assigned clients",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Pack ID or slug to list clients",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackClientList)
+				},
+			},
+			{
+				Name:  "client-append",
+				Usage: "Append a client to pack",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Pack ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "client",
+						Value: "",
+						Usage: "Client ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackClientAppend)
+				},
+			},
+			{
+				Name:  "client-remove",
+				Usage: "Remove a client from pack",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Pack ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "client",
+						Value: "",
+						Usage: "Client ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackClientRemove)
+				},
+			},
 		},
 	}
 }
@@ -426,5 +478,20 @@ func PackCreate(c *cli.Context, client solder.API) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully created\n")
+	return nil
+}
+
+// PackClientList provides the sub-command to list packs of the pack.
+func PackClientList(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// PackClientAppend provides the sub-command to append a client to the pack.
+func PackClientAppend(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// PackClientRemove provides the sub-command to remove a client from the pack.
+func PackClientRemove(c *cli.Context, client solder.API) error {
 	return nil
 }

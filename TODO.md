@@ -8,6 +8,7 @@
 ## Commands
 
 * [ ] Integrate permission management
+* [ ] Append packs to permission system
 
 
 ## Types

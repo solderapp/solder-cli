@@ -10,7 +10,7 @@ import (
 	"github.com/solderapp/solder-cli/solder"
 )
 
-// Minecraft provides the sub-command for the minecraft API.
+// Minecraft provides the sub-command for the Minecraft API.
 func Minecraft() cli.Command {
 	return cli.Command{
 		Name:  "minecraft",
@@ -30,6 +30,58 @@ func Minecraft() cli.Command {
 				Usage:   "Refresh Minecraft versions",
 				Action: func(c *cli.Context) {
 					Handle(c, MinecraftRefresh)
+				},
+			},
+			{
+				Name:  "build-list",
+				Usage: "List assigned builds",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Minecraft ID or slug to list builds",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, MinecraftBuildList)
+				},
+			},
+			{
+				Name:  "build-append",
+				Usage: "Append a build to Minecraft",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Minecraft ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "build",
+						Value: "",
+						Usage: "Build ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, MinecraftBuildAppend)
+				},
+			},
+			{
+				Name:  "build-remove",
+				Usage: "Remove a build from Minecraft",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Minecraft ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "build",
+						Value: "",
+						Usage: "Build ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, MinecraftBuildRemove)
 				},
 			},
 		},
@@ -77,5 +129,20 @@ func MinecraftRefresh(c *cli.Context, client solder.API) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully refreshed\n")
+	return nil
+}
+
+// MinecraftBuildList provides the sub-command to list builds of the Minecraft.
+func MinecraftBuildList(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
+func MinecraftBuildAppend(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
+func MinecraftBuildRemove(c *cli.Context, client solder.API) error {
 	return nil
 }

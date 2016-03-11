@@ -10,7 +10,7 @@ import (
 	"github.com/solderapp/solder-cli/solder"
 )
 
-// Forge provides the sub-command for the forge API.
+// Forge provides the sub-command for the Forge API.
 func Forge() cli.Command {
 	return cli.Command{
 		Name:  "forge",
@@ -30,6 +30,58 @@ func Forge() cli.Command {
 				Usage:   "Refresh Forge versions",
 				Action: func(c *cli.Context) {
 					Handle(c, ForgeRefresh)
+				},
+			},
+			{
+				Name:  "build-list",
+				Usage: "List assigned builds",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Forge ID or slug to list builds",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ForgeBuildList)
+				},
+			},
+			{
+				Name:  "build-append",
+				Usage: "Append a build to Forge",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Forge ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "build",
+						Value: "",
+						Usage: "Build ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ForgeBuildAppend)
+				},
+			},
+			{
+				Name:  "build-remove",
+				Usage: "Remove a build from Forge",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Forge ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "build",
+						Value: "",
+						Usage: "Build ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ForgeBuildRemove)
 				},
 			},
 		},
@@ -77,5 +129,20 @@ func ForgeRefresh(c *cli.Context, client solder.API) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully refreshed\n")
+	return nil
+}
+
+// ForgeBuildList provides the sub-command to list builds of the Forge.
+func ForgeBuildList(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// ForgeBuildAppend provides the sub-command to append a build to the Forge.
+func ForgeBuildAppend(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// ForgeBuildRemove provides the sub-command to remove a build from the Forge.
+func ForgeBuildRemove(c *cli.Context, client solder.API) error {
 	return nil
 }

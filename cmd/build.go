@@ -181,6 +181,73 @@ func Build() cli.Command {
 					Handle(c, BuildCreate)
 				},
 			},
+			{
+				Name:  "version-list",
+				Usage: "List assigned versions",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Build ID or slug to list versions",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, BuildVersionList)
+				},
+			},
+			{
+				Name:  "version-append",
+				Usage: "Append a version to build",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Build ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "version",
+						Value: "",
+						Usage: "Version ID or slug to append to",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, BuildVersionAppend)
+				},
+			},
+			{
+				Name:  "version-remove",
+				Usage: "Remove a version from build",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id",
+						Value: "",
+						Usage: "Build ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "version",
+						Value: "",
+						Usage: "Version ID or slug to append to",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, BuildVersionRemove)
+				},
+			},
 		},
 	}
 }
@@ -366,5 +433,20 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully created\n")
+	return nil
+}
+
+// BuildVersionList provides the sub-command to list versions of the build.
+func BuildVersionList(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// BuildVersionAppend provides the sub-command to append a version to the build.
+func BuildVersionAppend(c *cli.Context, client solder.API) error {
+	return nil
+}
+
+// BuildVersionRemove provides the sub-command to remove a version from the build.
+func BuildVersionRemove(c *cli.Context, client solder.API) error {
 	return nil
 }
