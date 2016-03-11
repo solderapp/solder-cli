@@ -363,43 +363,49 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 		record.Website = val
 	}
 
-	if val := c.String("recommended"); val != record.Recommended {
-		record.Recommended = val
+	if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
+		record.RecommendedID = val
 	}
 
-	if val := c.String("latest"); val != record.Latest {
-		record.Latest = val
+	if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
+		record.LatestID = val
 	}
 
-	if val := c.String("icon-url"); val != record.IconURL {
-		record.IconURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("icon-url"); val != record.IconURL {
+	// 	record.IconURL = val
+	// }
 
-	if val := c.String("icon-path"); val != record.IconPath {
-		record.IconPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("icon-path"); val != record.IconPath {
+	// 	record.IconPath = val
+	// }
 
-	if val := c.String("logo-url"); val != record.LogoURL {
-		record.LogoURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("logo-url"); val != record.LogoURL {
+	// 	record.LogoURL = val
+	// }
 
-	if val := c.String("logo-path"); val != record.LogoPath {
-		record.LogoPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("logo-path"); val != record.LogoPath {
+	// 	record.LogoPath = val
+	// }
 
-	if val := c.String("bg-url"); val != record.BackgrounURL {
-		record.BackgroundURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("bg-url"); val != record.BackgrounURL {
+	// 	record.BackgroundURL = val
+	// }
 
-	if val := c.String("bg-path"); val != record.BackgroundPath {
-		record.BackgroundPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("bg-path"); val != record.BackgroundPath {
+	// 	record.BackgroundPath = val
+	// }
 
-	if val := c.String("hidden"); val != record.Hidden {
+	if val := c.Bool("hidden"); val != record.Hidden {
 		record.Hidden = val
 	}
 
-	if val := c.String("private"); val != record.Private {
+	if val := c.Bool("private"); val != record.Private {
 		record.Private = val
 	}
 
@@ -431,43 +437,49 @@ func PackCreate(c *cli.Context, client solder.API) error {
 		record.Website = val
 	}
 
-	if val := c.String("recommended"); val != "" {
-		record.Recommended = val
+	if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != 0 {
+		record.RecommendedID = val
 	}
 
-	if val := c.String("latest"); val != "" {
-		record.Latest = val
+	if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != 0 {
+		record.LatestID = val
 	}
 
-	if val := c.String("icon-url"); val != "" {
-		record.IconURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("icon-url"); val != "" {
+	// 	record.IconURL = val
+	// }
 
-	if val := c.String("icon-path"); val != "" {
-		record.IconPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("icon-path"); val != "" {
+	// 	record.IconPath = val
+	// }
 
-	if val := c.String("logo-url"); val != "" {
-		record.LogoURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("logo-url"); val != "" {
+	// 	record.LogoURL = val
+	// }
 
-	if val := c.String("logo-path"); val != "" {
-		record.LogoPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("logo-path"); val != "" {
+	// 	record.LogoPath = val
+	// }
 
-	if val := c.String("bg-url"); val != "" {
-		record.BackgroundURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("bg-url"); val != "" {
+	// 	record.BackgroundURL = val
+	// }
 
-	if val := c.String("bg-path"); val != "" {
-		record.BackgroundPath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("bg-path"); val != "" {
+	// 	record.BackgroundPath = val
+	// }
 
-	if val := c.String("hidden"); val != false {
+	if val := c.Bool("hidden"); val != false {
 		record.Hidden = val
 	}
 
-	if val := c.String("private"); val != false {
+	if val := c.Bool("private"); val != false {
 		record.Private = val
 	}
 

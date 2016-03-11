@@ -313,13 +313,15 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 		record.Slug = val
 	}
 
-	if val := c.String("file-url"); val != record.FileURL {
-		record.FileURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("file-url"); val != record.FileURL {
+	// 	record.FileURL = val
+	// }
 
-	if val := c.String("file-path"); val != record.FilePath {
-		record.FilePath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("file-path"); val != record.FilePath {
+	// 	record.FilePath = val
+	// }
 
 	_, patch := client.VersionPatch(GetModParam(c), record)
 
@@ -346,13 +348,15 @@ func VersionCreate(c *cli.Context, client solder.API) error {
 		record.Slug = val
 	}
 
-	if val := c.String("file-url"); val != "" {
-		record.FileURL = val
-	}
+	// TODO(must): Implement URL import
+	// if val := c.String("file-url"); val != "" {
+	// 	record.FileURL = val
+	// }
 
-	if val := c.String("file-path"); val != "" {
-		record.FilePath = val
-	}
+	// TODO(must): Implement path import
+	// if val := c.String("file-path"); val != "" {
+	// 	record.FilePath = val
+	// }
 
 	_, err := client.VersionPost(GetModParam(c), record)
 

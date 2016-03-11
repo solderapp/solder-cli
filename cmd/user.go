@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/codegangsta/cli"
 	"github.com/olekukonko/tablewriter"
@@ -147,8 +149,8 @@ func UserShow(c *cli.Context, client solder.API) error {
 		[][]string{
 			[]string{"ID", strconv.FormatInt(record.ID, 10)},
 			[]string{"Slug", record.Slug},
-			[]string{"Username", record.Name},
-			[]string{"Email", record.Website},
+			[]string{"Username", record.Username},
+			[]string{"Email", record.Email},
 			[]string{"Created", record.CreatedAt.Format(time.UnixDate)},
 			[]string{"Updated", record.UpdatedAt.Format(time.UnixDate)},
 		},
@@ -195,7 +197,7 @@ func UserUpdate(c *cli.Context, client solder.API) error {
 	}
 
 	if val := c.String("password"); val != "" {
-		record.Recommended = val
+		record.Password = val
 	}
 
 	_, patch := client.UserPatch(record)

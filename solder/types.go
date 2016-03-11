@@ -30,6 +30,9 @@ type Build struct {
 // Client represents a client API response.
 type Client struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	Value     string    `json:"uuid"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -47,6 +50,9 @@ type Forge struct {
 // Key represents a key API response.
 type Key struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	Value     string    `json:"key"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -63,25 +69,43 @@ type Minecraft struct {
 
 // Mod represents a mod API response.
 type Mod struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID          int64     `json:"id"`
+	Slug        string    `json:"slug"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Author      string    `json:"author"`
+	Website     string    `json:"website"`
+	Donate      string    `json:"donate"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // Pack represents a pack API response.
 type Pack struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID            int64     `json:"id"`
+	Slug          string    `json:"slug"`
+	Name          string    `json:"name"`
+	Icon          string    `json:"icon"`
+	Logo          string    `json:"logo"`
+	Background    string    `json:"background"`
+	RecommendedID int64     `json:"recommended_id"`
+	Recommended   string    `json:"recommended"`
+	LatestID      int64     `json:"latest_id"`
+	Latest        string    `json:"latest"`
+	Website       string    `json:"website"`
+	Hidden        bool      `json:"hidden"`
+	Private       bool      `json:"private"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 // User represents a user API response.
 type User struct {
 	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -91,12 +115,18 @@ type Version struct {
 	ID        int64     `json:"id"`
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
+	File      string    `json:"file"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // Profile represents a profile API response.
 type Profile struct {
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

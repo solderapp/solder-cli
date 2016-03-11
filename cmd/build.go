@@ -354,11 +354,11 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		record.Slug = val
 	}
 
-	if val := c.String("minecraft"); val != record.MinecraftID {
+	if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
 		record.MinecraftID = val
 	}
 
-	if val := c.String("forge"); val != record.ForgeID {
+	if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
 		record.ForgeID = val
 	}
 
@@ -370,11 +370,11 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		record.MinMemory = val
 	}
 
-	if val := c.String("published"); val != record.Published {
+	if val := c.Bool("published"); val != record.Published {
 		record.Published = val
 	}
 
-	if val := c.String("private"); val != record.Private {
+	if val := c.Bool("private"); val != record.Private {
 		record.Private = val
 	}
 
@@ -402,11 +402,11 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 		record.Slug = val
 	}
 
-	if val := c.String("minecraft"); val != "" {
+	if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
 		record.MinecraftID = val
 	}
 
-	if val := c.String("forge"); val != "" {
+	if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
 		record.ForgeID = val
 	}
 
@@ -418,11 +418,11 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 		record.MinMemory = val
 	}
 
-	if val := c.String("published"); val != false {
+	if val := c.Bool("published"); val != false {
 		record.Published = val
 	}
 
-	if val := c.String("private"); val != false {
+	if val := c.Bool("private"); val != false {
 		record.Private = val
 	}
 
