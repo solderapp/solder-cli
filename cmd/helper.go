@@ -31,12 +31,48 @@ func GetModParam(c *cli.Context) string {
 	return val
 }
 
+// GetVersionParam checks and returns the version id/slug parameter.
+func GetVersionParam(c *cli.Context) string {
+	val := c.String("version")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a version ID or slug.")
+		os.Exit(1)
+	}
+
+	return val
+}
+
 // GetPackParam checks and returns the pack id/slug parameter.
 func GetPackParam(c *cli.Context) string {
 	val := c.String("pack")
 
 	if val == "" {
 		fmt.Println("Error: You must provide a pack ID or slug.")
+		os.Exit(1)
+	}
+
+	return val
+}
+
+// GetBuildParam checks and returns the build id/slug parameter.
+func GetBuildParam(c *cli.Context) string {
+	val := c.String("build")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a build ID or slug.")
+		os.Exit(1)
+	}
+
+	return val
+}
+
+// GetClientParam checks and returns the client id/slug parameter.
+func GetClientParam(c *cli.Context) string {
+	val := c.String("client")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a client ID or slug.")
 		os.Exit(1)
 	}
 

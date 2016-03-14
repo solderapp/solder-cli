@@ -134,15 +134,63 @@ func MinecraftRefresh(c *cli.Context, client solder.API) error {
 
 // MinecraftBuildList provides the sub-command to list builds of the Minecraft.
 func MinecraftBuildList(c *cli.Context, client solder.API) error {
+	records, err := client.MinecraftBuildList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
 func MinecraftBuildAppend(c *cli.Context, client solder.API) error {
+	err := client.MinecraftBuildAppend(
+		GetIdentifierParam(c),
+		GetBuildParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to Minecraft\n")
 	return nil
 }
 
 // MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
 func MinecraftBuildRemove(c *cli.Context, client solder.API) error {
+	err := client.MinecraftBuildDelete(
+		GetIdentifierParam(c),
+		GetBuildParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from Minecraft\n")
 	return nil
 }

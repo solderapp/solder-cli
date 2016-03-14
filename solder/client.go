@@ -161,7 +161,7 @@ func (c *defaultClient) ForgeBuildAppend(id, append string) error {
 	return err
 }
 
-// ForgeBuildAppend remove a Forge version from a build.
+// ForgeBuildDelete remove a Forge version from a build.
 func (c *defaultClient) ForgeBuildDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathForgeBuild, c.base, id, delete)
 	err := c.delete(uri)
@@ -225,7 +225,7 @@ func (c *defaultClient) MinecraftBuildAppend(id, append string) error {
 	return err
 }
 
-// MinecraftBuildAppend remove a Minecraft version from a build.
+// MinecraftBuildDelete remove a Minecraft version from a build.
 func (c *defaultClient) MinecraftBuildDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathMinecraftBuild, c.base, id, delete)
 	err := c.delete(uri)

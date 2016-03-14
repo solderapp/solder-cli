@@ -134,15 +134,63 @@ func ForgeRefresh(c *cli.Context, client solder.API) error {
 
 // ForgeBuildList provides the sub-command to list builds of the Forge.
 func ForgeBuildList(c *cli.Context, client solder.API) error {
+	records, err := client.ForgeBuildList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // ForgeBuildAppend provides the sub-command to append a build to the Forge.
 func ForgeBuildAppend(c *cli.Context, client solder.API) error {
+	err := client.ForgeBuildAppend(
+		GetIdentifierParam(c),
+		GetBuildParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to Forge\n")
 	return nil
 }
 
 // ForgeBuildRemove provides the sub-command to remove a build from the Forge.
 func ForgeBuildRemove(c *cli.Context, client solder.API) error {
+	err := client.ForgeBuildDelete(
+		GetIdentifierParam(c),
+		GetBuildParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from Forge\n")
 	return nil
 }

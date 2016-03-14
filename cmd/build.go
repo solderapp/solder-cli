@@ -495,15 +495,63 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 
 // BuildVersionList provides the sub-command to list versions of the build.
 func BuildVersionList(c *cli.Context, client solder.API) error {
+	records, err := client.BuildVersionList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // BuildVersionAppend provides the sub-command to append a version to the build.
 func BuildVersionAppend(c *cli.Context, client solder.API) error {
+	err := client.BuildVersionAppend(
+		GetIdentifierParam(c),
+		GetVersionParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to build\n")
 	return nil
 }
 
 // BuildVersionRemove provides the sub-command to remove a version from the build.
 func BuildVersionRemove(c *cli.Context, client solder.API) error {
+	err := client.BuildVersionDelete(
+		GetIdentifierParam(c),
+		GetVersionParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from build\n")
 	return nil
 }

@@ -300,15 +300,63 @@ func ClientCreate(c *cli.Context, client solder.API) error {
 
 // ClientPackList provides the sub-command to list packs of the client.
 func ClientPackList(c *cli.Context, client solder.API) error {
+	records, err := client.ClientPackList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Name"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Name,
+			},
+		)
+	}
+
+	table.Render()
 	return nil
 }
 
 // ClientPackAppend provides the sub-command to append a pack to the client.
 func ClientPackAppend(c *cli.Context, client solder.API) error {
+	err := client.ClientPackAppend(
+		GetIdentifierParam(c),
+		GetPackParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to client\n")
 	return nil
 }
 
 // ClientPackRemove provides the sub-command to remove a pack from the client.
 func ClientPackRemove(c *cli.Context, client solder.API) error {
+	err := client.ClientPackDelete(
+		GetIdentifierParam(c),
+		GetPackParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from client\n")
 	return nil
 }
