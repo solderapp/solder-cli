@@ -11,6 +11,9 @@ type API interface {
 	// ForgeList returns a list of all Forge versions.
 	ForgeList() ([]*Forge, error)
 
+	// ForgeGet returns a Forge.
+	ForgeGet(string) (*Forge, error)
+
 	// ForgeRefresh refreshs the available Forge versions.
 	ForgeRefresh() error
 
@@ -25,6 +28,9 @@ type API interface {
 
 	// MinecraftList returns a list of all Minecraft versions.
 	MinecraftList() ([]*Minecraft, error)
+
+	// MinecraftGet returns a Minecraft.
+	MinecraftGet(string) (*Minecraft, error)
 
 	// MinecraftRefresh refreshs the available Minecraft versions.
 	MinecraftRefresh() error

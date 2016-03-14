@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"golang.org/x/oauth2"
 )
@@ -114,7 +115,27 @@ func (c *defaultClient) ForgeList() ([]*Forge, error) {
 	return out, err
 }
 
-// ForgeRefresh refreshs the available Minecraft versions.
+// ForgeGet returns a Forge.
+func (c *defaultClient) ForgeGet(id string) (*Forge, error) {
+	var out []*Forge
+
+	uri := fmt.Sprintf(pathForge, c.base)
+	err := c.get(uri, out)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, row := range out {
+		if row.Slug == id || strconv.FormatInt(row.ID, 10) == id {
+			return row, nil
+		}
+	}
+
+	return nil, fmt.Errorf("Failed to find matching Forge version")
+}
+
+// ForgeRefresh refreshs the available Forge versions.
 func (c *defaultClient) ForgeRefresh() error {
 	uri := fmt.Sprintf(pathForge, c.base)
 	err := c.patch(uri, nil, nil)
@@ -156,6 +177,26 @@ func (c *defaultClient) MinecraftList() ([]*Minecraft, error) {
 	err := c.get(uri, &out)
 
 	return out, err
+}
+
+// MinecraftGet returns a Minecraft.
+func (c *defaultClient) MinecraftGet(id string) (*Minecraft, error) {
+	var out []*Minecraft
+
+	uri := fmt.Sprintf(pathMinecraft, c.base)
+	err := c.get(uri, out)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, row := range out {
+		if row.Slug == id || strconv.FormatInt(row.ID, 10) == id {
+			return row, nil
+		}
+	}
+
+	return nil, fmt.Errorf("Failed to find matching Minecraft version")
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
