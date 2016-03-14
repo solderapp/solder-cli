@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -305,10 +306,28 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 func VersionCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Version{}
 
-	if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
-		record.ModID = val
-	} else {
+	if c.String("mod") == "" {
 		return fmt.Errorf("You must provide a mod.")
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("mod")); match {
+		if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
+			record.ModID = val
+		}
+	} else {
+		if c.String("mod") != "" {
+			related, err := client.BuildGet(
+				c.String("mod"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.ModID {
+				record.ModID = related.ID
+			}
+		}
 	}
 
 	if val := c.String("name"); val != "" {

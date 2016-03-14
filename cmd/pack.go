@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -67,12 +68,12 @@ func Pack() cli.Command {
 					cli.StringFlag{
 						Name:  "recommended",
 						Value: "",
-						Usage: "Recommended build ID",
+						Usage: "Recommended build ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "latest",
 						Value: "",
-						Usage: "Latest build ID",
+						Usage: "Latest build ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "icon-url",
@@ -154,12 +155,12 @@ func Pack() cli.Command {
 					cli.StringFlag{
 						Name:  "recommended",
 						Value: "",
-						Usage: "Recommended build ID",
+						Usage: "Recommended build ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "latest",
 						Value: "",
-						Usage: "Latest build ID",
+						Usage: "Latest build ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "icon-url",
@@ -351,6 +352,46 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
+		if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
+			record.RecommendedID = val
+		}
+	} else {
+		if c.String("recommended") != "" {
+			related, err := client.BuildGet(
+				c.String("recommended"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.RecommendedID {
+				record.RecommendedID = related.ID
+			}
+		}
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
+		if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
+			record.LatestID = val
+		}
+	} else {
+		if c.String("latest") != "" {
+			related, err := client.BuildGet(
+				c.String("latest"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.LatestID {
+				record.LatestID = related.ID
+			}
+		}
+	}
+
 	if val := c.String("name"); val != record.Name {
 		record.Name = val
 	}
@@ -361,14 +402,6 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 
 	if val := c.String("website"); val != record.Website {
 		record.Website = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
-		record.RecommendedID = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
-		record.LatestID = val
 	}
 
 	// TODO(must): Implement URL import
@@ -422,6 +455,44 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 // PackCreate provides the sub-command to create a pack.
 func PackCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Pack{}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
+		if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != 0 {
+			record.RecommendedID = val
+		}
+	} else {
+		related, err := client.BuildGet(
+			c.String("recommended"),
+		)
+
+		if err != nil {
+			return err
+		}
+
+		if related.ID != record.RecommendedID {
+			record.RecommendedID = related.ID
+		}
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
+		if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != 0 {
+			record.LatestID = val
+		}
+	} else {
+		if c.String("latest") != "" {
+			related, err := client.BuildGet(
+				c.String("latest"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.LatestID {
+				record.LatestID = related.ID
+			}
+		}
+	}
 
 	if val := c.String("name"); val != "" {
 		record.Name = val

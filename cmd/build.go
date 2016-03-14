@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -79,12 +80,12 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "minecraft",
 						Value: "",
-						Usage: "Provide a Minecraft ID",
+						Usage: "Provide a Minecraft ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "forge",
 						Value: "",
-						Usage: "Provide a Forge ID",
+						Usage: "Provide a Forge ID or slug",
 					},
 					cli.BoolFlag{
 						Name:  "published",
@@ -146,12 +147,12 @@ func Build() cli.Command {
 					cli.StringFlag{
 						Name:  "minecraft",
 						Value: "",
-						Usage: "Provide a Minecraft ID",
+						Usage: "Provide a Minecraft ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "forge",
 						Value: "",
-						Usage: "Provide a Forge ID",
+						Usage: "Provide a Forge ID or slug",
 					},
 					cli.BoolFlag{
 						Name:  "published",
@@ -314,20 +315,52 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+		if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
+			record.MinecraftID = val
+		}
+	} else {
+		if c.String("minecraft") != "" {
+			related, err := client.MinecraftGet(
+				c.String("minecraft"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.MinecraftID {
+				record.MinecraftID = related.ID
+			}
+		}
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+		if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
+			record.ForgeID = val
+		}
+	} else {
+		if c.String("forge") != "" {
+			related, err := client.ForgeGet(
+				c.String("forge"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.ForgeID {
+				record.ForgeID = related.ID
+			}
+		}
+	}
+
 	if val := c.String("name"); val != record.Name {
 		record.Name = val
 	}
 
 	if val := c.String("slug"); val != record.Slug {
 		record.Slug = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
-		record.MinecraftID = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
-		record.ForgeID = val
 	}
 
 	if val := c.String("min-java"); val != record.MinJava {
@@ -360,10 +393,68 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 func BuildCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Build{}
 
-	if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
-		record.PackID = val
-	} else {
+	if c.String("pack") == "" {
 		return fmt.Errorf("You must provide a pack.")
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("pack")); match {
+		if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
+			record.PackID = val
+		}
+	} else {
+		if c.String("pack") != "" {
+			related, err := client.PackGet(
+				c.String("pack"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.PackID {
+				record.PackID = related.ID
+			}
+		}
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+		if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
+			record.MinecraftID = val
+		}
+	} else {
+		if c.String("minecraft") != "" {
+			related, err := client.MinecraftGet(
+				c.String("minecraft"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.MinecraftID {
+				record.MinecraftID = related.ID
+			}
+		}
+	}
+
+	if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+		if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
+			record.ForgeID = val
+		}
+	} else {
+		if c.String("forge") != "" {
+			related, err := client.ForgeGet(
+				c.String("forge"),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			if related.ID != record.ForgeID {
+				record.ForgeID = related.ID
+			}
+		}
 	}
 
 	if val := c.String("name"); val != "" {
@@ -374,14 +465,6 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 
 	if val := c.String("slug"); val != "" {
 		record.Slug = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
-		record.MinecraftID = val
-	}
-
-	if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
-		record.ForgeID = val
 	}
 
 	if val := c.String("min-java"); val != "" {
