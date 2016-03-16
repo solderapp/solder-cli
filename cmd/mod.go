@@ -19,19 +19,21 @@ func Mod() cli.Command {
 		Usage:   "Mod related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all mods",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all mods",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, ModList)
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a mod",
+				Name:      "show",
+				Usage:     "Display a mod",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Mod ID or slug to show",
 					},
@@ -41,11 +43,12 @@ func Mod() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a mod",
+				Name:      "update",
+				Usage:     "Update a mod",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Mod ID or slug to update",
 					},
@@ -85,12 +88,13 @@ func Mod() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a mod",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a mod",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Mod ID or slug to delete",
 					},
@@ -100,8 +104,9 @@ func Mod() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a mod",
+				Name:      "create",
+				Usage:     "Create a mod",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "slug",
@@ -136,6 +141,61 @@ func Mod() cli.Command {
 				},
 				Action: func(c *cli.Context) {
 					Handle(c, ModCreate)
+				},
+			},
+			{
+				Name:      "user-list",
+				Usage:     "List assigned users",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to list users",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ModUserList)
+				},
+			},
+			{
+				Name:      "user-append",
+				Usage:     "Append a user to mod",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "user, u",
+						Value: "",
+						Usage: "User ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ModUserAppend)
+				},
+			},
+			{
+				Name:      "user-remove",
+				Usage:     "Remove a user from mod",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "user, u",
+						Value: "",
+						Usage: "User ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, ModUserRemove)
 				},
 			},
 		},
@@ -229,37 +289,52 @@ func ModUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("name"); val != record.Name {
+	changed := false
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
 		record.Slug = val
+		changed = true
 	}
 
-	if val := c.String("description"); val != record.Description {
+	if val := c.String("description"); c.IsSet("description") && val != record.Description {
 		record.Description = val
+		changed = true
 	}
 
-	if val := c.String("author"); val != record.Author {
+	if val := c.String("author"); c.IsSet("author") && val != record.Author {
 		record.Author = val
+		changed = true
 	}
 
-	if val := c.String("website"); val != record.Website {
+	if val := c.String("website"); c.IsSet("website") && val != record.Website {
 		record.Website = val
+		changed = true
 	}
 
-	if val := c.String("donate"); val != record.Donate {
+	if val := c.String("donate"); c.IsSet("donate") && val != record.Donate {
 		record.Donate = val
+		changed = true
 	}
 
-	_, patch := client.ModPatch(record)
+	if changed {
+		_, patch := client.ModPatch(
+			record,
+		)
 
-	if patch != nil {
-		return patch
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
@@ -267,38 +342,103 @@ func ModUpdate(c *cli.Context, client solder.API) error {
 func ModCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Mod{}
 
-	if val := c.String("name"); val != "" {
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("description"); val != "" {
+	if val := c.String("description"); c.IsSet("description") && val != "" {
 		record.Description = val
 	}
 
-	if val := c.String("author"); val != "" {
+	if val := c.String("author"); c.IsSet("author") && val != "" {
 		record.Author = val
 	}
 
-	if val := c.String("website"); val != "" {
+	if val := c.String("website"); c.IsSet("website") && val != "" {
 		record.Website = val
 	}
 
-	if val := c.String("donate"); val != "" {
+	if val := c.String("donate"); c.IsSet("donate") && val != "" {
 		record.Donate = val
 	}
 
-	_, err := client.ModPost(record)
+	_, err := client.ModPost(
+		record,
+	)
 
 	if err != nil {
 		return err
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully created\n")
+	return nil
+}
+
+// ModUserList provides the sub-command to list users of the mod.
+func ModUserList(c *cli.Context, client solder.API) error {
+	records, err := client.ModUserList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Username"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Username,
+			},
+		)
+	}
+
+	table.Render()
+	return nil
+}
+
+// ModUserAppend provides the sub-command to append a user to the mod.
+func ModUserAppend(c *cli.Context, client solder.API) error {
+	err := client.PackClientAppend(
+		GetIdentifierParam(c),
+		GetUserParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to mod\n")
+	return nil
+}
+
+// ModUserRemove provides the sub-command to remove a user from the mod.
+func ModUserRemove(c *cli.Context, client solder.API) error {
+	err := client.PackClientDelete(
+		GetIdentifierParam(c),
+		GetUserParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from mod\n")
 	return nil
 }

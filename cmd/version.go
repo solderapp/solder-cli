@@ -20,9 +20,10 @@ func Version() cli.Command {
 		Usage:   "Version related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all versions",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all versions",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "mod, m",
@@ -35,11 +36,17 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a version",
+				Name:      "show",
+				Usage:     "Display a version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to show",
 					},
@@ -49,11 +56,17 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a version",
+				Name:      "update",
+				Usage:     "Update a version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to show",
 					},
@@ -83,12 +96,18 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a version",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to show",
 					},
@@ -98,8 +117,9 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a version",
+				Name:      "create",
+				Usage:     "Create a version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "mod, m",
@@ -132,11 +152,17 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "build-list",
-				Usage: "List assigned builds",
+				Name:      "build-list",
+				Usage:     "List assigned builds",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to list builds",
 					},
@@ -146,16 +172,22 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "build-append",
-				Usage: "Append a mod version to build",
+				Name:      "build-append",
+				Usage:     "Append a build to version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append to",
 					},
@@ -165,16 +197,22 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:  "build-remove",
-				Usage: "Remove a mod version from build",
+				Name:      "build-remove",
+				Usage:     "Remove a build from version",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append to",
 					},
@@ -223,6 +261,7 @@ func VersionList(c *cli.Context, client solder.API) error {
 // VersionShow provides the sub-command to show version details.
 func VersionShow(c *cli.Context, client solder.API) error {
 	record, err := client.VersionGet(
+		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -237,7 +276,7 @@ func VersionShow(c *cli.Context, client solder.API) error {
 	table.AppendBulk(
 		[][]string{
 			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Mod", record.Mod},
+			{"Mod", string(record.Mod)},
 			{"Slug", record.Slug},
 			{"Name", record.Name},
 			{"File", record.File},
@@ -253,6 +292,7 @@ func VersionShow(c *cli.Context, client solder.API) error {
 // VersionDelete provides the sub-command to delete a version.
 func VersionDelete(c *cli.Context, client solder.API) error {
 	err := client.VersionDelete(
+		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -267,6 +307,7 @@ func VersionDelete(c *cli.Context, client solder.API) error {
 // VersionUpdate provides the sub-command to update a version.
 func VersionUpdate(c *cli.Context, client solder.API) error {
 	record, err := client.VersionGet(
+		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -274,31 +315,57 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("name"); val != record.Name {
+	changed := false
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
 		record.Slug = val
+		changed = true
 	}
 
-	// TODO(must): Implement URL import
-	// if val := c.String("file-url"); val != record.FileURL {
-	// 	record.FileURL = val
-	// }
+	if val := c.String("file-url"); c.IsSet("file-url") && val != "" {
+		err := record.DownloadFile(
+			val,
+		)
 
-	// TODO(must): Implement path import
-	// if val := c.String("file-path"); val != record.FilePath {
-	// 	record.FilePath = val
-	// }
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode file.")
+		}
 
-	_, patch := client.VersionPatch(record)
-
-	if patch != nil {
-		return patch
+		changed = true
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	if val := c.String("file-path"); c.IsSet("file-path") && val != "" {
+		err := record.EncodeFile(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode file.")
+		}
+
+		changed = true
+	}
+
+	if changed {
+		_, patch := client.VersionPatch(
+			GetModParam(c),
+			record,
+		)
+
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
+	}
+
 	return nil
 }
 
@@ -307,51 +374,66 @@ func VersionCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Version{}
 
 	if c.String("mod") == "" {
-		return fmt.Errorf("You must provide a mod.")
+		return fmt.Errorf("You must provide a mod ID or slug.")
 	}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("mod")); match {
-		if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
-			record.ModID = val
-		}
-	} else {
-		if c.String("mod") != "" {
-			related, err := client.BuildGet(
-				c.String("mod"),
-			)
-
-			if err != nil {
-				return err
+	if c.IsSet("mod") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("mod")); match {
+			if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
+				record.ModID = val
 			}
+		} else {
+			if c.String("mod") != "" {
+				related, err := client.ModGet(
+					c.String("mod"),
+				)
 
-			if related.ID != record.ModID {
-				record.ModID = related.ID
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.ModID {
+					record.ModID = related.ID
+				}
 			}
 		}
 	}
 
-	if val := c.String("name"); val != "" {
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 		os.Exit(1)
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	// TODO(must): Implement URL import
-	// if val := c.String("file-url"); val != "" {
-	// 	record.FileURL = val
-	// }
+	if val := c.String("file-url"); c.IsSet("file-url") && val != "" {
+		err := record.DownloadFile(
+			val,
+		)
 
-	// TODO(must): Implement path import
-	// if val := c.String("file-path"); val != "" {
-	// 	record.FilePath = val
-	// }
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode file.")
+		}
+	}
 
-	_, err := client.VersionPost(record)
+	if val := c.String("file-path"); c.IsSet("file-path") && val != "" {
+		err := record.EncodeFile(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode file.")
+		}
+	}
+
+	_, err := client.VersionPost(
+		GetModParam(c),
+		record,
+	)
 
 	if err != nil {
 		return err
@@ -364,6 +446,7 @@ func VersionCreate(c *cli.Context, client solder.API) error {
 // VersionBuildList provides the sub-command to list builds of the version.
 func VersionBuildList(c *cli.Context, client solder.API) error {
 	records, err := client.VersionBuildList(
+		GetModParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -397,6 +480,7 @@ func VersionBuildList(c *cli.Context, client solder.API) error {
 // VersionBuildAppend provides the sub-command to append a build to the version.
 func VersionBuildAppend(c *cli.Context, client solder.API) error {
 	err := client.VersionBuildAppend(
+		GetModParam(c),
 		GetIdentifierParam(c),
 		GetBuildParam(c),
 	)
@@ -412,6 +496,7 @@ func VersionBuildAppend(c *cli.Context, client solder.API) error {
 // VersionBuildRemove provides the sub-command to remove a build from the version.
 func VersionBuildRemove(c *cli.Context, client solder.API) error {
 	err := client.VersionBuildDelete(
+		GetModParam(c),
 		GetIdentifierParam(c),
 		GetBuildParam(c),
 	)

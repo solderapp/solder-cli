@@ -17,27 +17,30 @@ func Forge() cli.Command {
 		Usage: "Forge related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all Forge versions",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all Forge versions",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, ForgeList)
 				},
 			},
 			{
-				Name:    "refresh",
-				Aliases: []string{"ref"},
-				Usage:   "Refresh Forge versions",
+				Name:      "refresh",
+				Aliases:   []string{"ref"},
+				Usage:     "Refresh Forge versions",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, ForgeRefresh)
 				},
 			},
 			{
-				Name:  "build-list",
-				Usage: "List assigned builds",
+				Name:      "build-list",
+				Usage:     "List assigned builds",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Forge ID or slug to list builds",
 					},
@@ -47,16 +50,17 @@ func Forge() cli.Command {
 				},
 			},
 			{
-				Name:  "build-append",
-				Usage: "Append a build to Forge",
+				Name:      "build-append",
+				Usage:     "Append a build to Forge",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Forge ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append",
 					},
@@ -66,16 +70,17 @@ func Forge() cli.Command {
 				},
 			},
 			{
-				Name:  "build-remove",
-				Usage: "Remove a build from Forge",
+				Name:      "build-remove",
+				Usage:     "Remove a build from Forge",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Forge ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to remove",
 					},

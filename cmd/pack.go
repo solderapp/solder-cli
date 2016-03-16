@@ -20,19 +20,21 @@ func Pack() cli.Command {
 		Usage:   "Pack related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all packs",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all packs",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, PackList)
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a pack",
+				Name:      "show",
+				Usage:     "Display a pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to show",
 					},
@@ -42,11 +44,12 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a pack",
+				Name:      "update",
+				Usage:     "Update a pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to update",
 					},
@@ -106,8 +109,8 @@ func Pack() cli.Command {
 						Usage: "Provide a background path",
 					},
 					cli.BoolFlag{
-						Name:  "hidden",
-						Usage: "Mark pack hidden",
+						Name:  "published",
+						Usage: "Mark pack published",
 					},
 					cli.BoolFlag{
 						Name:  "private",
@@ -119,12 +122,13 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a pack",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to delete",
 					},
@@ -134,8 +138,9 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a pack",
+				Name:      "create",
+				Usage:     "Create a pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "slug",
@@ -151,16 +156,6 @@ func Pack() cli.Command {
 						Name:  "website",
 						Value: "",
 						Usage: "Provide a website",
-					},
-					cli.StringFlag{
-						Name:  "recommended",
-						Value: "",
-						Usage: "Recommended build ID or slug",
-					},
-					cli.StringFlag{
-						Name:  "latest",
-						Value: "",
-						Usage: "Latest build ID or slug",
 					},
 					cli.StringFlag{
 						Name:  "icon-url",
@@ -193,8 +188,8 @@ func Pack() cli.Command {
 						Usage: "Provide a background path",
 					},
 					cli.BoolFlag{
-						Name:  "hidden",
-						Usage: "Mark pack hidden",
+						Name:  "published",
+						Usage: "Mark pack published",
 					},
 					cli.BoolFlag{
 						Name:  "private",
@@ -206,11 +201,12 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:  "client-list",
-				Usage: "List assigned clients",
+				Name:      "client-list",
+				Usage:     "List assigned clients",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to list clients",
 					},
@@ -220,16 +216,17 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:  "client-append",
-				Usage: "Append a client to pack",
+				Name:      "client-append",
+				Usage:     "Append a client to pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "client",
+						Name:  "client, c",
 						Value: "",
 						Usage: "Client ID or slug to append",
 					},
@@ -239,16 +236,17 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:  "client-remove",
-				Usage: "Remove a client from pack",
+				Name:      "client-remove",
+				Usage:     "Remove a client from pack",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "client",
+						Name:  "client, c",
 						Value: "",
 						Usage: "Client ID or slug to remove",
 					},
@@ -312,12 +310,12 @@ func PackShow(c *cli.Context, client solder.API) error {
 			{"Slug", record.Slug},
 			{"Name", record.Name},
 			{"Website", record.Website},
-			{"Recommended", record.Recommended},
-			{"Latest", record.Latest},
+			{"Recommended", string(record.Recommended)},
+			{"Latest", string(record.Latest)},
 			{"Icon", record.Icon},
 			{"Logo", record.Logo},
 			{"Background", record.Background},
-			{"Hidden", strconv.FormatBool(record.Hidden)},
+			{"Published", strconv.FormatBool(record.Published)},
 			{"Private", strconv.FormatBool(record.Private)},
 			{"Created", record.CreatedAt.Format(time.UnixDate)},
 			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
@@ -352,103 +350,169 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
-		if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
-			record.RecommendedID = val
-		}
-	} else {
-		if c.String("recommended") != "" {
-			related, err := client.BuildGet(
-				c.String("recommended"),
-			)
+	changed := false
 
-			if err != nil {
-				return err
+	if c.IsSet("recommended") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
+			if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
+				record.RecommendedID = val
+				changed = true
 			}
+		} else {
+			if c.String("recommended") != "" {
+				related, err := client.BuildGet(
+					GetIdentifierParam(c),
+					c.String("recommended"),
+				)
 
-			if related.ID != record.RecommendedID {
-				record.RecommendedID = related.ID
-			}
-		}
-	}
+				if err != nil {
+					return err
+				}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
-		if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
-			record.LatestID = val
-		}
-	} else {
-		if c.String("latest") != "" {
-			related, err := client.BuildGet(
-				c.String("latest"),
-			)
-
-			if err != nil {
-				return err
-			}
-
-			if related.ID != record.LatestID {
-				record.LatestID = related.ID
+				if related.ID != record.RecommendedID {
+					record.RecommendedID = related.ID
+					changed = true
+				}
 			}
 		}
 	}
 
-	if val := c.String("name"); val != record.Name {
+	if c.IsSet("latest") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
+			if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
+				record.LatestID = val
+				changed = true
+			}
+		} else {
+			if c.String("latest") != "" {
+				related, err := client.BuildGet(
+					GetIdentifierParam(c),
+					c.String("latest"),
+				)
+
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.LatestID {
+					record.LatestID = related.ID
+					changed = true
+				}
+			}
+		}
+	}
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
 		record.Slug = val
+		changed = true
 	}
 
-	if val := c.String("website"); val != record.Website {
+	if val := c.String("website"); c.IsSet("website") && val != record.Website {
 		record.Website = val
+		changed = true
 	}
 
-	// TODO(must): Implement URL import
-	// if val := c.String("icon-url"); val != record.IconURL {
-	// 	record.IconURL = val
-	// }
+	if val := c.String("icon-url"); c.IsSet("icon-url") && val != "" {
+		err := record.DownloadIcon(
+			val,
+		)
 
-	// TODO(must): Implement path import
-	// if val := c.String("icon-path"); val != record.IconPath {
-	// 	record.IconPath = val
-	// }
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode icon.")
+		}
 
-	// TODO(must): Implement URL import
-	// if val := c.String("logo-url"); val != record.LogoURL {
-	// 	record.LogoURL = val
-	// }
-
-	// TODO(must): Implement path import
-	// if val := c.String("logo-path"); val != record.LogoPath {
-	// 	record.LogoPath = val
-	// }
-
-	// TODO(must): Implement URL import
-	// if val := c.String("bg-url"); val != record.BackgrounURL {
-	// 	record.BackgroundURL = val
-	// }
-
-	// TODO(must): Implement path import
-	// if val := c.String("bg-path"); val != record.BackgroundPath {
-	// 	record.BackgroundPath = val
-	// }
-
-	if val := c.Bool("hidden"); val != record.Hidden {
-		record.Hidden = val
+		changed = true
 	}
 
-	if val := c.Bool("private"); val != record.Private {
+	if val := c.String("icon-path"); c.IsSet("icon-path") && val != "" {
+		err := record.EncodeIcon(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode icon.")
+		}
+
+		changed = true
+	}
+
+	if val := c.String("logo-url"); c.IsSet("logo-url") && val != "" {
+		err := record.DownloadLogo(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode logo.")
+		}
+
+		changed = true
+	}
+
+	if val := c.String("logo-path"); c.IsSet("logo-path") && val != "" {
+		err := record.EncodeLogo(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode logo.")
+		}
+
+		changed = true
+	}
+
+	if val := c.String("bg-url"); c.IsSet("bg-url") && val != "" {
+		err := record.DownloadBackground(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode background.")
+		}
+
+		changed = true
+	}
+
+	if val := c.String("bg-path"); c.IsSet("bg-path") && val != "" {
+		err := record.EncodeBackground(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode background.")
+		}
+
+		changed = true
+	}
+
+	if val := c.Bool("published"); c.IsSet("published") && val != record.Published {
+		record.Published = val
+		changed = true
+	}
+
+	if val := c.Bool("private"); c.IsSet("private") && val != record.Private {
 		record.Private = val
+		changed = true
 	}
 
-	_, patch := client.PackPatch(record)
+	if changed {
+		_, patch := client.PackPatch(
+			record,
+		)
 
-	if patch != nil {
-		return patch
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
@@ -456,105 +520,91 @@ func PackUpdate(c *cli.Context, client solder.API) error {
 func PackCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Pack{}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
-		if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != 0 {
-			record.RecommendedID = val
-		}
-	} else {
-		related, err := client.BuildGet(
-			c.String("recommended"),
-		)
-
-		if err != nil {
-			return err
-		}
-
-		if related.ID != record.RecommendedID {
-			record.RecommendedID = related.ID
-		}
-	}
-
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
-		if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != 0 {
-			record.LatestID = val
-		}
-	} else {
-		if c.String("latest") != "" {
-			related, err := client.BuildGet(
-				c.String("latest"),
-			)
-
-			if err != nil {
-				return err
-			}
-
-			if related.ID != record.LatestID {
-				record.LatestID = related.ID
-			}
-		}
-	}
-
-	if val := c.String("name"); val != "" {
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("website"); val != "" {
+	if val := c.String("website"); c.IsSet("website") && val != "" {
 		record.Website = val
 	}
 
-	if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != 0 {
-		record.RecommendedID = val
+	if val := c.String("icon-url"); c.IsSet("icon-url") && val != "" {
+		err := record.DownloadIcon(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode icon.")
+		}
 	}
 
-	if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != 0 {
-		record.LatestID = val
+	if val := c.String("icon-path"); c.IsSet("icon-path") && val != "" {
+		err := record.EncodeIcon(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode icon.")
+		}
 	}
 
-	// TODO(must): Implement URL import
-	// if val := c.String("icon-url"); val != "" {
-	// 	record.IconURL = val
-	// }
+	if val := c.String("logo-url"); c.IsSet("logo-url") && val != "" {
+		err := record.DownloadLogo(
+			val,
+		)
 
-	// TODO(must): Implement path import
-	// if val := c.String("icon-path"); val != "" {
-	// 	record.IconPath = val
-	// }
-
-	// TODO(must): Implement URL import
-	// if val := c.String("logo-url"); val != "" {
-	// 	record.LogoURL = val
-	// }
-
-	// TODO(must): Implement path import
-	// if val := c.String("logo-path"); val != "" {
-	// 	record.LogoPath = val
-	// }
-
-	// TODO(must): Implement URL import
-	// if val := c.String("bg-url"); val != "" {
-	// 	record.BackgroundURL = val
-	// }
-
-	// TODO(must): Implement path import
-	// if val := c.String("bg-path"); val != "" {
-	// 	record.BackgroundPath = val
-	// }
-
-	if val := c.Bool("hidden"); val != false {
-		record.Hidden = val
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode logo.")
+		}
 	}
 
-	if val := c.Bool("private"); val != false {
-		record.Private = val
+	if val := c.String("logo-path"); c.IsSet("logo-path") && val != "" {
+		err := record.EncodeLogo(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode logo.")
+		}
 	}
 
-	_, err := client.PackPost(record)
+	if val := c.String("bg-url"); c.IsSet("bg-url") && val != "" {
+		err := record.DownloadBackground(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to download and encode background.")
+		}
+	}
+
+	if val := c.String("bg-path"); c.IsSet("bg-path") && val != "" {
+		err := record.EncodeBackground(
+			val,
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to encode background.")
+		}
+	}
+
+	if c.IsSet("published") {
+		record.Published = c.Bool("published")
+	}
+
+	if c.IsSet("private") {
+		record.Private = c.Bool("private")
+	}
+
+	_, err := client.PackPost(
+		record,
+	)
 
 	if err != nil {
 		return err

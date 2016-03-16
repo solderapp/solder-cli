@@ -19,19 +19,21 @@ func Key() cli.Command {
 		Usage:   "Key related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all keys",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all keys",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, KeyList)
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a key",
+				Name:      "show",
+				Usage:     "Display a key",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to show",
 					},
@@ -41,11 +43,12 @@ func Key() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a key",
+				Name:      "update",
+				Usage:     "Update a key",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to show",
 					},
@@ -70,12 +73,13 @@ func Key() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a key",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a key",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to show",
 					},
@@ -85,8 +89,9 @@ func Key() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a key",
+				Name:      "create",
+				Usage:     "Create a key",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "slug",
@@ -196,25 +201,37 @@ func KeyUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("name"); val != record.Name {
+	changed := false
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
-		record.Slug = val
-	}
-
-	if val := c.String("key"); val != record.Value {
+	if val := c.String("key"); c.IsSet("key") && val != record.Value {
 		record.Value = val
+		changed = true
 	}
 
-	_, patch := client.KeyPatch(record)
-
-	if patch != nil {
-		return patch
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
+		record.Slug = val
+		changed = true
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	if changed {
+		_, patch := client.KeyPatch(
+			record,
+		)
+
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
+	}
+
 	return nil
 }
 
@@ -222,21 +239,25 @@ func KeyUpdate(c *cli.Context, client solder.API) error {
 func KeyCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Key{}
 
-	if val := c.String("name"); val != "" {
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("key"); c.IsSet("key") && val != "" {
+		record.Value = val
+	} else {
+		return fmt.Errorf("You must provide a key.")
+	}
+
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("key"); val != "" {
-		record.Value = val
-	}
-
-	_, err := client.KeyPost(record)
+	_, err := client.KeyPost(
+		record,
+	)
 
 	if err != nil {
 		return err

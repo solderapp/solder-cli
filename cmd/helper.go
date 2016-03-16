@@ -78,3 +78,15 @@ func GetClientParam(c *cli.Context) string {
 
 	return val
 }
+
+// GetUserParam checks and returns the user id/slug parameter.
+func GetUserParam(c *cli.Context) string {
+	val := c.String("user")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a user ID or slug.")
+		os.Exit(1)
+	}
+
+	return val
+}

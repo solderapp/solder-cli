@@ -26,7 +26,7 @@ func Profile() cli.Command {
 			},
 			{
 				Name:  "update",
-				Usage: "Update your profile",
+				Usage: "Update profile details",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "slug",
@@ -92,28 +92,41 @@ func ProfileUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("slug"); val != record.Slug {
+	changed := false
+
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
 		record.Slug = val
+		changed = true
 	}
 
-	if val := c.String("username"); val != record.Username {
+	if val := c.String("username"); c.IsSet("username") && val != record.Username {
 		record.Username = val
+		changed = true
 	}
 
-	if val := c.String("email"); val != record.Email {
+	if val := c.String("email"); c.IsSet("email") && val != record.Email {
 		record.Email = val
+		changed = true
 	}
 
-	if val := c.String("password"); val != "" {
+	if val := c.String("password"); c.IsSet("password") {
 		record.Password = val
+		changed = true
 	}
 
-	_, patch := client.ProfilePatch(record)
+	if changed {
+		_, patch := client.ProfilePatch(
+			record,
+		)
 
-	if patch != nil {
-		return patch
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }

@@ -19,19 +19,21 @@ func Client() cli.Command {
 		Usage:   "Client related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all clients",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all clients",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, ClientList)
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a build",
+				Name:      "show",
+				Usage:     "Display a client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to show",
 					},
@@ -41,11 +43,12 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a client",
+				Name:      "update",
+				Usage:     "Update a client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to update",
 					},
@@ -70,12 +73,13 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a client",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to delete",
 					},
@@ -85,8 +89,9 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a client",
+				Name:      "create",
+				Usage:     "Create a client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "slug",
@@ -109,11 +114,12 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:  "pack-list",
-				Usage: "List assigned packs",
+				Name:      "pack-list",
+				Usage:     "List assigned packs",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to list packs",
 					},
@@ -123,16 +129,17 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:  "pack-append",
-				Usage: "Append a pack to client",
+				Name:      "pack-append",
+				Usage:     "Append a pack to client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "pack",
+						Name:  "pack, p",
 						Value: "",
 						Usage: "Pack ID or slug to append",
 					},
@@ -142,16 +149,17 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:  "pack-remove",
-				Usage: "Remove a pack from client",
+				Name:      "pack-remove",
+				Usage:     "Remove a pack from client",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "pack",
+						Name:  "pack, p",
 						Value: "",
 						Usage: "Pack ID or slug to remove",
 					},
@@ -248,25 +256,37 @@ func ClientUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if val := c.String("name"); val != record.Name {
+	changed := false
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
-		record.Slug = val
-	}
-
-	if val := c.String("uuid"); val != record.Value {
+	if val := c.String("uuid"); c.IsSet("uuid") && val != record.Value {
 		record.Value = val
+		changed = true
 	}
 
-	_, patch := client.ClientPatch(record)
-
-	if patch != nil {
-		return patch
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
+		record.Slug = val
+		changed = true
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	if changed {
+		_, patch := client.ClientPatch(
+			record,
+		)
+
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
+	}
+
 	return nil
 }
 
@@ -274,21 +294,25 @@ func ClientUpdate(c *cli.Context, client solder.API) error {
 func ClientCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Client{}
 
-	if val := c.String("name"); val != "" {
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("uuid"); c.IsSet("uuid") && val != "" {
+		record.Value = val
+	} else {
+		return fmt.Errorf("You must provide a UUID.")
+	}
+
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("uuid"); val != "" {
-		record.Value = val
-	}
-
-	_, err := client.ClientPost(record)
+	_, err := client.ClientPost(
+		record,
+	)
 
 	if err != nil {
 		return err

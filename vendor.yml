@@ -4,9 +4,11 @@ vendors:
 - path: github.com/davecgh/go-spew
   rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
-  rev: b9504f23731d0b61ccfff7370a161d6c857ca00d
+  rev: 99511271042a09d1e01baea8781caa5210fec66e
+- path: github.com/jackspirou/syscerts
+  rev: 64db7e442e5db10218ed7ec87c8d54aec5ea8b60
 - path: github.com/mattn/go-runewidth
-  rev: d037b52ae5c0338c2bb18da01fb7ddf0e8be9aa1
+  rev: d6bea18f789704b5f83375793155289da36a3c7f
 - path: github.com/olekukonko/tablewriter
   rev: cca8bbc0798408af109aaaa239cbd2634846b340
 - path: github.com/pmezard/go-difflib
@@ -15,8 +17,10 @@ vendors:
   rev: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
 - path: github.com/stretchr/testify
   rev: 6fe211e493929a8aac0469b93f28b1d0688a9a3a
+- path: github.com/vincent-petithory/dataurl
+  rev: a81abcdac6cb8cbd9bf6ec779c2fb09fffb1d3f5
 - path: golang.org/x/net
-  rev: 3e5cd1ed149001198e582f9d3f5bfd564cde2896
+  rev: 35b06af0720201bc2f326773a80767387544f8c4
 - path: golang.org/x/oauth2
   rev: 045497edb6234273d67dbc25da3f2ddbc4c4cacf
 - path: google.golang.org/appengine

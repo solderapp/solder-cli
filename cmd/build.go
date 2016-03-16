@@ -20,9 +20,10 @@ func Build() cli.Command {
 		Usage:   "Build related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all builds",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all builds",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "pack, p",
@@ -35,11 +36,17 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "show",
-				Usage: "Display a build",
+				Name:      "show",
+				Usage:     "Display a build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to show",
 					},
@@ -49,11 +56,17 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "update",
-				Usage: "Update a build",
+				Name:      "update",
+				Usage:     "Update a build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to update",
 					},
@@ -101,12 +114,18 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:    "delete",
-				Aliases: []string{"rm"},
-				Usage:   "Delete a build",
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to delete",
 					},
@@ -116,8 +135,9 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "create",
-				Usage: "Create a build",
+				Name:      "create",
+				Usage:     "Create a build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "pack, p",
@@ -168,11 +188,17 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "version-list",
-				Usage: "List assigned versions",
+				Name:      "version-list",
+				Usage:     "List assigned versions",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to list versions",
 					},
@@ -182,18 +208,24 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "version-append",
-				Usage: "Append a version to build",
+				Name:      "version-append",
+				Usage:     "Append a version to build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "version",
+						Name:  "version, V",
 						Value: "",
-						Usage: "Version ID or slug to append to",
+						Usage: "Version ID or slug to append",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -201,18 +233,24 @@ func Build() cli.Command {
 				},
 			},
 			{
-				Name:  "version-remove",
-				Usage: "Remove a version from build",
+				Name:      "version-remove",
+				Usage:     "Remove a version from build",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "pack, p",
+						Value: "",
+						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "version",
+						Name:  "version, V",
 						Value: "",
-						Usage: "Version ID or slug to append to",
+						Usage: "Version ID or slug to remove",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -259,6 +297,7 @@ func BuildList(c *cli.Context, client solder.API) error {
 // BuildShow provides the sub-command to show build details.
 func BuildShow(c *cli.Context, client solder.API) error {
 	record, err := client.BuildGet(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -275,9 +314,9 @@ func BuildShow(c *cli.Context, client solder.API) error {
 			{"ID", strconv.FormatInt(record.ID, 10)},
 			{"Slug", record.Slug},
 			{"Name", record.Name},
-			{"Pack", record.Pack},
-			{"Minecraft", record.Minecraft},
-			{"Forge", record.Forge},
+			{"Pack", string(record.Pack)},
+			{"Minecraft", string(record.Minecraft)},
+			{"Forge", string(record.Forge)},
 			{"Java", record.MinJava},
 			{"Memory", record.MinMemory},
 			{"Published", strconv.FormatBool(record.Published)},
@@ -294,6 +333,7 @@ func BuildShow(c *cli.Context, client solder.API) error {
 // BuildDelete provides the sub-command to delete a build.
 func BuildDelete(c *cli.Context, client solder.API) error {
 	err := client.BuildDelete(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -308,6 +348,7 @@ func BuildDelete(c *cli.Context, client solder.API) error {
 // BuildUpdate provides the sub-command to update a build.
 func BuildUpdate(c *cli.Context, client solder.API) error {
 	record, err := client.BuildGet(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -315,77 +356,101 @@ func BuildUpdate(c *cli.Context, client solder.API) error {
 		return err
 	}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
-		if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
-			record.MinecraftID = val
-		}
-	} else {
-		if c.String("minecraft") != "" {
-			related, err := client.MinecraftGet(
-				c.String("minecraft"),
-			)
+	changed := false
 
-			if err != nil {
-				return err
+	if c.IsSet("minecraft") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
+				record.MinecraftID = val
+				changed = true
 			}
+		} else {
+			if c.String("minecraft") != "" {
+				related, err := client.MinecraftGet(
+					c.String("minecraft"),
+				)
 
-			if related.ID != record.MinecraftID {
-				record.MinecraftID = related.ID
-			}
-		}
-	}
+				if err != nil {
+					return err
+				}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
-		if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
-			record.ForgeID = val
-		}
-	} else {
-		if c.String("forge") != "" {
-			related, err := client.ForgeGet(
-				c.String("forge"),
-			)
-
-			if err != nil {
-				return err
-			}
-
-			if related.ID != record.ForgeID {
-				record.ForgeID = related.ID
+				if related.ID != record.MinecraftID {
+					record.MinecraftID = related.ID
+					changed = true
+				}
 			}
 		}
 	}
 
-	if val := c.String("name"); val != record.Name {
+	if c.IsSet("forge") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
+				record.ForgeID = val
+				changed = true
+			}
+		} else {
+			if c.String("forge") != "" {
+				related, err := client.ForgeGet(
+					c.String("forge"),
+				)
+
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.ForgeID {
+					record.ForgeID = related.ID
+					changed = true
+				}
+			}
+		}
+	}
+
+	if val := c.String("name"); c.IsSet("name") && val != record.Name {
 		record.Name = val
+		changed = true
 	}
 
-	if val := c.String("slug"); val != record.Slug {
+	if val := c.String("slug"); c.IsSet("slug") && val != record.Slug {
 		record.Slug = val
+		changed = true
 	}
 
-	if val := c.String("min-java"); val != record.MinJava {
+	if val := c.String("min-java"); c.IsSet("min-java") && val != record.MinJava {
 		record.MinJava = val
+		changed = true
 	}
 
-	if val := c.String("min-memory"); val != record.MinMemory {
+	if val := c.String("min-memory"); c.IsSet("min-memory") && val != record.MinMemory {
 		record.MinMemory = val
+		changed = true
 	}
 
-	if val := c.Bool("published"); val != record.Published {
+	if val := c.Bool("published"); c.IsSet("published") && val != record.Published {
 		record.Published = val
+		changed = true
 	}
 
-	if val := c.Bool("private"); val != record.Private {
+	if val := c.Bool("private"); c.IsSet("private") && val != record.Private {
 		record.Private = val
+		changed = true
 	}
 
-	_, patch := client.BuildPatch(record)
+	if changed {
+		_, patch := client.BuildPatch(
+			GetPackParam(c),
+			record,
+		)
 
-	if patch != nil {
-		return patch
+		if patch != nil {
+			return patch
+		}
+
+		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully updated\n")
 	return nil
 }
 
@@ -394,96 +459,105 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 	record := &solder.Build{}
 
 	if c.String("pack") == "" {
-		return fmt.Errorf("You must provide a pack.")
+		return fmt.Errorf("You must provide a pack ID or slug.")
 	}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("pack")); match {
-		if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
-			record.PackID = val
-		}
-	} else {
-		if c.String("pack") != "" {
-			related, err := client.PackGet(
-				c.String("pack"),
-			)
-
-			if err != nil {
-				return err
+	if c.IsSet("pack") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("pack")); match {
+			if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
+				record.PackID = val
 			}
+		} else {
+			if c.String("pack") != "" {
+				related, err := client.PackGet(
+					c.String("pack"),
+				)
 
-			if related.ID != record.PackID {
-				record.PackID = related.ID
-			}
-		}
-	}
+				if err != nil {
+					return err
+				}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
-		if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
-			record.MinecraftID = val
-		}
-	} else {
-		if c.String("minecraft") != "" {
-			related, err := client.MinecraftGet(
-				c.String("minecraft"),
-			)
-
-			if err != nil {
-				return err
-			}
-
-			if related.ID != record.MinecraftID {
-				record.MinecraftID = related.ID
+				if related.ID != record.PackID {
+					record.PackID = related.ID
+				}
 			}
 		}
 	}
 
-	if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
-		if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
-			record.ForgeID = val
-		}
-	} else {
-		if c.String("forge") != "" {
-			related, err := client.ForgeGet(
-				c.String("forge"),
-			)
-
-			if err != nil {
-				return err
+	if c.IsSet("minecraft") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
+				record.MinecraftID = val
 			}
+		} else {
+			if c.String("minecraft") != "" {
+				related, err := client.MinecraftGet(
+					c.String("minecraft"),
+				)
 
-			if related.ID != record.ForgeID {
-				record.ForgeID = related.ID
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.MinecraftID {
+					record.MinecraftID = related.ID
+				}
 			}
 		}
 	}
 
-	if val := c.String("name"); val != "" {
+	if c.IsSet("forge") {
+		if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
+				record.ForgeID = val
+			}
+		} else {
+			if c.String("forge") != "" {
+				related, err := client.ForgeGet(
+					c.String("forge"),
+				)
+
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.ForgeID {
+					record.ForgeID = related.ID
+				}
+			}
+		}
+	}
+
+	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	if val := c.String("slug"); val != "" {
+	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
 	}
 
-	if val := c.String("min-java"); val != "" {
+	if val := c.String("min-java"); c.IsSet("min-java") && val != "" {
 		record.MinJava = val
 	}
 
-	if val := c.String("min-memory"); val != "" {
+	if val := c.String("min-memory"); c.IsSet("min-memory") && val != "" {
 		record.MinMemory = val
 	}
 
-	if val := c.Bool("published"); val != false {
-		record.Published = val
+	if c.IsSet("published") {
+		record.Published = c.Bool("published")
 	}
 
-	if val := c.Bool("private"); val != false {
-		record.Private = val
+	if c.IsSet("private") {
+		record.Private = c.Bool("private")
 	}
 
-	_, err := client.BuildPost(record)
+	_, err := client.BuildPost(
+		GetPackParam(c),
+		record,
+	)
 
 	if err != nil {
 		return err
@@ -496,6 +570,7 @@ func BuildCreate(c *cli.Context, client solder.API) error {
 // BuildVersionList provides the sub-command to list versions of the build.
 func BuildVersionList(c *cli.Context, client solder.API) error {
 	records, err := client.BuildVersionList(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 	)
 
@@ -529,6 +604,7 @@ func BuildVersionList(c *cli.Context, client solder.API) error {
 // BuildVersionAppend provides the sub-command to append a version to the build.
 func BuildVersionAppend(c *cli.Context, client solder.API) error {
 	err := client.BuildVersionAppend(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 		GetVersionParam(c),
 	)
@@ -544,6 +620,7 @@ func BuildVersionAppend(c *cli.Context, client solder.API) error {
 // BuildVersionRemove provides the sub-command to remove a version from the build.
 func BuildVersionRemove(c *cli.Context, client solder.API) error {
 	err := client.BuildVersionDelete(
+		GetPackParam(c),
 		GetIdentifierParam(c),
 		GetVersionParam(c),
 	)

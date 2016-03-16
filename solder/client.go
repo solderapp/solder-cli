@@ -2,6 +2,7 @@ package solder
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/jackspirou/syscerts"
 	"golang.org/x/oauth2"
 )
 
@@ -18,33 +20,37 @@ import (
 const (
 	pathProfile         = "%s/api/profile"
 	pathForge           = "%s/api/forge"
-	pathForgeBuilds     = "%s/api/forge/%s/builds"
-	pathForgeBuild      = "%s/api/forge/%s/builds/%s"
+	pathForgeBuilds     = "%s/api/forge/%v/builds"
+	pathForgeBuild      = "%s/api/forge/%v/builds/%v"
 	pathMinecraft       = "%s/api/minecraft"
-	pathMinecraftBuilds = "%s/api/minecraft/%s/builds"
-	pathMinecraftBuild  = "%s/api/minecraft/%s/builds/%s"
+	pathMinecraftBuilds = "%s/api/minecraft/%v/builds"
+	pathMinecraftBuild  = "%s/api/minecraft/%v/builds/%v"
 	pathPacks           = "%s/api/packs"
 	pathPack            = "%s/api/packs/%v"
-	pathPackClients     = "%s/api/packs/%s/clients"
-	pathPackClient      = "%s/api/packs/%s/clients/%s"
-	pathBuilds          = "%s/api/builds"
-	pathBuild           = "%s/api/builds/%v"
-	pathBuildVersions   = "%s/api/builds/%s/versions"
-	pathBuildVersion    = "%s/api/builds/%s/versions/%s"
+	pathPackClients     = "%s/api/packs/%v/clients"
+	pathPackClient      = "%s/api/packs/%v/clients/%v"
+	pathBuilds          = "%s/api/packs/%v/builds"
+	pathBuild           = "%s/api/packs/%v/builds/%v"
+	pathBuildVersions   = "%s/api/packs/%v/builds/%v/versions"
+	pathBuildVersion    = "%s/api/packs/%v/builds/%v/versions/%v"
 	pathMods            = "%s/api/mods"
 	pathMod             = "%s/api/mods/%v"
-	pathVersions        = "%s/api/versions"
-	pathVersion         = "%s/api/versions/%v"
-	pathVersionBuilds   = "%s/api/versions/%s/builds"
-	pathVersionBuild    = "%s/api/versions/%s/builds/%s"
+	pathModUsers        = "%s/api/mods/%v/users"
+	pathModUser         = "%s/api/mods/%v/users/%v"
+	pathVersions        = "%s/api/mods/%v/versions"
+	pathVersion         = "%s/api/mods/%v/versions/%v"
+	pathVersionBuilds   = "%s/api/mods/%v/versions/%v/builds"
+	pathVersionBuild    = "%s/api/mods/%v/versions/%v/builds/%v"
 	pathClients         = "%s/api/clients"
 	pathClient          = "%s/api/clients/%v"
-	pathClientPacks     = "%s/api/clients/%s/packs"
-	pathClientPack      = "%s/api/clients/%s/packs/%s"
-	pathKeys            = "%s/api/keys"
-	pathKey             = "%s/api/keys/%v"
+	pathClientPacks     = "%s/api/clients/%v/packs"
+	pathClientPack      = "%s/api/clients/%v/packs/%v"
 	pathUsers           = "%s/api/users"
 	pathUser            = "%s/api/users/%v"
+	pathUserMods        = "%s/api/users/%v/mods"
+	pathUserMod         = "%s/api/users/%v/mods/%v"
+	pathKeys            = "%s/api/keys"
+	pathKey             = "%s/api/keys/%v"
 )
 
 type defaultClient struct {
@@ -71,6 +77,12 @@ func NewClientToken(uri, token string) API {
 			AccessToken: token,
 		},
 	)
+
+	auther.Transport = &http.Transport{
+		TLSClientConfig: &tls.Config{
+			RootCAs: syscerts.SystemRootsPool(),
+		},
+	}
 
 	return &defaultClient{
 		auther,
@@ -311,76 +323,71 @@ func (c *defaultClient) PackClientDelete(id, delete string) error {
 func (c *defaultClient) BuildList(pack string) ([]*Build, error) {
 	var out []*Build
 
-	uri := fmt.Sprintf(pathBuilds, c.base)
-
-	if pack != "" {
-		uri = fmt.Sprintf("%s?pack=%s", uri, pack)
-	}
-
+	uri := fmt.Sprintf(pathBuilds, c.base, pack)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
 // BuildGet returns a build for a specific pack.
-func (c *defaultClient) BuildGet(id string) (*Build, error) {
+func (c *defaultClient) BuildGet(pack, id string) (*Build, error) {
 	out := &Build{}
 
-	uri := fmt.Sprintf(pathBuild, c.base, id)
+	uri := fmt.Sprintf(pathBuild, c.base, pack, id)
 	err := c.get(uri, out)
 
 	return out, err
 }
 
 // BuildPost creates a build for a specific pack.
-func (c *defaultClient) BuildPost(in *Build) (*Build, error) {
+func (c *defaultClient) BuildPost(pack string, in *Build) (*Build, error) {
 	out := &Build{}
 
-	uri := fmt.Sprintf(pathBuilds, c.base)
+	uri := fmt.Sprintf(pathBuilds, c.base, pack)
 	err := c.post(uri, in, out)
 
 	return out, err
 }
 
 // BuildPatch updates a build for a specific pack.
-func (c *defaultClient) BuildPatch(in *Build) (*Build, error) {
+func (c *defaultClient) BuildPatch(pack string, in *Build) (*Build, error) {
 	out := &Build{}
 
-	uri := fmt.Sprintf(pathBuild, c.base, in.ID)
+	uri := fmt.Sprintf(pathBuild, c.base, pack, in.ID)
 	err := c.patch(uri, in, out)
 
 	return out, err
 }
 
 // BuildDelete deletes a build for a specific pack.
-func (c *defaultClient) BuildDelete(id string) error {
-	uri := fmt.Sprintf(pathBuild, c.base, id)
+func (c *defaultClient) BuildDelete(pack, id string) error {
+	uri := fmt.Sprintf(pathBuild, c.base, pack, id)
 	err := c.delete(uri)
 
 	return err
 }
 
 // BuildVersionList returns a list of related versions for a build.
-func (c *defaultClient) BuildVersionList(id string) ([]*Version, error) {
+func (c *defaultClient) BuildVersionList(pack, id string) ([]*Version, error) {
 	var out []*Version
 
-	uri := fmt.Sprintf(pathBuildVersions, c.base, id)
+	uri := fmt.Sprintf(pathBuildVersions, c.base, pack, id)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
 // BuildVersionAppend appends a version to a build.
-func (c *defaultClient) BuildVersionAppend(id, append string) error {
-	uri := fmt.Sprintf(pathBuildVersion, c.base, id, append)
+func (c *defaultClient) BuildVersionAppend(pack, id, append string) error {
+	uri := fmt.Sprintf(pathBuildVersion, c.base, pack, id, append)
 	err := c.patch(uri, nil, nil)
 
 	return err
 }
 
 // BuildVersionDelete remove a version from a build.
-func (c *defaultClient) BuildVersionDelete(id, delete string) error {
-	uri := fmt.Sprintf(pathBuildVersion, c.base, id, delete)
+func (c *defaultClient) BuildVersionDelete(pack, id, delete string) error {
+	uri := fmt.Sprintf(pathBuildVersion, c.base, pack, id, delete)
 	err := c.delete(uri)
 
 	return err
@@ -434,80 +441,101 @@ func (c *defaultClient) ModDelete(id string) error {
 	return err
 }
 
+// ModUserList returns a list of related users for a mod.
+func (c *defaultClient) ModUserList(id string) ([]*User, error) {
+	var out []*User
+
+	uri := fmt.Sprintf(pathModUsers, c.base, id)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// ModUserAppend appends a user to a mod.
+func (c *defaultClient) ModUserAppend(id, append string) error {
+	uri := fmt.Sprintf(pathModUser, c.base, id, append)
+	err := c.patch(uri, nil, nil)
+
+	return err
+}
+
+// ModUserDelete remove a user from a mod.
+func (c *defaultClient) ModUserDelete(id, delete string) error {
+	uri := fmt.Sprintf(pathModUser, c.base, id, delete)
+	err := c.delete(uri)
+
+	return err
+}
+
 // VersionList returns a list of all versions for a specific mod.
 func (c *defaultClient) VersionList(mod string) ([]*Version, error) {
 	var out []*Version
 
-	uri := fmt.Sprintf(pathVersions, c.base)
-
-	if mod != "" {
-		uri = fmt.Sprintf("%s?mod=%s", uri, mod)
-	}
-
+	uri := fmt.Sprintf(pathVersions, c.base, mod)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
 // VersionGet returns a version for a specific mod.
-func (c *defaultClient) VersionGet(id string) (*Version, error) {
+func (c *defaultClient) VersionGet(mod, id string) (*Version, error) {
 	out := &Version{}
 
-	uri := fmt.Sprintf(pathVersion, c.base, id)
+	uri := fmt.Sprintf(pathVersion, c.base, mod, id)
 	err := c.get(uri, out)
 
 	return out, err
 }
 
 // VersionPost creates a version for a specific mod.
-func (c *defaultClient) VersionPost(in *Version) (*Version, error) {
+func (c *defaultClient) VersionPost(mod string, in *Version) (*Version, error) {
 	out := &Version{}
 
-	uri := fmt.Sprintf(pathVersions, c.base)
+	uri := fmt.Sprintf(pathVersions, c.base, mod)
 	err := c.post(uri, in, out)
 
 	return out, err
 }
 
 // VersionPatch updates a version for a specific mod.
-func (c *defaultClient) VersionPatch(in *Version) (*Version, error) {
+func (c *defaultClient) VersionPatch(mod string, in *Version) (*Version, error) {
 	out := &Version{}
 
-	uri := fmt.Sprintf(pathVersion, c.base, in.ID)
+	uri := fmt.Sprintf(pathVersion, c.base, mod, in.ID)
 	err := c.patch(uri, in, out)
 
 	return out, err
 }
 
 // VersionDelete deletes a version for a specific mod.
-func (c *defaultClient) VersionDelete(id string) error {
-	uri := fmt.Sprintf(pathVersion, c.base, id)
+func (c *defaultClient) VersionDelete(mod, id string) error {
+	uri := fmt.Sprintf(pathVersion, c.base, mod, id)
 	err := c.delete(uri)
 
 	return err
 }
 
 // VersionBuildList returns a list of related builds for a version.
-func (c *defaultClient) VersionBuildList(id string) ([]*Build, error) {
+func (c *defaultClient) VersionBuildList(mod, id string) ([]*Build, error) {
 	var out []*Build
 
-	uri := fmt.Sprintf(pathVersionBuilds, c.base, id)
+	uri := fmt.Sprintf(pathVersionBuilds, c.base, mod, id)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
 // VersionBuildAppend appends a build to a version.
-func (c *defaultClient) VersionBuildAppend(id, append string) error {
-	uri := fmt.Sprintf(pathVersionBuild, c.base, id, append)
+func (c *defaultClient) VersionBuildAppend(mod, id, append string) error {
+	uri := fmt.Sprintf(pathVersionBuild, c.base, mod, id, append)
 	err := c.patch(uri, nil, nil)
 
 	return err
 }
 
 // VersionBuildDelete remove a build from a version.
-func (c *defaultClient) VersionBuildDelete(id, delete string) error {
-	uri := fmt.Sprintf(pathVersionBuild, c.base, id, delete)
+func (c *defaultClient) VersionBuildDelete(mod, id, delete string) error {
+	uri := fmt.Sprintf(pathVersionBuild, c.base, mod, id, delete)
 	err := c.delete(uri)
 
 	return err
@@ -587,54 +615,6 @@ func (c *defaultClient) ClientPackDelete(id, delete string) error {
 	return err
 }
 
-// KeyList returns a list of all keys.
-func (c *defaultClient) KeyList() ([]*Key, error) {
-	var out []*Key
-
-	uri := fmt.Sprintf(pathKeys, c.base)
-	err := c.get(uri, &out)
-
-	return out, err
-}
-
-// KeyGet returns a key.
-func (c *defaultClient) KeyGet(id string) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKey, c.base, id)
-	err := c.get(uri, out)
-
-	return out, err
-}
-
-// KeyPost creates a key.
-func (c *defaultClient) KeyPost(in *Key) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKeys, c.base)
-	err := c.post(uri, in, out)
-
-	return out, err
-}
-
-// KeyPatch updates a key.
-func (c *defaultClient) KeyPatch(in *Key) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKey, c.base, in.ID)
-	err := c.patch(uri, in, out)
-
-	return out, err
-}
-
-// KeyDelete deletes a key.
-func (c *defaultClient) KeyDelete(id string) error {
-	uri := fmt.Sprintf(pathKey, c.base, id)
-	err := c.delete(uri)
-
-	return err
-}
-
 // UserList returns a list of all users.
 func (c *defaultClient) UserList() ([]*User, error) {
 	var out []*User
@@ -678,6 +658,80 @@ func (c *defaultClient) UserPatch(in *User) (*User, error) {
 // UserDelete deletes a user.
 func (c *defaultClient) UserDelete(id string) error {
 	uri := fmt.Sprintf(pathUser, c.base, id)
+	err := c.delete(uri)
+
+	return err
+}
+
+// UserModList returns a list of related mods for a user.
+func (c *defaultClient) UserModList(id string) ([]*Mod, error) {
+	var out []*Mod
+
+	uri := fmt.Sprintf(pathUserMods, c.base, id)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// UserModAppend appends a mod to a user.
+func (c *defaultClient) UserModAppend(id, append string) error {
+	uri := fmt.Sprintf(pathUserMod, c.base, id, append)
+	err := c.patch(uri, nil, nil)
+
+	return err
+}
+
+// UserModDelete remove a mod from a user.
+func (c *defaultClient) UserModDelete(id, delete string) error {
+	uri := fmt.Sprintf(pathUserMod, c.base, id, delete)
+	err := c.delete(uri)
+
+	return err
+}
+
+// KeyList returns a list of all keys.
+func (c *defaultClient) KeyList() ([]*Key, error) {
+	var out []*Key
+
+	uri := fmt.Sprintf(pathKeys, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// KeyGet returns a key.
+func (c *defaultClient) KeyGet(id string) (*Key, error) {
+	out := &Key{}
+
+	uri := fmt.Sprintf(pathKey, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// KeyPost creates a key.
+func (c *defaultClient) KeyPost(in *Key) (*Key, error) {
+	out := &Key{}
+
+	uri := fmt.Sprintf(pathKeys, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
+}
+
+// KeyPatch updates a key.
+func (c *defaultClient) KeyPatch(in *Key) (*Key, error) {
+	out := &Key{}
+
+	uri := fmt.Sprintf(pathKey, c.base, in.ID)
+	err := c.patch(uri, in, out)
+
+	return out, err
+}
+
+// KeyDelete deletes a key.
+func (c *defaultClient) KeyDelete(id string) error {
+	uri := fmt.Sprintf(pathKey, c.base, id)
 	err := c.delete(uri)
 
 	return err

@@ -17,27 +17,30 @@ func Minecraft() cli.Command {
 		Usage: "Minecraft related sub-commands",
 		Subcommands: []cli.Command{
 			{
-				Name:    "list",
-				Aliases: []string{"ls"},
-				Usage:   "List all Minecraft versions",
+				Name:      "list",
+				Aliases:   []string{"ls"},
+				Usage:     "List all Minecraft versions",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, MinecraftList)
 				},
 			},
 			{
-				Name:    "refresh",
-				Aliases: []string{"ref"},
-				Usage:   "Refresh Minecraft versions",
+				Name:      "refresh",
+				Aliases:   []string{"ref"},
+				Usage:     "Refresh Minecraft versions",
+				ArgsUsage: " ",
 				Action: func(c *cli.Context) {
 					Handle(c, MinecraftRefresh)
 				},
 			},
 			{
-				Name:  "build-list",
-				Usage: "List assigned builds",
+				Name:      "build-list",
+				Usage:     "List assigned builds",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Minecraft ID or slug to list builds",
 					},
@@ -47,16 +50,17 @@ func Minecraft() cli.Command {
 				},
 			},
 			{
-				Name:  "build-append",
-				Usage: "Append a build to Minecraft",
+				Name:      "build-append",
+				Usage:     "Append a build to Minecraft",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Minecraft ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append",
 					},
@@ -66,16 +70,17 @@ func Minecraft() cli.Command {
 				},
 			},
 			{
-				Name:  "build-remove",
-				Usage: "Remove a build from Minecraft",
+				Name:      "build-remove",
+				Usage:     "Remove a build from Minecraft",
+				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
-						Name:  "id",
+						Name:  "id, i",
 						Value: "",
 						Usage: "Minecraft ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "build",
+						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to remove",
 					},

@@ -23,7 +23,7 @@ type API interface {
 	// ForgeBuildAppend appends a Forge version to a build.
 	ForgeBuildAppend(string, string) error
 
-	// ForgeBuildAppend removde a Forge version from a build.
+	// ForgeBuildAppend remove a Forge version from a build.
 	ForgeBuildDelete(string, string) error
 
 	// MinecraftList returns a list of all Minecraft versions.
@@ -41,7 +41,7 @@ type API interface {
 	// MinecraftBuildAppend appends a Minecraft version to a build.
 	MinecraftBuildAppend(string, string) error
 
-	// MinecraftBuildAppend removde a Minecraft version from a build.
+	// MinecraftBuildAppend remove a Minecraft version from a build.
 	MinecraftBuildDelete(string, string) error
 
 	// PackList returns a list of all packs.
@@ -65,32 +65,32 @@ type API interface {
 	// PackClientAppend appends a client to a pack.
 	PackClientAppend(string, string) error
 
-	// PackClientDelete removde a client from a pack.
+	// PackClientDelete remove a client from a pack.
 	PackClientDelete(string, string) error
 
 	// BuildList returns a list of all builds for a specific pack.
 	BuildList(string) ([]*Build, error)
 
 	// BuildGet returns a build for a specific pack.
-	BuildGet(string) (*Build, error)
+	BuildGet(string, string) (*Build, error)
 
 	// BuildPost creates a build for a specific pack.
-	BuildPost(*Build) (*Build, error)
+	BuildPost(string, *Build) (*Build, error)
 
 	// BuildPatch updates a build for a specific pack.
-	BuildPatch(*Build) (*Build, error)
+	BuildPatch(string, *Build) (*Build, error)
 
 	// BuildDelete deletes a build for a specific pack.
-	BuildDelete(string) error
+	BuildDelete(string, string) error
 
 	// BuildVersionList returns a list of related versions for a build.
-	BuildVersionList(string) ([]*Version, error)
+	BuildVersionList(string, string) ([]*Version, error)
 
 	// BuildVersionAppend appends a version to a build.
-	BuildVersionAppend(string, string) error
+	BuildVersionAppend(string, string, string) error
 
 	// BuildVersionDelete remove a version from a build.
-	BuildVersionDelete(string, string) error
+	BuildVersionDelete(string, string, string) error
 
 	// ModList returns a list of all mods.
 	ModList() ([]*Mod, error)
@@ -107,29 +107,38 @@ type API interface {
 	// ModDelete deletes a mod.
 	ModDelete(string) error
 
+	// ModUserList returns a list of related users for a mod.
+	ModUserList(string) ([]*User, error)
+
+	// ModUserAppend appends a user to a mod.
+	ModUserAppend(string, string) error
+
+	// ModUserDelete remove a user from a mod.
+	ModUserDelete(string, string) error
+
 	// VersionList returns a list of all versions for a specific mod.
 	VersionList(string) ([]*Version, error)
 
 	// VersionGet returns a version for a specific mod.
-	VersionGet(string) (*Version, error)
+	VersionGet(string, string) (*Version, error)
 
 	// VersionPost creates a version for a specific mod.
-	VersionPost(*Version) (*Version, error)
+	VersionPost(string, *Version) (*Version, error)
 
 	// VersionPatch updates a version for a specific mod.
-	VersionPatch(*Version) (*Version, error)
+	VersionPatch(string, *Version) (*Version, error)
 
 	// VersionDelete deletes a version for a specific mod.
-	VersionDelete(string) error
+	VersionDelete(string, string) error
 
 	// VersionBuildList returns a list of related builds for a version.
-	VersionBuildList(string) ([]*Build, error)
+	VersionBuildList(string, string) ([]*Build, error)
 
 	// VersionBuildAppend appends a build to a version.
-	VersionBuildAppend(string, string) error
+	VersionBuildAppend(string, string, string) error
 
 	// VersionBuildDelete remove a build from a version.
-	VersionBuildDelete(string, string) error
+	VersionBuildDelete(string, string, string) error
 
 	// ClientList returns a list of all clients.
 	ClientList() ([]*Client, error)
@@ -155,21 +164,6 @@ type API interface {
 	// ClientPackDelete remove a pack from a client.
 	ClientPackDelete(string, string) error
 
-	// KeyList returns a list of all keys.
-	KeyList() ([]*Key, error)
-
-	// KeyGet returns a key.
-	KeyGet(string) (*Key, error)
-
-	// KeyPost creates a key.
-	KeyPost(*Key) (*Key, error)
-
-	// KeyPatch updates a key.
-	KeyPatch(*Key) (*Key, error)
-
-	// KeyDelete deletes a key.
-	KeyDelete(string) error
-
 	// UserList returns a list of all users.
 	UserList() ([]*User, error)
 
@@ -184,4 +178,28 @@ type API interface {
 
 	// UserDelete deletes a user.
 	UserDelete(string) error
+
+	// UserModList returns a list of related mods for a user.
+	UserModList(string) ([]*Mod, error)
+
+	// UserModAppend appends a mod to a user.
+	UserModAppend(string, string) error
+
+	// UserModDelete remove a mod from a user.
+	UserModDelete(string, string) error
+
+	// KeyList returns a list of all keys.
+	KeyList() ([]*Key, error)
+
+	// KeyGet returns a key.
+	KeyGet(string) (*Key, error)
+
+	// KeyPost creates a key.
+	KeyPost(*Key) (*Key, error)
+
+	// KeyPatch updates a key.
+	KeyPatch(*Key) (*Key, error)
+
+	// KeyDelete deletes a key.
+	KeyDelete(string) error
 }
