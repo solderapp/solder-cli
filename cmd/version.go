@@ -273,15 +273,56 @@ func VersionShow(c *cli.Context, client solder.API) error {
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetHeader([]string{"Key", "Value"})
 
-	table.AppendBulk(
-		[][]string{
-			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Mod", string(record.Mod)},
-			{"Slug", record.Slug},
-			{"Name", record.Name},
-			{"File", record.File},
-			{"Created", record.CreatedAt.Format(time.UnixDate)},
-			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+	table.Append(
+		[]string{
+			"ID",
+			strconv.FormatInt(record.ID, 10),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Slug",
+			record.Slug,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Name",
+			record.Name,
+		},
+	)
+
+	if record.Mod != nil {
+		table.Append(
+			[]string{
+				"Mod",
+				record.Mod.String(),
+			},
+		)
+	}
+
+	if record.File != nil {
+		table.Append(
+			[]string{
+				"File",
+				record.File.String(),
+			},
+		)
+	}
+
+	table.Append(
+		[]string{
+			"Created",
+			record.CreatedAt.Format(time.UnixDate),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Updated",
+			record.UpdatedAt.Format(time.UnixDate),
 		},
 	)
 

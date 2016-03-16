@@ -304,21 +304,104 @@ func PackShow(c *cli.Context, client solder.API) error {
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetHeader([]string{"Key", "Value"})
 
-	table.AppendBulk(
-		[][]string{
-			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Slug", record.Slug},
-			{"Name", record.Name},
-			{"Website", record.Website},
-			{"Recommended", string(record.Recommended)},
-			{"Latest", string(record.Latest)},
-			{"Icon", record.Icon},
-			{"Logo", record.Logo},
-			{"Background", record.Background},
-			{"Published", strconv.FormatBool(record.Published)},
-			{"Private", strconv.FormatBool(record.Private)},
-			{"Created", record.CreatedAt.Format(time.UnixDate)},
-			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+	table.Append(
+		[]string{
+			"ID",
+			strconv.FormatInt(record.ID, 10),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Slug",
+			record.Slug,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Name",
+			record.Name,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Website",
+			record.Website,
+		},
+	)
+
+	if record.Recommended != nil {
+		table.Append(
+			[]string{
+				"Recommended",
+				record.Recommended.String(),
+			},
+		)
+	}
+
+	if record.Latest != nil {
+		table.Append(
+			[]string{
+				"Latest",
+				record.Latest.String(),
+			},
+		)
+	}
+
+	if record.Icon != nil {
+		table.Append(
+			[]string{
+				"Icon",
+				record.Icon.String(),
+			},
+		)
+	}
+
+	if record.Logo != nil {
+		table.Append(
+			[]string{
+				"Logo",
+				record.Logo.String(),
+			},
+		)
+	}
+
+	if record.Background != nil {
+		table.Append(
+			[]string{
+				"Background",
+				record.Background.String(),
+			},
+		)
+	}
+
+	table.Append(
+		[]string{
+			"Published",
+			strconv.FormatBool(record.Published),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Private",
+			strconv.FormatBool(record.Private),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Created",
+			record.CreatedAt.Format(time.UnixDate),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Updated",
+			record.UpdatedAt.Format(time.UnixDate),
 		},
 	)
 

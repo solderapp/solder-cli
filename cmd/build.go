@@ -309,20 +309,93 @@ func BuildShow(c *cli.Context, client solder.API) error {
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetHeader([]string{"Key", "Value"})
 
-	table.AppendBulk(
-		[][]string{
-			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Slug", record.Slug},
-			{"Name", record.Name},
-			{"Pack", string(record.Pack)},
-			{"Minecraft", string(record.Minecraft)},
-			{"Forge", string(record.Forge)},
-			{"Java", record.MinJava},
-			{"Memory", record.MinMemory},
-			{"Published", strconv.FormatBool(record.Published)},
-			{"Private", strconv.FormatBool(record.Private)},
-			{"Created", record.CreatedAt.Format(time.UnixDate)},
-			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+	table.Append(
+		[]string{
+			"ID",
+			strconv.FormatInt(record.ID, 10),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Slug",
+			record.Slug,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Name",
+			record.Name,
+		},
+	)
+
+	if record.Pack != nil {
+		table.Append(
+			[]string{
+				"",
+				record.Pack.String(),
+			},
+		)
+	}
+
+	if record.Minecraft != nil {
+		table.Append(
+			[]string{
+				"",
+				record.Minecraft.String(),
+			},
+		)
+	}
+
+	if record.Forge != nil {
+		table.Append(
+			[]string{
+				"Forge",
+				record.Forge.String(),
+			},
+		)
+	}
+
+	table.Append(
+		[]string{
+			"Java",
+			record.MinJava,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Memory",
+			record.MinMemory,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Published",
+			strconv.FormatBool(record.Published),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Private",
+			strconv.FormatBool(record.Private),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Created",
+			record.CreatedAt.Format(time.UnixDate),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Updated",
+			record.UpdatedAt.Format(time.UnixDate),
 		},
 	)
 

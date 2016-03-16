@@ -2,7 +2,6 @@ package solder
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -18,46 +17,40 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+// Attachment represents a attachment API response.
+type Attachment struct {
+	URL       string    `json:"url"`
+	MD5       string    `json:"md5"`
+	Upload    string    `json:"upload"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (s *Attachment) String() string {
+	return s.URL
+}
+
 // Build represents a build API response.
 type Build struct {
-	ID          int64         `json:"id"`
-	Pack        PackName      `json:"pack"`
-	PackID      int64         `json:"pack_id"`
-	Minecraft   MinecraftName `json:"minecraft"`
-	MinecraftID int64         `json:"minecraft_id"`
-	Forge       ForgeName     `json:"forge"`
-	ForgeID     int64         `json:"forge_id"`
-	Slug        string        `json:"slug"`
-	Name        string        `json:"name"`
-	MinJava     string        `json:"min_java"`
-	MinMemory   string        `json:"min_memory"`
-	Published   bool          `json:"published"`
-	Private     bool          `json:"private"`
-	CreatedAt   time.Time     `json:"created_at"`
-	UpdatedAt   time.Time     `json:"updated_at"`
+	ID          int64      `json:"id"`
+	Pack        *Pack      `json:"pack"`
+	PackID      int64      `json:"pack_id"`
+	Minecraft   *Minecraft `json:"minecraft"`
+	MinecraftID int64      `json:"minecraft_id"`
+	Forge       *Forge     `json:"forge"`
+	ForgeID     int64      `json:"forge_id"`
+	Slug        string     `json:"slug"`
+	Name        string     `json:"name"`
+	MinJava     string     `json:"min_java"`
+	MinMemory   string     `json:"min_memory"`
+	Published   bool       `json:"published"`
+	Private     bool       `json:"private"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }
 
 func (s *Build) String() string {
 	return s.Name
-}
-
-// BuildName represents the mapped value of a simple build name.
-type BuildName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *BuildName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode build: %v", err)
-	}
-
-	*s = BuildName(aux.Name)
-	return nil
 }
 
 // Client represents a client API response.
@@ -74,25 +67,6 @@ func (s *Client) String() string {
 	return s.Name
 }
 
-// ClientName represents the mapped value of a simple client name.
-type ClientName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *ClientName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode client: %v", err)
-	}
-
-	*s = ClientName(aux.Name)
-	return nil
-}
-
 // Forge represents a forge API response.
 type Forge struct {
 	ID        int64     `json:"id"`
@@ -105,25 +79,6 @@ type Forge struct {
 
 func (s *Forge) String() string {
 	return s.Version
-}
-
-// ForgeName represents the mapped value of a simple forge name.
-type ForgeName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *ForgeName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Version string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode forge: %v", err)
-	}
-
-	*s = ForgeName(aux.Version)
-	return nil
 }
 
 // Key represents a key API response.
@@ -140,25 +95,6 @@ func (s *Key) String() string {
 	return s.Name
 }
 
-// KeyName represents the mapped value of a simple key name.
-type KeyName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *KeyName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode key: %v", err)
-	}
-
-	*s = KeyName(aux.Name)
-	return nil
-}
-
 // Minecraft represents a minecraft API response.
 type Minecraft struct {
 	ID        int64     `json:"id"`
@@ -171,25 +107,6 @@ type Minecraft struct {
 
 func (s *Minecraft) String() string {
 	return s.Version
-}
-
-// MinecraftName represents the mapped value of a simple Minecraft name.
-type MinecraftName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *MinecraftName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Version string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode minecraft: %v", err)
-	}
-
-	*s = MinecraftName(aux.Version)
-	return nil
 }
 
 // Mod represents a mod API response.
@@ -209,42 +126,23 @@ func (s *Mod) String() string {
 	return s.Name
 }
 
-// ModName represents the mapped value of a simple mod name.
-type ModName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *ModName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode mod: %v", err)
-	}
-
-	*s = ModName(aux.Name)
-	return nil
-}
-
 // Pack represents a pack API response.
 type Pack struct {
-	ID            int64     `json:"id"`
-	Slug          string    `json:"slug"`
-	Name          string    `json:"name"`
-	Icon          string    `json:"icon"`
-	Logo          string    `json:"logo"`
-	Background    string    `json:"background"`
-	RecommendedID int64     `json:"recommended_id"`
-	Recommended   BuildName `json:"recommended"`
-	LatestID      int64     `json:"latest_id"`
-	Latest        BuildName `json:"latest"`
-	Website       string    `json:"website"`
-	Published     bool      `json:"published"`
-	Private       bool      `json:"private"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID            int64       `json:"id"`
+	Slug          string      `json:"slug"`
+	Name          string      `json:"name"`
+	Icon          *Attachment `json:"icon"`
+	Logo          *Attachment `json:"logo"`
+	Background    *Attachment `json:"background"`
+	RecommendedID int64       `json:"recommended_id"`
+	Recommended   *Build      `json:"recommended"`
+	LatestID      int64       `json:"latest_id"`
+	Latest        *Build      `json:"latest"`
+	Website       string      `json:"website"`
+	Published     bool        `json:"published"`
+	Private       bool        `json:"private"`
+	CreatedAt     time.Time   `json:"created_at"`
+	UpdatedAt     time.Time   `json:"updated_at"`
 }
 
 func (s *Pack) String() string {
@@ -296,7 +194,10 @@ func (s *Pack) EncodeIcon(path string) error {
 		mimeType,
 	)
 
-	s.Icon = data.String()
+	s.Icon = &Attachment{
+		Upload: data.String(),
+	}
+
 	return nil
 }
 
@@ -345,7 +246,10 @@ func (s *Pack) EncodeLogo(path string) error {
 		mimeType,
 	)
 
-	s.Logo = data.String()
+	s.Logo = &Attachment{
+		Upload: data.String(),
+	}
+
 	return nil
 }
 
@@ -394,26 +298,10 @@ func (s *Pack) EncodeBackground(path string) error {
 		mimeType,
 	)
 
-	s.Background = data.String()
-	return nil
-}
-
-// PackName represents the mapped value of a simple pack name.
-type PackName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *PackName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
+	s.Background = &Attachment{
+		Upload: data.String(),
 	}
 
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode pack: %v", err)
-	}
-
-	*s = PackName(aux.Name)
 	return nil
 }
 
@@ -432,35 +320,16 @@ func (s *User) String() string {
 	return s.Username
 }
 
-// UserName represents the mapped value of a simple user username.
-type UserName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *UserName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Username string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode user: %v", err)
-	}
-
-	*s = UserName(aux.Username)
-	return nil
-}
-
 // Version represents a version API response.
 type Version struct {
-	ID        int64     `json:"id"`
-	Mod       ModName   `json:"mod"`
-	ModID     int64     `json:"mod_id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	File      string    `json:"file"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        int64       `json:"id"`
+	Mod       *Mod        `json:"mod"`
+	ModID     int64       `json:"mod_id"`
+	Slug      string      `json:"slug"`
+	Name      string      `json:"name"`
+	File      *Attachment `json:"file"`
+	CreatedAt time.Time   `json:"created_at"`
+	UpdatedAt time.Time   `json:"updated_at"`
 }
 
 func (s *Version) String() string {
@@ -512,26 +381,10 @@ func (s *Version) EncodeFile(path string) error {
 		mimeType,
 	)
 
-	s.File = data.String()
-	return nil
-}
-
-// VersionName represents the mapped value of a simple version name.
-type VersionName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *VersionName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Name string
+	s.File = &Attachment{
+		Upload: data.String(),
 	}
 
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode version: %v", err)
-	}
-
-	*s = VersionName(aux.Name)
 	return nil
 }
 
@@ -548,23 +401,4 @@ type Profile struct {
 
 func (s *Profile) String() string {
 	return s.Username
-}
-
-// ProfileName represents the mapped value of a simple profile name.
-type ProfileName string
-
-// UnmarshalJSON just maps the nested struct into a simple string.
-func (s *ProfileName) UnmarshalJSON(data []byte) error {
-	r := bytes.NewReader(data)
-
-	var aux struct {
-		Username string
-	}
-
-	if err := json.NewDecoder(r).Decode(&aux); err != nil {
-		return fmt.Errorf("Failed to decode profile: %v", err)
-	}
-
-	*s = ProfileName(aux.Username)
-	return nil
 }

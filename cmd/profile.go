@@ -69,14 +69,45 @@ func ProfileShow(c *cli.Context, client solder.API) error {
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetHeader([]string{"Key", "Value"})
 
-	table.AppendBulk(
-		[][]string{
-			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Slug", record.Slug},
-			{"Username", record.Username},
-			{"Email", record.Email},
-			{"Created", record.CreatedAt.Format(time.UnixDate)},
-			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+	table.Append(
+		[]string{
+			"ID",
+			strconv.FormatInt(record.ID, 10),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Slug",
+			record.Slug,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Username",
+			record.Username,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Email",
+			record.Email,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Created",
+			record.CreatedAt.Format(time.UnixDate),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Updated",
+			record.UpdatedAt.Format(time.UnixDate),
 		},
 	)
 

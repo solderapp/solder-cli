@@ -247,17 +247,66 @@ func ModShow(c *cli.Context, client solder.API) error {
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetHeader([]string{"Key", "Value"})
 
-	table.AppendBulk(
-		[][]string{
-			{"ID", strconv.FormatInt(record.ID, 10)},
-			{"Slug", record.Slug},
-			{"Name", record.Name},
-			{"Description", record.Description},
-			{"Author", record.Author},
-			{"Website", record.Website},
-			{"Donate", record.Donate},
-			{"Created", record.CreatedAt.Format(time.UnixDate)},
-			{"Updated", record.UpdatedAt.Format(time.UnixDate)},
+	table.Append(
+		[]string{
+			"ID",
+			strconv.FormatInt(record.ID, 10),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Slug",
+			record.Slug,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Name",
+			record.Name,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Description",
+			record.Description,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Author",
+			record.Author,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Website",
+			record.Website,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Donate",
+			record.Donate,
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Created",
+			record.CreatedAt.Format(time.UnixDate),
+		},
+	)
+
+	table.Append(
+		[]string{
+			"Updated",
+			record.UpdatedAt.Format(time.UnixDate),
 		},
 	)
 
