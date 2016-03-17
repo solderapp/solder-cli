@@ -333,7 +333,7 @@ func BuildShow(c *cli.Context, client solder.API) error {
 	if record.Pack != nil {
 		table.Append(
 			[]string{
-				"",
+				"Pack",
 				record.Pack.String(),
 			},
 		)
@@ -342,7 +342,7 @@ func BuildShow(c *cli.Context, client solder.API) error {
 	if record.Minecraft != nil {
 		table.Append(
 			[]string{
-				"",
+				"Minecraft",
 				record.Minecraft.String(),
 			},
 		)
@@ -357,19 +357,23 @@ func BuildShow(c *cli.Context, client solder.API) error {
 		)
 	}
 
-	table.Append(
-		[]string{
-			"Java",
-			record.MinJava,
-		},
-	)
+	if record.MinJava != "" {
+		table.Append(
+			[]string{
+				"Java",
+				record.MinJava,
+			},
+		)
+	}
 
-	table.Append(
-		[]string{
-			"Memory",
-			record.MinMemory,
-		},
-	)
+	if record.MinMemory != "" {
+		table.Append(
+			[]string{
+				"Memory",
+				record.MinMemory,
+			},
+		)
+	}
 
 	table.Append(
 		[]string{
