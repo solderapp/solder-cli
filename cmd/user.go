@@ -409,7 +409,7 @@ func UserModList(c *cli.Context, client solder.API) error {
 
 // UserModAppend provides the sub-command to append a mod to the user.
 func UserModAppend(c *cli.Context, client solder.API) error {
-	err := client.PackClientAppend(
+	err := client.UserModAppend(
 		GetIdentifierParam(c),
 		GetModParam(c),
 	)
@@ -424,7 +424,7 @@ func UserModAppend(c *cli.Context, client solder.API) error {
 
 // UserModRemove provides the sub-command to remove a mod from the user.
 func UserModRemove(c *cli.Context, client solder.API) error {
-	err := client.PackClientDelete(
+	err := client.UserModDelete(
 		GetIdentifierParam(c),
 		GetModParam(c),
 	)
