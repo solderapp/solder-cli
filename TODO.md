@@ -10,3 +10,5 @@
 
 * [ ] Integrate permission management
 * [ ] Append packs to permission system
+* [ ] Integrate JSON object output
+* [ ] Integrate plain text output
