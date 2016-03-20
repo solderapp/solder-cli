@@ -4,9 +4,9 @@ vendors:
 - path: github.com/davecgh/go-spew
   rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
-  rev: 99511271042a09d1e01baea8781caa5210fec66e
+  rev: 62e4364d64b32762febb61f2c88c0a29bc49a225
 - path: github.com/jackspirou/syscerts
-  rev: 64db7e442e5db10218ed7ec87c8d54aec5ea8b60
+  rev: 5ecaea8f7ec96a0826ced1ff106d30083066bf35
 - path: github.com/mattn/go-runewidth
   rev: d6bea18f789704b5f83375793155289da36a3c7f
 - path: github.com/olekukonko/tablewriter
