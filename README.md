@@ -1,7 +1,7 @@
 # Solder: CLI client
 
 [![Build Status](http://github.dronehippie.de/api/badges/solderapp/solder-cli/status.svg)](http://github.dronehippie.de/solderapp/solder-cli)
-[![Coverage Status](https://aircover.co/badges/solderapp/solder-cli/coverage.svg)](https://aircover.co/solderapp/solder-cli)
+[![Coverage Status](http://coverage.dronehippie.de//badges/solderapp/solder-cli/coverage.svg)](https://aircover.co/solderapp/solder-cli)
 [![Go Doc](https://godoc.org/github.com/solderapp/solder-cli?status.svg)](http://godoc.org/github.com/solderapp/solder-cli)
 [![Go Report](http://goreportcard.com/badge/solderapp/solder-cli)](http://goreportcard.com/report/solderapp/solder-cli)
 [![Join the chat at https://gitter.im/solderapp/solder](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solderapp/solder)
