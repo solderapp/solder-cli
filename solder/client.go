@@ -807,8 +807,16 @@ func (c *defaultClient) stream(rawurl, method string, in, out interface{}) (io.R
 		return nil, err
 	}
 
+	req.Header.Set(
+		"User-Agent",
+		"SolderNG CLI",
+	)
+
 	if in != nil {
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set(
+			"Content-Type",
+			"application/json",
+		)
 	}
 
 	resp, err := c.client.Do(req)
