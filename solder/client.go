@@ -15,8 +15,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-//go:generate mockery -all -case=underscore
-
 const (
 	pathProfile         = "%s/api/profile"
 	pathForge           = "%s/api/forge"

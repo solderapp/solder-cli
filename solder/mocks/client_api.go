@@ -3,13 +3,13 @@ package mocks
 import "github.com/solderapp/solder-cli/solder"
 import "github.com/stretchr/testify/mock"
 
-// API describes a Solder API client.
-type API struct {
+// ClientAPI describes a client API.
+type ClientAPI struct {
 	mock.Mock
 }
 
 // ProfileGet provides a mock function with given fields:
-func (_m *API) ProfileGet() (*solder.Profile, error) {
+func (_m *ClientAPI) ProfileGet() (*solder.Profile, error) {
 	ret := _m.Called()
 
 	var r0 *solder.Profile
@@ -32,7 +32,7 @@ func (_m *API) ProfileGet() (*solder.Profile, error) {
 }
 
 // ProfilePatch provides a mock function with given fields: _a0
-func (_m *API) ProfilePatch(_a0 *solder.Profile) (*solder.Profile, error) {
+func (_m *ClientAPI) ProfilePatch(_a0 *solder.Profile) (*solder.Profile, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Profile
@@ -55,7 +55,7 @@ func (_m *API) ProfilePatch(_a0 *solder.Profile) (*solder.Profile, error) {
 }
 
 // ForgeList provides a mock function with given fields:
-func (_m *API) ForgeList() ([]*solder.Forge, error) {
+func (_m *ClientAPI) ForgeList() ([]*solder.Forge, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Forge
@@ -78,7 +78,7 @@ func (_m *API) ForgeList() ([]*solder.Forge, error) {
 }
 
 // ForgeGet provides a mock function with given fields: _a0
-func (_m *API) ForgeGet(_a0 string) (*solder.Forge, error) {
+func (_m *ClientAPI) ForgeGet(_a0 string) (*solder.Forge, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Forge
@@ -101,7 +101,7 @@ func (_m *API) ForgeGet(_a0 string) (*solder.Forge, error) {
 }
 
 // ForgeRefresh provides a mock function with given fields:
-func (_m *API) ForgeRefresh() error {
+func (_m *ClientAPI) ForgeRefresh() error {
 	ret := _m.Called()
 
 	var r0 error
@@ -115,7 +115,7 @@ func (_m *API) ForgeRefresh() error {
 }
 
 // ForgeBuildList provides a mock function with given fields: _a0
-func (_m *API) ForgeBuildList(_a0 string) ([]*solder.Build, error) {
+func (_m *ClientAPI) ForgeBuildList(_a0 string) ([]*solder.Build, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Build
@@ -138,7 +138,7 @@ func (_m *API) ForgeBuildList(_a0 string) ([]*solder.Build, error) {
 }
 
 // ForgeBuildAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) ForgeBuildAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ForgeBuildAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -152,7 +152,7 @@ func (_m *API) ForgeBuildAppend(_a0 string, _a1 string) error {
 }
 
 // ForgeBuildDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) ForgeBuildDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ForgeBuildDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -166,7 +166,7 @@ func (_m *API) ForgeBuildDelete(_a0 string, _a1 string) error {
 }
 
 // MinecraftList provides a mock function with given fields:
-func (_m *API) MinecraftList() ([]*solder.Minecraft, error) {
+func (_m *ClientAPI) MinecraftList() ([]*solder.Minecraft, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Minecraft
@@ -189,7 +189,7 @@ func (_m *API) MinecraftList() ([]*solder.Minecraft, error) {
 }
 
 // MinecraftGet provides a mock function with given fields: _a0
-func (_m *API) MinecraftGet(_a0 string) (*solder.Minecraft, error) {
+func (_m *ClientAPI) MinecraftGet(_a0 string) (*solder.Minecraft, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Minecraft
@@ -212,7 +212,7 @@ func (_m *API) MinecraftGet(_a0 string) (*solder.Minecraft, error) {
 }
 
 // MinecraftRefresh provides a mock function with given fields:
-func (_m *API) MinecraftRefresh() error {
+func (_m *ClientAPI) MinecraftRefresh() error {
 	ret := _m.Called()
 
 	var r0 error
@@ -226,7 +226,7 @@ func (_m *API) MinecraftRefresh() error {
 }
 
 // MinecraftBuildList provides a mock function with given fields: _a0
-func (_m *API) MinecraftBuildList(_a0 string) ([]*solder.Build, error) {
+func (_m *ClientAPI) MinecraftBuildList(_a0 string) ([]*solder.Build, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Build
@@ -249,7 +249,7 @@ func (_m *API) MinecraftBuildList(_a0 string) ([]*solder.Build, error) {
 }
 
 // MinecraftBuildAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) MinecraftBuildAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) MinecraftBuildAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -263,7 +263,7 @@ func (_m *API) MinecraftBuildAppend(_a0 string, _a1 string) error {
 }
 
 // MinecraftBuildDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) MinecraftBuildDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) MinecraftBuildDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -277,7 +277,7 @@ func (_m *API) MinecraftBuildDelete(_a0 string, _a1 string) error {
 }
 
 // PackList provides a mock function with given fields:
-func (_m *API) PackList() ([]*solder.Pack, error) {
+func (_m *ClientAPI) PackList() ([]*solder.Pack, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Pack
@@ -300,7 +300,7 @@ func (_m *API) PackList() ([]*solder.Pack, error) {
 }
 
 // PackGet provides a mock function with given fields: _a0
-func (_m *API) PackGet(_a0 string) (*solder.Pack, error) {
+func (_m *ClientAPI) PackGet(_a0 string) (*solder.Pack, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Pack
@@ -323,7 +323,7 @@ func (_m *API) PackGet(_a0 string) (*solder.Pack, error) {
 }
 
 // PackPost provides a mock function with given fields: _a0
-func (_m *API) PackPost(_a0 *solder.Pack) (*solder.Pack, error) {
+func (_m *ClientAPI) PackPost(_a0 *solder.Pack) (*solder.Pack, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Pack
@@ -346,7 +346,7 @@ func (_m *API) PackPost(_a0 *solder.Pack) (*solder.Pack, error) {
 }
 
 // PackPatch provides a mock function with given fields: _a0
-func (_m *API) PackPatch(_a0 *solder.Pack) (*solder.Pack, error) {
+func (_m *ClientAPI) PackPatch(_a0 *solder.Pack) (*solder.Pack, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Pack
@@ -369,7 +369,7 @@ func (_m *API) PackPatch(_a0 *solder.Pack) (*solder.Pack, error) {
 }
 
 // PackDelete provides a mock function with given fields: _a0
-func (_m *API) PackDelete(_a0 string) error {
+func (_m *ClientAPI) PackDelete(_a0 string) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
@@ -383,7 +383,7 @@ func (_m *API) PackDelete(_a0 string) error {
 }
 
 // PackClientList provides a mock function with given fields: _a0
-func (_m *API) PackClientList(_a0 string) ([]*solder.Client, error) {
+func (_m *ClientAPI) PackClientList(_a0 string) ([]*solder.Client, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Client
@@ -406,7 +406,7 @@ func (_m *API) PackClientList(_a0 string) ([]*solder.Client, error) {
 }
 
 // PackClientAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) PackClientAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) PackClientAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -420,7 +420,7 @@ func (_m *API) PackClientAppend(_a0 string, _a1 string) error {
 }
 
 // PackClientDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) PackClientDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) PackClientDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -434,7 +434,7 @@ func (_m *API) PackClientDelete(_a0 string, _a1 string) error {
 }
 
 // BuildList provides a mock function with given fields: _a0
-func (_m *API) BuildList(_a0 string) ([]*solder.Build, error) {
+func (_m *ClientAPI) BuildList(_a0 string) ([]*solder.Build, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Build
@@ -457,7 +457,7 @@ func (_m *API) BuildList(_a0 string) ([]*solder.Build, error) {
 }
 
 // BuildGet provides a mock function with given fields: _a0, _a1
-func (_m *API) BuildGet(_a0 string, _a1 string) (*solder.Build, error) {
+func (_m *ClientAPI) BuildGet(_a0 string, _a1 string) (*solder.Build, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Build
@@ -480,7 +480,7 @@ func (_m *API) BuildGet(_a0 string, _a1 string) (*solder.Build, error) {
 }
 
 // BuildPost provides a mock function with given fields: _a0, _a1
-func (_m *API) BuildPost(_a0 string, _a1 *solder.Build) (*solder.Build, error) {
+func (_m *ClientAPI) BuildPost(_a0 string, _a1 *solder.Build) (*solder.Build, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Build
@@ -503,7 +503,7 @@ func (_m *API) BuildPost(_a0 string, _a1 *solder.Build) (*solder.Build, error) {
 }
 
 // BuildPatch provides a mock function with given fields: _a0, _a1
-func (_m *API) BuildPatch(_a0 string, _a1 *solder.Build) (*solder.Build, error) {
+func (_m *ClientAPI) BuildPatch(_a0 string, _a1 *solder.Build) (*solder.Build, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Build
@@ -526,7 +526,7 @@ func (_m *API) BuildPatch(_a0 string, _a1 *solder.Build) (*solder.Build, error) 
 }
 
 // BuildDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) BuildDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) BuildDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -540,7 +540,7 @@ func (_m *API) BuildDelete(_a0 string, _a1 string) error {
 }
 
 // BuildVersionList provides a mock function with given fields: _a0, _a1
-func (_m *API) BuildVersionList(_a0 string, _a1 string) ([]*solder.Version, error) {
+func (_m *ClientAPI) BuildVersionList(_a0 string, _a1 string) ([]*solder.Version, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 []*solder.Version
@@ -563,7 +563,7 @@ func (_m *API) BuildVersionList(_a0 string, _a1 string) ([]*solder.Version, erro
 }
 
 // BuildVersionAppend provides a mock function with given fields: _a0, _a1, _a2
-func (_m *API) BuildVersionAppend(_a0 string, _a1 string, _a2 string) error {
+func (_m *ClientAPI) BuildVersionAppend(_a0 string, _a1 string, _a2 string) error {
 	ret := _m.Called(_a0, _a1, _a2)
 
 	var r0 error
@@ -577,7 +577,7 @@ func (_m *API) BuildVersionAppend(_a0 string, _a1 string, _a2 string) error {
 }
 
 // BuildVersionDelete provides a mock function with given fields: _a0, _a1, _a2
-func (_m *API) BuildVersionDelete(_a0 string, _a1 string, _a2 string) error {
+func (_m *ClientAPI) BuildVersionDelete(_a0 string, _a1 string, _a2 string) error {
 	ret := _m.Called(_a0, _a1, _a2)
 
 	var r0 error
@@ -591,7 +591,7 @@ func (_m *API) BuildVersionDelete(_a0 string, _a1 string, _a2 string) error {
 }
 
 // ModList provides a mock function with given fields:
-func (_m *API) ModList() ([]*solder.Mod, error) {
+func (_m *ClientAPI) ModList() ([]*solder.Mod, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Mod
@@ -614,7 +614,7 @@ func (_m *API) ModList() ([]*solder.Mod, error) {
 }
 
 // ModGet provides a mock function with given fields: _a0
-func (_m *API) ModGet(_a0 string) (*solder.Mod, error) {
+func (_m *ClientAPI) ModGet(_a0 string) (*solder.Mod, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Mod
@@ -637,7 +637,7 @@ func (_m *API) ModGet(_a0 string) (*solder.Mod, error) {
 }
 
 // ModPost provides a mock function with given fields: _a0
-func (_m *API) ModPost(_a0 *solder.Mod) (*solder.Mod, error) {
+func (_m *ClientAPI) ModPost(_a0 *solder.Mod) (*solder.Mod, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Mod
@@ -660,7 +660,7 @@ func (_m *API) ModPost(_a0 *solder.Mod) (*solder.Mod, error) {
 }
 
 // ModPatch provides a mock function with given fields: _a0
-func (_m *API) ModPatch(_a0 *solder.Mod) (*solder.Mod, error) {
+func (_m *ClientAPI) ModPatch(_a0 *solder.Mod) (*solder.Mod, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Mod
@@ -683,7 +683,7 @@ func (_m *API) ModPatch(_a0 *solder.Mod) (*solder.Mod, error) {
 }
 
 // ModDelete provides a mock function with given fields: _a0
-func (_m *API) ModDelete(_a0 string) error {
+func (_m *ClientAPI) ModDelete(_a0 string) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
@@ -697,7 +697,7 @@ func (_m *API) ModDelete(_a0 string) error {
 }
 
 // ModUserList provides a mock function with given fields: _a0
-func (_m *API) ModUserList(_a0 string) ([]*solder.User, error) {
+func (_m *ClientAPI) ModUserList(_a0 string) ([]*solder.User, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.User
@@ -720,7 +720,7 @@ func (_m *API) ModUserList(_a0 string) ([]*solder.User, error) {
 }
 
 // ModUserAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) ModUserAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ModUserAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -734,7 +734,7 @@ func (_m *API) ModUserAppend(_a0 string, _a1 string) error {
 }
 
 // ModUserDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) ModUserDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ModUserDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -748,7 +748,7 @@ func (_m *API) ModUserDelete(_a0 string, _a1 string) error {
 }
 
 // VersionList provides a mock function with given fields: _a0
-func (_m *API) VersionList(_a0 string) ([]*solder.Version, error) {
+func (_m *ClientAPI) VersionList(_a0 string) ([]*solder.Version, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Version
@@ -771,7 +771,7 @@ func (_m *API) VersionList(_a0 string) ([]*solder.Version, error) {
 }
 
 // VersionGet provides a mock function with given fields: _a0, _a1
-func (_m *API) VersionGet(_a0 string, _a1 string) (*solder.Version, error) {
+func (_m *ClientAPI) VersionGet(_a0 string, _a1 string) (*solder.Version, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Version
@@ -794,7 +794,7 @@ func (_m *API) VersionGet(_a0 string, _a1 string) (*solder.Version, error) {
 }
 
 // VersionPost provides a mock function with given fields: _a0, _a1
-func (_m *API) VersionPost(_a0 string, _a1 *solder.Version) (*solder.Version, error) {
+func (_m *ClientAPI) VersionPost(_a0 string, _a1 *solder.Version) (*solder.Version, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Version
@@ -817,7 +817,7 @@ func (_m *API) VersionPost(_a0 string, _a1 *solder.Version) (*solder.Version, er
 }
 
 // VersionPatch provides a mock function with given fields: _a0, _a1
-func (_m *API) VersionPatch(_a0 string, _a1 *solder.Version) (*solder.Version, error) {
+func (_m *ClientAPI) VersionPatch(_a0 string, _a1 *solder.Version) (*solder.Version, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 *solder.Version
@@ -840,7 +840,7 @@ func (_m *API) VersionPatch(_a0 string, _a1 *solder.Version) (*solder.Version, e
 }
 
 // VersionDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) VersionDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) VersionDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -854,7 +854,7 @@ func (_m *API) VersionDelete(_a0 string, _a1 string) error {
 }
 
 // VersionBuildList provides a mock function with given fields: _a0, _a1
-func (_m *API) VersionBuildList(_a0 string, _a1 string) ([]*solder.Build, error) {
+func (_m *ClientAPI) VersionBuildList(_a0 string, _a1 string) ([]*solder.Build, error) {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 []*solder.Build
@@ -877,7 +877,7 @@ func (_m *API) VersionBuildList(_a0 string, _a1 string) ([]*solder.Build, error)
 }
 
 // VersionBuildAppend provides a mock function with given fields: _a0, _a1, _a2
-func (_m *API) VersionBuildAppend(_a0 string, _a1 string, _a2 string) error {
+func (_m *ClientAPI) VersionBuildAppend(_a0 string, _a1 string, _a2 string) error {
 	ret := _m.Called(_a0, _a1, _a2)
 
 	var r0 error
@@ -891,7 +891,7 @@ func (_m *API) VersionBuildAppend(_a0 string, _a1 string, _a2 string) error {
 }
 
 // VersionBuildDelete provides a mock function with given fields: _a0, _a1, _a2
-func (_m *API) VersionBuildDelete(_a0 string, _a1 string, _a2 string) error {
+func (_m *ClientAPI) VersionBuildDelete(_a0 string, _a1 string, _a2 string) error {
 	ret := _m.Called(_a0, _a1, _a2)
 
 	var r0 error
@@ -905,7 +905,7 @@ func (_m *API) VersionBuildDelete(_a0 string, _a1 string, _a2 string) error {
 }
 
 // ClientList provides a mock function with given fields:
-func (_m *API) ClientList() ([]*solder.Client, error) {
+func (_m *ClientAPI) ClientList() ([]*solder.Client, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Client
@@ -928,7 +928,7 @@ func (_m *API) ClientList() ([]*solder.Client, error) {
 }
 
 // ClientGet provides a mock function with given fields: _a0
-func (_m *API) ClientGet(_a0 string) (*solder.Client, error) {
+func (_m *ClientAPI) ClientGet(_a0 string) (*solder.Client, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Client
@@ -951,7 +951,7 @@ func (_m *API) ClientGet(_a0 string) (*solder.Client, error) {
 }
 
 // ClientPost provides a mock function with given fields: _a0
-func (_m *API) ClientPost(_a0 *solder.Client) (*solder.Client, error) {
+func (_m *ClientAPI) ClientPost(_a0 *solder.Client) (*solder.Client, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Client
@@ -974,7 +974,7 @@ func (_m *API) ClientPost(_a0 *solder.Client) (*solder.Client, error) {
 }
 
 // ClientPatch provides a mock function with given fields: _a0
-func (_m *API) ClientPatch(_a0 *solder.Client) (*solder.Client, error) {
+func (_m *ClientAPI) ClientPatch(_a0 *solder.Client) (*solder.Client, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Client
@@ -997,7 +997,7 @@ func (_m *API) ClientPatch(_a0 *solder.Client) (*solder.Client, error) {
 }
 
 // ClientDelete provides a mock function with given fields: _a0
-func (_m *API) ClientDelete(_a0 string) error {
+func (_m *ClientAPI) ClientDelete(_a0 string) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
@@ -1011,7 +1011,7 @@ func (_m *API) ClientDelete(_a0 string) error {
 }
 
 // ClientPackList provides a mock function with given fields: _a0
-func (_m *API) ClientPackList(_a0 string) ([]*solder.Pack, error) {
+func (_m *ClientAPI) ClientPackList(_a0 string) ([]*solder.Pack, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Pack
@@ -1034,7 +1034,7 @@ func (_m *API) ClientPackList(_a0 string) ([]*solder.Pack, error) {
 }
 
 // ClientPackAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) ClientPackAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ClientPackAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -1048,7 +1048,7 @@ func (_m *API) ClientPackAppend(_a0 string, _a1 string) error {
 }
 
 // ClientPackDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) ClientPackDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) ClientPackDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -1062,7 +1062,7 @@ func (_m *API) ClientPackDelete(_a0 string, _a1 string) error {
 }
 
 // UserList provides a mock function with given fields:
-func (_m *API) UserList() ([]*solder.User, error) {
+func (_m *ClientAPI) UserList() ([]*solder.User, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.User
@@ -1085,7 +1085,7 @@ func (_m *API) UserList() ([]*solder.User, error) {
 }
 
 // UserGet provides a mock function with given fields: _a0
-func (_m *API) UserGet(_a0 string) (*solder.User, error) {
+func (_m *ClientAPI) UserGet(_a0 string) (*solder.User, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.User
@@ -1108,7 +1108,7 @@ func (_m *API) UserGet(_a0 string) (*solder.User, error) {
 }
 
 // UserPost provides a mock function with given fields: _a0
-func (_m *API) UserPost(_a0 *solder.User) (*solder.User, error) {
+func (_m *ClientAPI) UserPost(_a0 *solder.User) (*solder.User, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.User
@@ -1131,7 +1131,7 @@ func (_m *API) UserPost(_a0 *solder.User) (*solder.User, error) {
 }
 
 // UserPatch provides a mock function with given fields: _a0
-func (_m *API) UserPatch(_a0 *solder.User) (*solder.User, error) {
+func (_m *ClientAPI) UserPatch(_a0 *solder.User) (*solder.User, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.User
@@ -1154,7 +1154,7 @@ func (_m *API) UserPatch(_a0 *solder.User) (*solder.User, error) {
 }
 
 // UserDelete provides a mock function with given fields: _a0
-func (_m *API) UserDelete(_a0 string) error {
+func (_m *ClientAPI) UserDelete(_a0 string) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
@@ -1168,7 +1168,7 @@ func (_m *API) UserDelete(_a0 string) error {
 }
 
 // UserModList provides a mock function with given fields: _a0
-func (_m *API) UserModList(_a0 string) ([]*solder.Mod, error) {
+func (_m *ClientAPI) UserModList(_a0 string) ([]*solder.Mod, error) {
 	ret := _m.Called(_a0)
 
 	var r0 []*solder.Mod
@@ -1191,7 +1191,7 @@ func (_m *API) UserModList(_a0 string) ([]*solder.Mod, error) {
 }
 
 // UserModAppend provides a mock function with given fields: _a0, _a1
-func (_m *API) UserModAppend(_a0 string, _a1 string) error {
+func (_m *ClientAPI) UserModAppend(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -1205,7 +1205,7 @@ func (_m *API) UserModAppend(_a0 string, _a1 string) error {
 }
 
 // UserModDelete provides a mock function with given fields: _a0, _a1
-func (_m *API) UserModDelete(_a0 string, _a1 string) error {
+func (_m *ClientAPI) UserModDelete(_a0 string, _a1 string) error {
 	ret := _m.Called(_a0, _a1)
 
 	var r0 error
@@ -1219,7 +1219,7 @@ func (_m *API) UserModDelete(_a0 string, _a1 string) error {
 }
 
 // KeyList provides a mock function with given fields:
-func (_m *API) KeyList() ([]*solder.Key, error) {
+func (_m *ClientAPI) KeyList() ([]*solder.Key, error) {
 	ret := _m.Called()
 
 	var r0 []*solder.Key
@@ -1242,7 +1242,7 @@ func (_m *API) KeyList() ([]*solder.Key, error) {
 }
 
 // KeyGet provides a mock function with given fields: _a0
-func (_m *API) KeyGet(_a0 string) (*solder.Key, error) {
+func (_m *ClientAPI) KeyGet(_a0 string) (*solder.Key, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Key
@@ -1265,7 +1265,7 @@ func (_m *API) KeyGet(_a0 string) (*solder.Key, error) {
 }
 
 // KeyPost provides a mock function with given fields: _a0
-func (_m *API) KeyPost(_a0 *solder.Key) (*solder.Key, error) {
+func (_m *ClientAPI) KeyPost(_a0 *solder.Key) (*solder.Key, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Key
@@ -1288,7 +1288,7 @@ func (_m *API) KeyPost(_a0 *solder.Key) (*solder.Key, error) {
 }
 
 // KeyPatch provides a mock function with given fields: _a0
-func (_m *API) KeyPatch(_a0 *solder.Key) (*solder.Key, error) {
+func (_m *ClientAPI) KeyPatch(_a0 *solder.Key) (*solder.Key, error) {
 	ret := _m.Called(_a0)
 
 	var r0 *solder.Key
@@ -1311,7 +1311,7 @@ func (_m *API) KeyPatch(_a0 *solder.Key) (*solder.Key, error) {
 }
 
 // KeyDelete provides a mock function with given fields: _a0
-func (_m *API) KeyDelete(_a0 string) error {
+func (_m *ClientAPI) KeyDelete(_a0 string) error {
 	ret := _m.Called(_a0)
 
 	var r0 error
