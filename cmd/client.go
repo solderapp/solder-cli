@@ -173,7 +173,7 @@ func Client() cli.Command {
 }
 
 // ClientList provides the sub-command to list all clients.
-func ClientList(c *cli.Context, client solder.API) error {
+func ClientList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ClientList()
 
 	if err != nil {
@@ -204,7 +204,7 @@ func ClientList(c *cli.Context, client solder.API) error {
 }
 
 // ClientShow provides the sub-command to show client details.
-func ClientShow(c *cli.Context, client solder.API) error {
+func ClientShow(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ClientGet(
 		GetIdentifierParam(c),
 	)
@@ -264,7 +264,7 @@ func ClientShow(c *cli.Context, client solder.API) error {
 }
 
 // ClientDelete provides the sub-command to delete a client.
-func ClientDelete(c *cli.Context, client solder.API) error {
+func ClientDelete(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ClientDelete(
 		GetIdentifierParam(c),
 	)
@@ -278,7 +278,7 @@ func ClientDelete(c *cli.Context, client solder.API) error {
 }
 
 // ClientUpdate provides the sub-command to update a client.
-func ClientUpdate(c *cli.Context, client solder.API) error {
+func ClientUpdate(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ClientGet(
 		GetIdentifierParam(c),
 	)
@@ -322,7 +322,7 @@ func ClientUpdate(c *cli.Context, client solder.API) error {
 }
 
 // ClientCreate provides the sub-command to create a client.
-func ClientCreate(c *cli.Context, client solder.API) error {
+func ClientCreate(c *cli.Context, client solder.ClientAPI) error {
 	record := &solder.Client{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
@@ -354,7 +354,7 @@ func ClientCreate(c *cli.Context, client solder.API) error {
 }
 
 // ClientPackList provides the sub-command to list packs of the client.
-func ClientPackList(c *cli.Context, client solder.API) error {
+func ClientPackList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ClientPackList(
 		GetIdentifierParam(c),
 	)
@@ -387,7 +387,7 @@ func ClientPackList(c *cli.Context, client solder.API) error {
 }
 
 // ClientPackAppend provides the sub-command to append a pack to the client.
-func ClientPackAppend(c *cli.Context, client solder.API) error {
+func ClientPackAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ClientPackAppend(
 		GetIdentifierParam(c),
 		GetPackParam(c),
@@ -402,7 +402,7 @@ func ClientPackAppend(c *cli.Context, client solder.API) error {
 }
 
 // ClientPackRemove provides the sub-command to remove a pack from the client.
-func ClientPackRemove(c *cli.Context, client solder.API) error {
+func ClientPackRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ClientPackDelete(
 		GetIdentifierParam(c),
 		GetPackParam(c),

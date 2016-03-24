@@ -51,14 +51,14 @@ const (
 	pathKey             = "%s/api/keys/%v"
 )
 
-type defaultClient struct {
+type DefaultClient struct {
 	client *http.Client
 	base   string
 }
 
 // NewClient returns a client for the specified URL.
-func NewClient(uri string) API {
-	return &defaultClient{
+func NewClient(uri string) ClientAPI {
+	return &DefaultClient{
 		http.DefaultClient,
 		uri,
 	}
@@ -66,7 +66,7 @@ func NewClient(uri string) API {
 
 // NewClientToken returns a client that authenticates
 // all outbound requests with the given token.
-func NewClientToken(uri, token string) API {
+func NewClientToken(uri, token string) ClientAPI {
 	config := oauth2.Config{}
 
 	auther := config.Client(
@@ -82,7 +82,7 @@ func NewClientToken(uri, token string) API {
 		},
 	}
 
-	return &defaultClient{
+	return &DefaultClient{
 		auther,
 		uri,
 	}
@@ -91,12 +91,12 @@ func NewClientToken(uri, token string) API {
 // SetClient sets the default http client. This should
 // be used in conjunction with golang.org/x/oauth2 to
 // authenticate requests to the Solder API.
-func (c *defaultClient) SetClient(client *http.Client) {
+func (c *DefaultClient) SetClient(client *http.Client) {
 	c.client = client
 }
 
 // ProfileGet returns a profile.
-func (c *defaultClient) ProfileGet() (*Profile, error) {
+func (c *DefaultClient) ProfileGet() (*Profile, error) {
 	out := &Profile{}
 
 	uri := fmt.Sprintf(pathProfile, c.base)
@@ -106,7 +106,7 @@ func (c *defaultClient) ProfileGet() (*Profile, error) {
 }
 
 // ProfilePatch updates a profile.
-func (c *defaultClient) ProfilePatch(in *Profile) (*Profile, error) {
+func (c *DefaultClient) ProfilePatch(in *Profile) (*Profile, error) {
 	out := &Profile{}
 
 	uri := fmt.Sprintf(pathProfile, c.base)
@@ -116,7 +116,7 @@ func (c *defaultClient) ProfilePatch(in *Profile) (*Profile, error) {
 }
 
 // ForgeList returns a list of all Forge versions.
-func (c *defaultClient) ForgeList() ([]*Forge, error) {
+func (c *DefaultClient) ForgeList() ([]*Forge, error) {
 	var out []*Forge
 
 	uri := fmt.Sprintf(pathForge, c.base)
@@ -126,7 +126,7 @@ func (c *defaultClient) ForgeList() ([]*Forge, error) {
 }
 
 // ForgeGet returns a Forge.
-func (c *defaultClient) ForgeGet(id string) (*Forge, error) {
+func (c *DefaultClient) ForgeGet(id string) (*Forge, error) {
 	var out []*Forge
 
 	uri := fmt.Sprintf(pathForge, c.base)
@@ -146,7 +146,7 @@ func (c *defaultClient) ForgeGet(id string) (*Forge, error) {
 }
 
 // ForgeRefresh refreshs the available Forge versions.
-func (c *defaultClient) ForgeRefresh() error {
+func (c *DefaultClient) ForgeRefresh() error {
 	uri := fmt.Sprintf(pathForge, c.base)
 	err := c.patch(uri, nil, nil)
 
@@ -154,7 +154,7 @@ func (c *defaultClient) ForgeRefresh() error {
 }
 
 // ForgeBuildList returns a list of related builds for a Forge version.
-func (c *defaultClient) ForgeBuildList(id string) ([]*Build, error) {
+func (c *DefaultClient) ForgeBuildList(id string) ([]*Build, error) {
 	var out []*Build
 
 	uri := fmt.Sprintf(pathForgeBuilds, c.base, id)
@@ -164,7 +164,7 @@ func (c *defaultClient) ForgeBuildList(id string) ([]*Build, error) {
 }
 
 // ForgeBuildAppend appends a Forge version to a build.
-func (c *defaultClient) ForgeBuildAppend(id, append string) error {
+func (c *DefaultClient) ForgeBuildAppend(id, append string) error {
 	uri := fmt.Sprintf(pathForgeBuild, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -172,7 +172,7 @@ func (c *defaultClient) ForgeBuildAppend(id, append string) error {
 }
 
 // ForgeBuildDelete remove a Forge version from a build.
-func (c *defaultClient) ForgeBuildDelete(id, delete string) error {
+func (c *DefaultClient) ForgeBuildDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathForgeBuild, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -180,7 +180,7 @@ func (c *defaultClient) ForgeBuildDelete(id, delete string) error {
 }
 
 // MinecraftList returns a list of all Minecraft versions.
-func (c *defaultClient) MinecraftList() ([]*Minecraft, error) {
+func (c *DefaultClient) MinecraftList() ([]*Minecraft, error) {
 	var out []*Minecraft
 
 	uri := fmt.Sprintf(pathMinecraft, c.base)
@@ -190,7 +190,7 @@ func (c *defaultClient) MinecraftList() ([]*Minecraft, error) {
 }
 
 // MinecraftGet returns a Minecraft.
-func (c *defaultClient) MinecraftGet(id string) (*Minecraft, error) {
+func (c *DefaultClient) MinecraftGet(id string) (*Minecraft, error) {
 	var out []*Minecraft
 
 	uri := fmt.Sprintf(pathMinecraft, c.base)
@@ -210,7 +210,7 @@ func (c *defaultClient) MinecraftGet(id string) (*Minecraft, error) {
 }
 
 // MinecraftRefresh refreshs the available Minecraft versions.
-func (c *defaultClient) MinecraftRefresh() error {
+func (c *DefaultClient) MinecraftRefresh() error {
 	uri := fmt.Sprintf(pathMinecraft, c.base)
 	err := c.patch(uri, nil, nil)
 
@@ -218,7 +218,7 @@ func (c *defaultClient) MinecraftRefresh() error {
 }
 
 // MinecraftBuildList returns a list of related builds for a Minecraft version.
-func (c *defaultClient) MinecraftBuildList(id string) ([]*Build, error) {
+func (c *DefaultClient) MinecraftBuildList(id string) ([]*Build, error) {
 	var out []*Build
 
 	uri := fmt.Sprintf(pathMinecraftBuilds, c.base, id)
@@ -228,7 +228,7 @@ func (c *defaultClient) MinecraftBuildList(id string) ([]*Build, error) {
 }
 
 // MinecraftBuildAppend appends a Minecraft version to a build.
-func (c *defaultClient) MinecraftBuildAppend(id, append string) error {
+func (c *DefaultClient) MinecraftBuildAppend(id, append string) error {
 	uri := fmt.Sprintf(pathMinecraftBuild, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -236,7 +236,7 @@ func (c *defaultClient) MinecraftBuildAppend(id, append string) error {
 }
 
 // MinecraftBuildDelete remove a Minecraft version from a build.
-func (c *defaultClient) MinecraftBuildDelete(id, delete string) error {
+func (c *DefaultClient) MinecraftBuildDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathMinecraftBuild, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -244,7 +244,7 @@ func (c *defaultClient) MinecraftBuildDelete(id, delete string) error {
 }
 
 // PackList returns a list of all packs.
-func (c *defaultClient) PackList() ([]*Pack, error) {
+func (c *DefaultClient) PackList() ([]*Pack, error) {
 	var out []*Pack
 
 	uri := fmt.Sprintf(pathPacks, c.base)
@@ -254,7 +254,7 @@ func (c *defaultClient) PackList() ([]*Pack, error) {
 }
 
 // PackGet returns a pack.
-func (c *defaultClient) PackGet(id string) (*Pack, error) {
+func (c *DefaultClient) PackGet(id string) (*Pack, error) {
 	out := &Pack{}
 
 	uri := fmt.Sprintf(pathPack, c.base, id)
@@ -264,7 +264,7 @@ func (c *defaultClient) PackGet(id string) (*Pack, error) {
 }
 
 // PackPost creates a pack.
-func (c *defaultClient) PackPost(in *Pack) (*Pack, error) {
+func (c *DefaultClient) PackPost(in *Pack) (*Pack, error) {
 	out := &Pack{}
 
 	uri := fmt.Sprintf(pathPacks, c.base)
@@ -274,7 +274,7 @@ func (c *defaultClient) PackPost(in *Pack) (*Pack, error) {
 }
 
 // PackPatch updates a pack.
-func (c *defaultClient) PackPatch(in *Pack) (*Pack, error) {
+func (c *DefaultClient) PackPatch(in *Pack) (*Pack, error) {
 	out := &Pack{}
 
 	uri := fmt.Sprintf(pathPack, c.base, in.ID)
@@ -284,7 +284,7 @@ func (c *defaultClient) PackPatch(in *Pack) (*Pack, error) {
 }
 
 // PackDelete deletes a pack.
-func (c *defaultClient) PackDelete(id string) error {
+func (c *DefaultClient) PackDelete(id string) error {
 	uri := fmt.Sprintf(pathPack, c.base, id)
 	err := c.delete(uri)
 
@@ -292,7 +292,7 @@ func (c *defaultClient) PackDelete(id string) error {
 }
 
 // PackClientList returns a list of related clients for a pack.
-func (c *defaultClient) PackClientList(id string) ([]*Client, error) {
+func (c *DefaultClient) PackClientList(id string) ([]*Client, error) {
 	var out []*Client
 
 	uri := fmt.Sprintf(pathPackClients, c.base, id)
@@ -302,7 +302,7 @@ func (c *defaultClient) PackClientList(id string) ([]*Client, error) {
 }
 
 // PackClientAppend appends a client to a pack.
-func (c *defaultClient) PackClientAppend(id, append string) error {
+func (c *DefaultClient) PackClientAppend(id, append string) error {
 	uri := fmt.Sprintf(pathPackClient, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -310,7 +310,7 @@ func (c *defaultClient) PackClientAppend(id, append string) error {
 }
 
 // PackClientDelete remove a client from a pack.
-func (c *defaultClient) PackClientDelete(id, delete string) error {
+func (c *DefaultClient) PackClientDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathPackClient, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -318,7 +318,7 @@ func (c *defaultClient) PackClientDelete(id, delete string) error {
 }
 
 // BuildList returns a list of all builds for a specific pack.
-func (c *defaultClient) BuildList(pack string) ([]*Build, error) {
+func (c *DefaultClient) BuildList(pack string) ([]*Build, error) {
 	var out []*Build
 
 	uri := fmt.Sprintf(pathBuilds, c.base, pack)
@@ -328,7 +328,7 @@ func (c *defaultClient) BuildList(pack string) ([]*Build, error) {
 }
 
 // BuildGet returns a build for a specific pack.
-func (c *defaultClient) BuildGet(pack, id string) (*Build, error) {
+func (c *DefaultClient) BuildGet(pack, id string) (*Build, error) {
 	out := &Build{}
 
 	uri := fmt.Sprintf(pathBuild, c.base, pack, id)
@@ -338,7 +338,7 @@ func (c *defaultClient) BuildGet(pack, id string) (*Build, error) {
 }
 
 // BuildPost creates a build for a specific pack.
-func (c *defaultClient) BuildPost(pack string, in *Build) (*Build, error) {
+func (c *DefaultClient) BuildPost(pack string, in *Build) (*Build, error) {
 	out := &Build{}
 
 	uri := fmt.Sprintf(pathBuilds, c.base, pack)
@@ -348,7 +348,7 @@ func (c *defaultClient) BuildPost(pack string, in *Build) (*Build, error) {
 }
 
 // BuildPatch updates a build for a specific pack.
-func (c *defaultClient) BuildPatch(pack string, in *Build) (*Build, error) {
+func (c *DefaultClient) BuildPatch(pack string, in *Build) (*Build, error) {
 	out := &Build{}
 
 	uri := fmt.Sprintf(pathBuild, c.base, pack, in.ID)
@@ -358,7 +358,7 @@ func (c *defaultClient) BuildPatch(pack string, in *Build) (*Build, error) {
 }
 
 // BuildDelete deletes a build for a specific pack.
-func (c *defaultClient) BuildDelete(pack, id string) error {
+func (c *DefaultClient) BuildDelete(pack, id string) error {
 	uri := fmt.Sprintf(pathBuild, c.base, pack, id)
 	err := c.delete(uri)
 
@@ -366,7 +366,7 @@ func (c *defaultClient) BuildDelete(pack, id string) error {
 }
 
 // BuildVersionList returns a list of related versions for a build.
-func (c *defaultClient) BuildVersionList(pack, id string) ([]*Version, error) {
+func (c *DefaultClient) BuildVersionList(pack, id string) ([]*Version, error) {
 	var out []*Version
 
 	uri := fmt.Sprintf(pathBuildVersions, c.base, pack, id)
@@ -376,7 +376,7 @@ func (c *defaultClient) BuildVersionList(pack, id string) ([]*Version, error) {
 }
 
 // BuildVersionAppend appends a version to a build.
-func (c *defaultClient) BuildVersionAppend(pack, id, append string) error {
+func (c *DefaultClient) BuildVersionAppend(pack, id, append string) error {
 	uri := fmt.Sprintf(pathBuildVersion, c.base, pack, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -384,7 +384,7 @@ func (c *defaultClient) BuildVersionAppend(pack, id, append string) error {
 }
 
 // BuildVersionDelete remove a version from a build.
-func (c *defaultClient) BuildVersionDelete(pack, id, delete string) error {
+func (c *DefaultClient) BuildVersionDelete(pack, id, delete string) error {
 	uri := fmt.Sprintf(pathBuildVersion, c.base, pack, id, delete)
 	err := c.delete(uri)
 
@@ -392,7 +392,7 @@ func (c *defaultClient) BuildVersionDelete(pack, id, delete string) error {
 }
 
 // ModList returns a list of all mods.
-func (c *defaultClient) ModList() ([]*Mod, error) {
+func (c *DefaultClient) ModList() ([]*Mod, error) {
 	var out []*Mod
 
 	uri := fmt.Sprintf(pathMods, c.base)
@@ -402,7 +402,7 @@ func (c *defaultClient) ModList() ([]*Mod, error) {
 }
 
 // ModGet returns a mod.
-func (c *defaultClient) ModGet(id string) (*Mod, error) {
+func (c *DefaultClient) ModGet(id string) (*Mod, error) {
 	out := &Mod{}
 
 	uri := fmt.Sprintf(pathMod, c.base, id)
@@ -412,7 +412,7 @@ func (c *defaultClient) ModGet(id string) (*Mod, error) {
 }
 
 // ModPost creates a mod.
-func (c *defaultClient) ModPost(in *Mod) (*Mod, error) {
+func (c *DefaultClient) ModPost(in *Mod) (*Mod, error) {
 	out := &Mod{}
 
 	uri := fmt.Sprintf(pathMods, c.base)
@@ -422,7 +422,7 @@ func (c *defaultClient) ModPost(in *Mod) (*Mod, error) {
 }
 
 // ModPatch updates a mod.
-func (c *defaultClient) ModPatch(in *Mod) (*Mod, error) {
+func (c *DefaultClient) ModPatch(in *Mod) (*Mod, error) {
 	out := &Mod{}
 
 	uri := fmt.Sprintf(pathMod, c.base, in.ID)
@@ -432,7 +432,7 @@ func (c *defaultClient) ModPatch(in *Mod) (*Mod, error) {
 }
 
 // ModDelete deletes a mod.
-func (c *defaultClient) ModDelete(id string) error {
+func (c *DefaultClient) ModDelete(id string) error {
 	uri := fmt.Sprintf(pathMod, c.base, id)
 	err := c.delete(uri)
 
@@ -440,7 +440,7 @@ func (c *defaultClient) ModDelete(id string) error {
 }
 
 // ModUserList returns a list of related users for a mod.
-func (c *defaultClient) ModUserList(id string) ([]*User, error) {
+func (c *DefaultClient) ModUserList(id string) ([]*User, error) {
 	var out []*User
 
 	uri := fmt.Sprintf(pathModUsers, c.base, id)
@@ -450,7 +450,7 @@ func (c *defaultClient) ModUserList(id string) ([]*User, error) {
 }
 
 // ModUserAppend appends a user to a mod.
-func (c *defaultClient) ModUserAppend(id, append string) error {
+func (c *DefaultClient) ModUserAppend(id, append string) error {
 	uri := fmt.Sprintf(pathModUser, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -458,7 +458,7 @@ func (c *defaultClient) ModUserAppend(id, append string) error {
 }
 
 // ModUserDelete remove a user from a mod.
-func (c *defaultClient) ModUserDelete(id, delete string) error {
+func (c *DefaultClient) ModUserDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathModUser, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -466,7 +466,7 @@ func (c *defaultClient) ModUserDelete(id, delete string) error {
 }
 
 // VersionList returns a list of all versions for a specific mod.
-func (c *defaultClient) VersionList(mod string) ([]*Version, error) {
+func (c *DefaultClient) VersionList(mod string) ([]*Version, error) {
 	var out []*Version
 
 	uri := fmt.Sprintf(pathVersions, c.base, mod)
@@ -476,7 +476,7 @@ func (c *defaultClient) VersionList(mod string) ([]*Version, error) {
 }
 
 // VersionGet returns a version for a specific mod.
-func (c *defaultClient) VersionGet(mod, id string) (*Version, error) {
+func (c *DefaultClient) VersionGet(mod, id string) (*Version, error) {
 	out := &Version{}
 
 	uri := fmt.Sprintf(pathVersion, c.base, mod, id)
@@ -486,7 +486,7 @@ func (c *defaultClient) VersionGet(mod, id string) (*Version, error) {
 }
 
 // VersionPost creates a version for a specific mod.
-func (c *defaultClient) VersionPost(mod string, in *Version) (*Version, error) {
+func (c *DefaultClient) VersionPost(mod string, in *Version) (*Version, error) {
 	out := &Version{}
 
 	uri := fmt.Sprintf(pathVersions, c.base, mod)
@@ -496,7 +496,7 @@ func (c *defaultClient) VersionPost(mod string, in *Version) (*Version, error) {
 }
 
 // VersionPatch updates a version for a specific mod.
-func (c *defaultClient) VersionPatch(mod string, in *Version) (*Version, error) {
+func (c *DefaultClient) VersionPatch(mod string, in *Version) (*Version, error) {
 	out := &Version{}
 
 	uri := fmt.Sprintf(pathVersion, c.base, mod, in.ID)
@@ -506,7 +506,7 @@ func (c *defaultClient) VersionPatch(mod string, in *Version) (*Version, error) 
 }
 
 // VersionDelete deletes a version for a specific mod.
-func (c *defaultClient) VersionDelete(mod, id string) error {
+func (c *DefaultClient) VersionDelete(mod, id string) error {
 	uri := fmt.Sprintf(pathVersion, c.base, mod, id)
 	err := c.delete(uri)
 
@@ -514,7 +514,7 @@ func (c *defaultClient) VersionDelete(mod, id string) error {
 }
 
 // VersionBuildList returns a list of related builds for a version.
-func (c *defaultClient) VersionBuildList(mod, id string) ([]*Build, error) {
+func (c *DefaultClient) VersionBuildList(mod, id string) ([]*Build, error) {
 	var out []*Build
 
 	uri := fmt.Sprintf(pathVersionBuilds, c.base, mod, id)
@@ -524,7 +524,7 @@ func (c *defaultClient) VersionBuildList(mod, id string) ([]*Build, error) {
 }
 
 // VersionBuildAppend appends a build to a version.
-func (c *defaultClient) VersionBuildAppend(mod, id, append string) error {
+func (c *DefaultClient) VersionBuildAppend(mod, id, append string) error {
 	uri := fmt.Sprintf(pathVersionBuild, c.base, mod, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -532,7 +532,7 @@ func (c *defaultClient) VersionBuildAppend(mod, id, append string) error {
 }
 
 // VersionBuildDelete remove a build from a version.
-func (c *defaultClient) VersionBuildDelete(mod, id, delete string) error {
+func (c *DefaultClient) VersionBuildDelete(mod, id, delete string) error {
 	uri := fmt.Sprintf(pathVersionBuild, c.base, mod, id, delete)
 	err := c.delete(uri)
 
@@ -540,7 +540,7 @@ func (c *defaultClient) VersionBuildDelete(mod, id, delete string) error {
 }
 
 // ClientList returns a list of all clients.
-func (c *defaultClient) ClientList() ([]*Client, error) {
+func (c *DefaultClient) ClientList() ([]*Client, error) {
 	var out []*Client
 
 	uri := fmt.Sprintf(pathClients, c.base)
@@ -550,7 +550,7 @@ func (c *defaultClient) ClientList() ([]*Client, error) {
 }
 
 // ClientGet returns a client.
-func (c *defaultClient) ClientGet(id string) (*Client, error) {
+func (c *DefaultClient) ClientGet(id string) (*Client, error) {
 	out := &Client{}
 
 	uri := fmt.Sprintf(pathClient, c.base, id)
@@ -560,7 +560,7 @@ func (c *defaultClient) ClientGet(id string) (*Client, error) {
 }
 
 // ClientPost creates a client.
-func (c *defaultClient) ClientPost(in *Client) (*Client, error) {
+func (c *DefaultClient) ClientPost(in *Client) (*Client, error) {
 	out := &Client{}
 
 	uri := fmt.Sprintf(pathClients, c.base)
@@ -570,7 +570,7 @@ func (c *defaultClient) ClientPost(in *Client) (*Client, error) {
 }
 
 // ClientPatch updates a client.
-func (c *defaultClient) ClientPatch(in *Client) (*Client, error) {
+func (c *DefaultClient) ClientPatch(in *Client) (*Client, error) {
 	out := &Client{}
 
 	uri := fmt.Sprintf(pathClient, c.base, in.ID)
@@ -580,7 +580,7 @@ func (c *defaultClient) ClientPatch(in *Client) (*Client, error) {
 }
 
 // ClientDelete deletes a client.
-func (c *defaultClient) ClientDelete(id string) error {
+func (c *DefaultClient) ClientDelete(id string) error {
 	uri := fmt.Sprintf(pathClient, c.base, id)
 	err := c.delete(uri)
 
@@ -588,7 +588,7 @@ func (c *defaultClient) ClientDelete(id string) error {
 }
 
 // ClientPackList returns a list of related packs for a client.
-func (c *defaultClient) ClientPackList(id string) ([]*Pack, error) {
+func (c *DefaultClient) ClientPackList(id string) ([]*Pack, error) {
 	var out []*Pack
 
 	uri := fmt.Sprintf(pathClientPacks, c.base, id)
@@ -598,7 +598,7 @@ func (c *defaultClient) ClientPackList(id string) ([]*Pack, error) {
 }
 
 // ClientPackAppend appends a pack to a client.
-func (c *defaultClient) ClientPackAppend(id, append string) error {
+func (c *DefaultClient) ClientPackAppend(id, append string) error {
 	uri := fmt.Sprintf(pathClientPack, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -606,7 +606,7 @@ func (c *defaultClient) ClientPackAppend(id, append string) error {
 }
 
 // ClientPackDelete remove a pack from a client.
-func (c *defaultClient) ClientPackDelete(id, delete string) error {
+func (c *DefaultClient) ClientPackDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathClientPack, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -614,7 +614,7 @@ func (c *defaultClient) ClientPackDelete(id, delete string) error {
 }
 
 // UserList returns a list of all users.
-func (c *defaultClient) UserList() ([]*User, error) {
+func (c *DefaultClient) UserList() ([]*User, error) {
 	var out []*User
 
 	uri := fmt.Sprintf(pathUsers, c.base)
@@ -624,7 +624,7 @@ func (c *defaultClient) UserList() ([]*User, error) {
 }
 
 // UserGet returns a user.
-func (c *defaultClient) UserGet(id string) (*User, error) {
+func (c *DefaultClient) UserGet(id string) (*User, error) {
 	out := &User{}
 
 	uri := fmt.Sprintf(pathUser, c.base, id)
@@ -634,7 +634,7 @@ func (c *defaultClient) UserGet(id string) (*User, error) {
 }
 
 // UserPost creates a user.
-func (c *defaultClient) UserPost(in *User) (*User, error) {
+func (c *DefaultClient) UserPost(in *User) (*User, error) {
 	out := &User{}
 
 	uri := fmt.Sprintf(pathUsers, c.base)
@@ -644,7 +644,7 @@ func (c *defaultClient) UserPost(in *User) (*User, error) {
 }
 
 // UserPatch updates a user.
-func (c *defaultClient) UserPatch(in *User) (*User, error) {
+func (c *DefaultClient) UserPatch(in *User) (*User, error) {
 	out := &User{}
 
 	uri := fmt.Sprintf(pathUser, c.base, in.ID)
@@ -654,7 +654,7 @@ func (c *defaultClient) UserPatch(in *User) (*User, error) {
 }
 
 // UserDelete deletes a user.
-func (c *defaultClient) UserDelete(id string) error {
+func (c *DefaultClient) UserDelete(id string) error {
 	uri := fmt.Sprintf(pathUser, c.base, id)
 	err := c.delete(uri)
 
@@ -662,7 +662,7 @@ func (c *defaultClient) UserDelete(id string) error {
 }
 
 // UserModList returns a list of related mods for a user.
-func (c *defaultClient) UserModList(id string) ([]*Mod, error) {
+func (c *DefaultClient) UserModList(id string) ([]*Mod, error) {
 	var out []*Mod
 
 	uri := fmt.Sprintf(pathUserMods, c.base, id)
@@ -672,7 +672,7 @@ func (c *defaultClient) UserModList(id string) ([]*Mod, error) {
 }
 
 // UserModAppend appends a mod to a user.
-func (c *defaultClient) UserModAppend(id, append string) error {
+func (c *DefaultClient) UserModAppend(id, append string) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, id, append)
 	err := c.patch(uri, nil, nil)
 
@@ -680,7 +680,7 @@ func (c *defaultClient) UserModAppend(id, append string) error {
 }
 
 // UserModDelete remove a mod from a user.
-func (c *defaultClient) UserModDelete(id, delete string) error {
+func (c *DefaultClient) UserModDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, id, delete)
 	err := c.delete(uri)
 
@@ -688,7 +688,7 @@ func (c *defaultClient) UserModDelete(id, delete string) error {
 }
 
 // KeyList returns a list of all keys.
-func (c *defaultClient) KeyList() ([]*Key, error) {
+func (c *DefaultClient) KeyList() ([]*Key, error) {
 	var out []*Key
 
 	uri := fmt.Sprintf(pathKeys, c.base)
@@ -698,7 +698,7 @@ func (c *defaultClient) KeyList() ([]*Key, error) {
 }
 
 // KeyGet returns a key.
-func (c *defaultClient) KeyGet(id string) (*Key, error) {
+func (c *DefaultClient) KeyGet(id string) (*Key, error) {
 	out := &Key{}
 
 	uri := fmt.Sprintf(pathKey, c.base, id)
@@ -708,7 +708,7 @@ func (c *defaultClient) KeyGet(id string) (*Key, error) {
 }
 
 // KeyPost creates a key.
-func (c *defaultClient) KeyPost(in *Key) (*Key, error) {
+func (c *DefaultClient) KeyPost(in *Key) (*Key, error) {
 	out := &Key{}
 
 	uri := fmt.Sprintf(pathKeys, c.base)
@@ -718,7 +718,7 @@ func (c *defaultClient) KeyPost(in *Key) (*Key, error) {
 }
 
 // KeyPatch updates a key.
-func (c *defaultClient) KeyPatch(in *Key) (*Key, error) {
+func (c *DefaultClient) KeyPatch(in *Key) (*Key, error) {
 	out := &Key{}
 
 	uri := fmt.Sprintf(pathKey, c.base, in.ID)
@@ -728,7 +728,7 @@ func (c *defaultClient) KeyPatch(in *Key) (*Key, error) {
 }
 
 // KeyDelete deletes a key.
-func (c *defaultClient) KeyDelete(id string) error {
+func (c *DefaultClient) KeyDelete(id string) error {
 	uri := fmt.Sprintf(pathKey, c.base, id)
 	err := c.delete(uri)
 
@@ -736,32 +736,32 @@ func (c *defaultClient) KeyDelete(id string) error {
 }
 
 // Helper function for making an GET request.
-func (c *defaultClient) get(rawurl string, out interface{}) error {
+func (c *DefaultClient) get(rawurl string, out interface{}) error {
 	return c.do(rawurl, "GET", nil, out)
 }
 
 // Helper function for making an POST request.
-func (c *defaultClient) post(rawurl string, in, out interface{}) error {
+func (c *DefaultClient) post(rawurl string, in, out interface{}) error {
 	return c.do(rawurl, "POST", in, out)
 }
 
 // Helper function for making an PUT request.
-func (c *defaultClient) put(rawurl string, in, out interface{}) error {
+func (c *DefaultClient) put(rawurl string, in, out interface{}) error {
 	return c.do(rawurl, "PUT", in, out)
 }
 
 // Helper function for making an PATCH request.
-func (c *defaultClient) patch(rawurl string, in, out interface{}) error {
+func (c *DefaultClient) patch(rawurl string, in, out interface{}) error {
 	return c.do(rawurl, "PATCH", in, out)
 }
 
 // Helper function for making an DELETE request.
-func (c *defaultClient) delete(rawurl string) error {
+func (c *DefaultClient) delete(rawurl string) error {
 	return c.do(rawurl, "DELETE", nil, nil)
 }
 
 // Helper function to make an HTTP request
-func (c *defaultClient) do(rawurl, method string, in, out interface{}) error {
+func (c *DefaultClient) do(rawurl, method string, in, out interface{}) error {
 	body, err := c.stream(
 		rawurl,
 		method,
@@ -783,7 +783,7 @@ func (c *defaultClient) do(rawurl, method string, in, out interface{}) error {
 }
 
 // Helper function to stream an HTTP request
-func (c *defaultClient) stream(rawurl, method string, in, out interface{}) (io.ReadCloser, error) {
+func (c *DefaultClient) stream(rawurl, method string, in, out interface{}) (io.ReadCloser, error) {
 	uri, err := url.Parse(rawurl)
 
 	if err != nil {

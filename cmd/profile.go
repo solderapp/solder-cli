@@ -58,7 +58,7 @@ func Profile() cli.Command {
 }
 
 // ProfileShow provides the sub-command to show profile details.
-func ProfileShow(c *cli.Context, client solder.API) error {
+func ProfileShow(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {
@@ -116,7 +116,7 @@ func ProfileShow(c *cli.Context, client solder.API) error {
 }
 
 // ProfileUpdate provides the sub-command to update the profile.
-func ProfileUpdate(c *cli.Context, client solder.API) error {
+func ProfileUpdate(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {

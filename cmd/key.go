@@ -118,7 +118,7 @@ func Key() cli.Command {
 }
 
 // KeyList provides the sub-command to list all keys.
-func KeyList(c *cli.Context, client solder.API) error {
+func KeyList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.KeyList()
 
 	if err != nil {
@@ -149,7 +149,7 @@ func KeyList(c *cli.Context, client solder.API) error {
 }
 
 // KeyShow provides the sub-command to show key details.
-func KeyShow(c *cli.Context, client solder.API) error {
+func KeyShow(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -209,7 +209,7 @@ func KeyShow(c *cli.Context, client solder.API) error {
 }
 
 // KeyDelete provides the sub-command to delete a key.
-func KeyDelete(c *cli.Context, client solder.API) error {
+func KeyDelete(c *cli.Context, client solder.ClientAPI) error {
 	err := client.KeyDelete(
 		GetIdentifierParam(c),
 	)
@@ -223,7 +223,7 @@ func KeyDelete(c *cli.Context, client solder.API) error {
 }
 
 // KeyUpdate provides the sub-command to update a key.
-func KeyUpdate(c *cli.Context, client solder.API) error {
+func KeyUpdate(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -267,7 +267,7 @@ func KeyUpdate(c *cli.Context, client solder.API) error {
 }
 
 // KeyCreate provides the sub-command to create a key.
-func KeyCreate(c *cli.Context, client solder.API) error {
+func KeyCreate(c *cli.Context, client solder.ClientAPI) error {
 	record := &solder.Key{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {

@@ -226,7 +226,7 @@ func Version() cli.Command {
 }
 
 // VersionList provides the sub-command to list all versions.
-func VersionList(c *cli.Context, client solder.API) error {
+func VersionList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.VersionList(
 		GetModParam(c),
 	)
@@ -259,7 +259,7 @@ func VersionList(c *cli.Context, client solder.API) error {
 }
 
 // VersionShow provides the sub-command to show version details.
-func VersionShow(c *cli.Context, client solder.API) error {
+func VersionShow(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.VersionGet(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -331,7 +331,7 @@ func VersionShow(c *cli.Context, client solder.API) error {
 }
 
 // VersionDelete provides the sub-command to delete a version.
-func VersionDelete(c *cli.Context, client solder.API) error {
+func VersionDelete(c *cli.Context, client solder.ClientAPI) error {
 	err := client.VersionDelete(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -346,7 +346,7 @@ func VersionDelete(c *cli.Context, client solder.API) error {
 }
 
 // VersionUpdate provides the sub-command to update a version.
-func VersionUpdate(c *cli.Context, client solder.API) error {
+func VersionUpdate(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.VersionGet(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -411,7 +411,7 @@ func VersionUpdate(c *cli.Context, client solder.API) error {
 }
 
 // VersionCreate provides the sub-command to create a version.
-func VersionCreate(c *cli.Context, client solder.API) error {
+func VersionCreate(c *cli.Context, client solder.ClientAPI) error {
 	record := &solder.Version{}
 
 	if c.String("mod") == "" {
@@ -485,7 +485,7 @@ func VersionCreate(c *cli.Context, client solder.API) error {
 }
 
 // VersionBuildList provides the sub-command to list builds of the version.
-func VersionBuildList(c *cli.Context, client solder.API) error {
+func VersionBuildList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.VersionBuildList(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -519,7 +519,7 @@ func VersionBuildList(c *cli.Context, client solder.API) error {
 }
 
 // VersionBuildAppend provides the sub-command to append a build to the version.
-func VersionBuildAppend(c *cli.Context, client solder.API) error {
+func VersionBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.VersionBuildAppend(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -535,7 +535,7 @@ func VersionBuildAppend(c *cli.Context, client solder.API) error {
 }
 
 // VersionBuildRemove provides the sub-command to remove a build from the version.
-func VersionBuildRemove(c *cli.Context, client solder.API) error {
+func VersionBuildRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.VersionBuildDelete(
 		GetModParam(c),
 		GetIdentifierParam(c),

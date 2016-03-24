@@ -94,7 +94,7 @@ func Minecraft() cli.Command {
 }
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList(c *cli.Context, client solder.API) error {
+func MinecraftList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.MinecraftList()
 
 	if err != nil {
@@ -126,7 +126,7 @@ func MinecraftList(c *cli.Context, client solder.API) error {
 }
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh(c *cli.Context, client solder.API) error {
+func MinecraftRefresh(c *cli.Context, client solder.ClientAPI) error {
 	err := client.MinecraftRefresh()
 
 	if err != nil {
@@ -138,7 +138,7 @@ func MinecraftRefresh(c *cli.Context, client solder.API) error {
 }
 
 // MinecraftBuildList provides the sub-command to list builds of the Minecraft.
-func MinecraftBuildList(c *cli.Context, client solder.API) error {
+func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.MinecraftBuildList(
 		GetIdentifierParam(c),
 	)
@@ -171,7 +171,7 @@ func MinecraftBuildList(c *cli.Context, client solder.API) error {
 }
 
 // MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
-func MinecraftBuildAppend(c *cli.Context, client solder.API) error {
+func MinecraftBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.MinecraftBuildAppend(
 		GetIdentifierParam(c),
 		GetBuildParam(c),
@@ -186,7 +186,7 @@ func MinecraftBuildAppend(c *cli.Context, client solder.API) error {
 }
 
 // MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
-func MinecraftBuildRemove(c *cli.Context, client solder.API) error {
+func MinecraftBuildRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.MinecraftBuildDelete(
 		GetIdentifierParam(c),
 		GetBuildParam(c),

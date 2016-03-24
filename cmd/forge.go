@@ -94,7 +94,7 @@ func Forge() cli.Command {
 }
 
 // ForgeList provides the sub-command to list all Forge versions.
-func ForgeList(c *cli.Context, client solder.API) error {
+func ForgeList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ForgeList()
 
 	if err != nil {
@@ -126,7 +126,7 @@ func ForgeList(c *cli.Context, client solder.API) error {
 }
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
-func ForgeRefresh(c *cli.Context, client solder.API) error {
+func ForgeRefresh(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ForgeRefresh()
 
 	if err != nil {
@@ -138,7 +138,7 @@ func ForgeRefresh(c *cli.Context, client solder.API) error {
 }
 
 // ForgeBuildList provides the sub-command to list builds of the Forge.
-func ForgeBuildList(c *cli.Context, client solder.API) error {
+func ForgeBuildList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ForgeBuildList(
 		GetIdentifierParam(c),
 	)
@@ -171,7 +171,7 @@ func ForgeBuildList(c *cli.Context, client solder.API) error {
 }
 
 // ForgeBuildAppend provides the sub-command to append a build to the Forge.
-func ForgeBuildAppend(c *cli.Context, client solder.API) error {
+func ForgeBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ForgeBuildAppend(
 		GetIdentifierParam(c),
 		GetBuildParam(c),
@@ -186,7 +186,7 @@ func ForgeBuildAppend(c *cli.Context, client solder.API) error {
 }
 
 // ForgeBuildRemove provides the sub-command to remove a build from the Forge.
-func ForgeBuildRemove(c *cli.Context, client solder.API) error {
+func ForgeBuildRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ForgeBuildDelete(
 		GetIdentifierParam(c),
 		GetBuildParam(c),

@@ -9,7 +9,7 @@ import (
 )
 
 // HandleFunc is the real handle implementation.
-type HandleFunc func(c *cli.Context, client solder.API) error
+type HandleFunc func(c *cli.Context, client solder.ClientAPI) error
 
 // Handle wraps the command function handler.
 func Handle(c *cli.Context, fn HandleFunc) {

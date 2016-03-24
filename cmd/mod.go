@@ -203,7 +203,7 @@ func Mod() cli.Command {
 }
 
 // ModList provides the sub-command to list all mods.
-func ModList(c *cli.Context, client solder.API) error {
+func ModList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ModList()
 
 	if err != nil {
@@ -234,7 +234,7 @@ func ModList(c *cli.Context, client solder.API) error {
 }
 
 // ModShow provides the sub-command to show mod details.
-func ModShow(c *cli.Context, client solder.API) error {
+func ModShow(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -315,7 +315,7 @@ func ModShow(c *cli.Context, client solder.API) error {
 }
 
 // ModDelete provides the sub-command to delete a mod.
-func ModDelete(c *cli.Context, client solder.API) error {
+func ModDelete(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ModDelete(
 		GetIdentifierParam(c),
 	)
@@ -329,7 +329,7 @@ func ModDelete(c *cli.Context, client solder.API) error {
 }
 
 // ModUpdate provides the sub-command to update a mod.
-func ModUpdate(c *cli.Context, client solder.API) error {
+func ModUpdate(c *cli.Context, client solder.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -388,7 +388,7 @@ func ModUpdate(c *cli.Context, client solder.API) error {
 }
 
 // ModCreate provides the sub-command to create a mod.
-func ModCreate(c *cli.Context, client solder.API) error {
+func ModCreate(c *cli.Context, client solder.ClientAPI) error {
 	record := &solder.Mod{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
@@ -430,7 +430,7 @@ func ModCreate(c *cli.Context, client solder.API) error {
 }
 
 // ModUserList provides the sub-command to list users of the mod.
-func ModUserList(c *cli.Context, client solder.API) error {
+func ModUserList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ModUserList(
 		GetIdentifierParam(c),
 	)
@@ -463,7 +463,7 @@ func ModUserList(c *cli.Context, client solder.API) error {
 }
 
 // ModUserAppend provides the sub-command to append a user to the mod.
-func ModUserAppend(c *cli.Context, client solder.API) error {
+func ModUserAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.PackClientAppend(
 		GetIdentifierParam(c),
 		GetUserParam(c),
@@ -478,7 +478,7 @@ func ModUserAppend(c *cli.Context, client solder.API) error {
 }
 
 // ModUserRemove provides the sub-command to remove a user from the mod.
-func ModUserRemove(c *cli.Context, client solder.API) error {
+func ModUserRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.PackClientDelete(
 		GetIdentifierParam(c),
 		GetUserParam(c),
