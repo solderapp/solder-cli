@@ -1,10 +1,10 @@
 vendors:
 - path: github.com/codegangsta/cli
-  rev: aca5b047ed14d17224157c3434ea93bf6cdaadee
+  rev: 9fec0fad02befc9209347cc6d620e68e1b45f74d
 - path: github.com/davecgh/go-spew
   rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
-  rev: 62e4364d64b32762febb61f2c88c0a29bc49a225
+  rev: 8d92cf5fc15a4382f8964b08e1f42a75c0591aa3
 - path: github.com/jackspirou/syscerts
   rev: 5ecaea8f7ec96a0826ced1ff106d30083066bf35
 - path: github.com/mattn/go-runewidth
@@ -20,8 +20,8 @@ vendors:
 - path: github.com/vincent-petithory/dataurl
   rev: a81abcdac6cb8cbd9bf6ec779c2fb09fffb1d3f5
 - path: golang.org/x/net
-  rev: 35b06af0720201bc2f326773a80767387544f8c4
+  rev: 4876518f9e71663000c348837735820161a42df7
 - path: golang.org/x/oauth2
-  rev: 045497edb6234273d67dbc25da3f2ddbc4c4cacf
+  rev: 2897dcade18a126645f1368de827f1e613a60049
 - path: google.golang.org/appengine
-  rev: 12d5545dc1cfa6047a286d5e853841b6471f4c19
+  rev: 41265fb44deca5c3b05a946d5db1f54ae54fe67e
