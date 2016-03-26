@@ -19,9 +19,9 @@ type Message struct {
 
 // Attachment represents a attachment API response.
 type Attachment struct {
-	URL       string    `json:"url"`
-	MD5       string    `json:"md5"`
-	Upload    string    `json:"upload"`
+	URL       string    `json:"url,omitempty"`
+	MD5       string    `json:"md5,omitempty"`
+	Upload    string    `json:"upload,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -33,11 +33,11 @@ func (s *Attachment) String() string {
 // Build represents a build API response.
 type Build struct {
 	ID          int64      `json:"id"`
-	Pack        *Pack      `json:"pack"`
+	Pack        *Pack      `json:"pack,omitempty"`
 	PackID      int64      `json:"pack_id"`
-	Minecraft   *Minecraft `json:"minecraft"`
+	Minecraft   *Minecraft `json:"minecraft,omitempty"`
 	MinecraftID int64      `json:"minecraft_id"`
-	Forge       *Forge     `json:"forge"`
+	Forge       *Forge     `json:"forge,omitempty"`
 	ForgeID     int64      `json:"forge_id"`
 	Slug        string     `json:"slug"`
 	Name        string     `json:"name"`
@@ -131,13 +131,13 @@ type Pack struct {
 	ID            int64       `json:"id"`
 	Slug          string      `json:"slug"`
 	Name          string      `json:"name"`
-	Icon          *Attachment `json:"icon"`
-	Logo          *Attachment `json:"logo"`
-	Background    *Attachment `json:"background"`
+	Icon          *Attachment `json:"icon,omitempty"`
+	Logo          *Attachment `json:"logo,omitempty"`
+	Background    *Attachment `json:"background,omitempty"`
 	RecommendedID int64       `json:"recommended_id"`
-	Recommended   *Build      `json:"recommended"`
+	Recommended   *Build      `json:"recommended,omitempty"`
 	LatestID      int64       `json:"latest_id"`
-	Latest        *Build      `json:"latest"`
+	Latest        *Build      `json:"latest,omitempty"`
 	Website       string      `json:"website"`
 	Published     bool        `json:"published"`
 	Private       bool        `json:"private"`
@@ -323,7 +323,7 @@ func (s *User) String() string {
 // Version represents a version API response.
 type Version struct {
 	ID        int64       `json:"id"`
-	Mod       *Mod        `json:"mod"`
+	Mod       *Mod        `json:"mod,omitempty"`
 	ModID     int64       `json:"mod_id"`
 	Slug      string      `json:"slug"`
 	Name      string      `json:"name"`
