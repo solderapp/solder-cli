@@ -20,6 +20,17 @@ this awesome project!
 
 ## Install
 
+
+You can download prebuilt binaries from the GitHub releases or from our
+[download site](http://dl.webhippie.de/solder-cli). If you are missing an
+architecture just write us on the [Gitter](https://gitter.im/solderapp/solder)
+chat. Take a look at the help output, you can enable auto updates to the binary
+to avoid bugs related to old versions. If you find a security issue please
+contact thomas@webhippie.de first.
+
+
+## Development
+
 Make sure you have a working Go environment, for further reference or a guide
 take a look at the [install instructions](http://golang.org/doc/install.html).
 As this project relies on vendoring of the dependencies and we are not
@@ -33,10 +44,6 @@ make deps build
 
 bin/drone-cli -h
 ```
-
-Later on we will also provide a download of prebuilt binaries for various
-platforms, but this will start if we get to an somehow working state or if we
-are more or less on feature parity with the upstream project.
 
 
 ## Contributing
