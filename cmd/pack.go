@@ -271,6 +271,61 @@ func Pack() cli.Command {
 					Handle(c, PackClientRemove)
 				},
 			},
+			{
+				Name:      "user-list",
+				Usage:     "List assigned users",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to list users",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackUserList)
+				},
+			},
+			{
+				Name:      "user-append",
+				Usage:     "Append a user to pack",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "user, u",
+						Value: "",
+						Usage: "User ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackUserAppend)
+				},
+			},
+			{
+				Name:      "user-remove",
+				Usage:     "Remove a user from pack",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "user, u",
+						Value: "",
+						Usage: "User ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) {
+					Handle(c, PackUserRemove)
+				},
+			},
 		},
 	}
 }
@@ -800,6 +855,69 @@ func PackClientRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.PackClientDelete(
 		GetIdentifierParam(c),
 		GetClientParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from pack\n")
+	return nil
+}
+
+// PackUserList provides the sub-command to list users of the pack.
+func PackUserList(c *cli.Context, client solder.ClientAPI) error {
+	records, err := client.PackUserList(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"ID", "Slug", "Username"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				strconv.FormatInt(record.ID, 10),
+				record.Slug,
+				record.Username,
+			},
+		)
+	}
+
+	table.Render()
+	return nil
+}
+
+// PackUserAppend provides the sub-command to append a user to the pack.
+func PackUserAppend(c *cli.Context, client solder.ClientAPI) error {
+	err := client.PackClientAppend(
+		GetIdentifierParam(c),
+		GetUserParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to pack\n")
+	return nil
+}
+
+// PackUserRemove provides the sub-command to remove a user from the pack.
+func PackUserRemove(c *cli.Context, client solder.ClientAPI) error {
+	err := client.PackClientDelete(
+		GetIdentifierParam(c),
+		GetUserParam(c),
 	)
 
 	if err != nil {

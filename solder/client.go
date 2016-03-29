@@ -27,6 +27,8 @@ const (
 	pathPack            = "%s/api/packs/%v"
 	pathPackClients     = "%s/api/packs/%v/clients"
 	pathPackClient      = "%s/api/packs/%v/clients/%v"
+	pathPackUsers       = "%s/api/packs/%v/users"
+	pathPackUser        = "%s/api/packs/%v/users/%v"
 	pathBuilds          = "%s/api/packs/%v/builds"
 	pathBuild           = "%s/api/packs/%v/builds/%v"
 	pathBuildVersions   = "%s/api/packs/%v/builds/%v/versions"
@@ -47,6 +49,8 @@ const (
 	pathUser            = "%s/api/users/%v"
 	pathUserMods        = "%s/api/users/%v/mods"
 	pathUserMod         = "%s/api/users/%v/mods/%v"
+	pathUserPacks       = "%s/api/users/%v/packs"
+	pathUserPack        = "%s/api/users/%v/packs/%v"
 	pathKeys            = "%s/api/keys"
 	pathKey             = "%s/api/keys/%v"
 )
@@ -312,6 +316,32 @@ func (c *DefaultClient) PackClientAppend(id, append string) error {
 // PackClientDelete remove a client from a pack.
 func (c *DefaultClient) PackClientDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathPackClient, c.base, id, delete)
+	err := c.delete(uri)
+
+	return err
+}
+
+// PackUserList returns a list of related users for a pack.
+func (c *DefaultClient) PackUserList(id string) ([]*User, error) {
+	var out []*User
+
+	uri := fmt.Sprintf(pathPackUsers, c.base, id)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// PackUserAppend appends a user to a pack.
+func (c *DefaultClient) PackUserAppend(id, append string) error {
+	uri := fmt.Sprintf(pathPackUser, c.base, id, append)
+	err := c.patch(uri, nil, nil)
+
+	return err
+}
+
+// PackUserDelete remove a user from a pack.
+func (c *DefaultClient) PackUserDelete(id, delete string) error {
+	uri := fmt.Sprintf(pathPackUser, c.base, id, delete)
 	err := c.delete(uri)
 
 	return err
@@ -682,6 +712,32 @@ func (c *DefaultClient) UserModAppend(id, append string) error {
 // UserModDelete remove a mod from a user.
 func (c *DefaultClient) UserModDelete(id, delete string) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, id, delete)
+	err := c.delete(uri)
+
+	return err
+}
+
+// UserPackList returns a list of related packs for a user.
+func (c *DefaultClient) UserPackList(id string) ([]*Pack, error) {
+	var out []*Pack
+
+	uri := fmt.Sprintf(pathUserPacks, c.base, id)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// UserPackAppend appends a pack to a user.
+func (c *DefaultClient) UserPackAppend(id, append string) error {
+	uri := fmt.Sprintf(pathUserPack, c.base, id, append)
+	err := c.patch(uri, nil, nil)
+
+	return err
+}
+
+// UserPackDelete remove a pack from a user.
+func (c *DefaultClient) UserPackDelete(id, delete string) error {
+	uri := fmt.Sprintf(pathUserPack, c.base, id, delete)
 	err := c.delete(uri)
 
 	return err

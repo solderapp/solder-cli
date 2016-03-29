@@ -70,6 +70,15 @@ type ClientAPI interface {
 	// PackClientDelete remove a client from a pack.
 	PackClientDelete(string, string) error
 
+	// PackUserList returns a list of related users for a pack.
+	PackUserList(string) ([]*User, error)
+
+	// PackUserAppend appends a user to a pack.
+	PackUserAppend(string, string) error
+
+	// PackUserDelete remove a user from a pack.
+	PackUserDelete(string, string) error
+
 	// BuildList returns a list of all builds for a specific pack.
 	BuildList(string) ([]*Build, error)
 
@@ -189,6 +198,15 @@ type ClientAPI interface {
 
 	// UserModDelete remove a mod from a user.
 	UserModDelete(string, string) error
+
+	// UserPackList returns a list of related packs for a user.
+	UserPackList(string) ([]*Pack, error)
+
+	// UserPackAppend appends a pack to a user.
+	UserPackAppend(string, string) error
+
+	// UserPackDelete remove a pack from a user.
+	UserPackDelete(string, string) error
 
 	// KeyList returns a list of all keys.
 	KeyList() ([]*Key, error)
