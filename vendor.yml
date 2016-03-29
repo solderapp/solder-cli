@@ -1,6 +1,6 @@
 vendors:
 - path: github.com/codegangsta/cli
-  rev: 9fec0fad02befc9209347cc6d620e68e1b45f74d
+  rev: bc465becccd1d527002fda095fc3c19d9c115029
 - path: github.com/davecgh/go-spew
   rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
@@ -20,8 +20,8 @@ vendors:
 - path: github.com/vincent-petithory/dataurl
   rev: a81abcdac6cb8cbd9bf6ec779c2fb09fffb1d3f5
 - path: golang.org/x/net
-  rev: 4876518f9e71663000c348837735820161a42df7
+  rev: 31df19d69da8728e9220def59b80ee577c3e48bf
 - path: golang.org/x/oauth2
-  rev: 2897dcade18a126645f1368de827f1e613a60049
+  rev: 33fa30fe45020622640e947917fd1fc4c81e3dce
 - path: google.golang.org/appengine
   rev: 41265fb44deca5c3b05a946d5db1f54ae54fe67e
