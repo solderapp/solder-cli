@@ -5,13 +5,14 @@ VERSION := $(shell cat VERSION)
 
 LDFLAGS += -X "main.version=$(VERSION)"
 
-RELEASES ?= $(DIST)/$(EXECUTABLE)-linux-amd64 \
-	$(DIST)/$(EXECUTABLE)-linux-386 \
-	$(DIST)/$(EXECUTABLE)-linux-arm \
-	$(DIST)/$(EXECUTABLE)-darwin-amd64 \
-	$(DIST)/$(EXECUTABLE)-darwin-386 \
-	$(DIST)/$(EXECUTABLE)-windows-amd64 \
-	$(DIST)/$(EXECUTABLE)-windows-386
+RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
+	$(BIN)/$(EXECUTABLE)-linux-386 \
+	$(BIN)/$(EXECUTABLE)-linux-arm \
+	$(BIN)/$(EXECUTABLE)-linux-arm64 \
+	$(BIN)/$(EXECUTABLE)-darwin-amd64 \
+	$(BIN)/$(EXECUTABLE)-darwin-386 \
+	$(BIN)/$(EXECUTABLE)-windows-amd64 \
+	$(BIN)/$(EXECUTABLE)-windows-386
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 
@@ -49,6 +50,8 @@ test:
 build: $(BIN)/$(EXECUTABLE)
 
 release: $(RELEASES)
+	go get -u github.com/sanbornm/go-selfupdate
+	go-selfupdate -o $(DIST)/publish $(DIST)/updater $(VERSION)
 
 install: $(BIN)/$(EXECUTABLE)
 	cp $< $(GOPATH)/bin/
@@ -56,16 +59,15 @@ install: $(BIN)/$(EXECUTABLE)
 $(BIN)/$(EXECUTABLE): $(wildcard *.go)
 	CGO_ENABLED=0 go build -ldflags '-s -w $(LDFLAGS)' -o $@
 
-$(BIN)/%/$(EXECUTABLE): GOOS=$(firstword $(subst -, ,$*))
-$(BIN)/%/$(EXECUTABLE): GOARCH=$(subst .exe,,$(word 2,$(subst -, ,$*)))
-$(BIN)/%/$(EXECUTABLE):
+$(BIN)/$(EXECUTABLE)-%: GOOS=$(word 1,$(subst -, ,$*))
+$(BIN)/$(EXECUTABLE)-%: GOARCH=$(subst .exe,,$(word 2,$(subst -, ,$*)))
+$(BIN)/$(EXECUTABLE)-%:
 	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags '-s -w $(LDFLAGS)' -o $@
-
-$(DIST)/$(EXECUTABLE)-%: GOOS=$(firstword $(subst -, ,$*))
-$(DIST)/$(EXECUTABLE)-%: GOARCH=$(subst .exe,,$(word 2,$(subst -, ,$*)))
-$(DIST)/$(EXECUTABLE)-%: $(BIN)/%/$(EXECUTABLE)
-	mkdir -p $(DIST)
-	cp $(BIN)/$*/$(EXECUTABLE) $(DIST)/$(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH)
+	mkdir -p $(DIST)/updater
+	cp $@ $(DIST)/updater/$(GOOS)-$(GOARCH)
+	mkdir -p $(DIST)/github
+	cp $@ $(DIST)/github/$(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH)
+	cd $(DIST)/github && sha256sum $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH).sha256
 
 .PHONY: all clean deps vendor generate fmt vet lint test build
-.PRECIOUS: $(BIN)/%/$(EXECUTABLE)
+.PRECIOUS: $(BIN)/$(EXECUTABLE)-%

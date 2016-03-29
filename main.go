@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 
 	"github.com/codegangsta/cli"
+	"github.com/sanbornm/go-selfupdate/selfupdate"
 	"github.com/solderapp/solder-cli/cmd"
 )
 
 var (
+	updates string = "http://dl.webhippie.de/"
 	version string = "0.0.0-dev"
 )
 
@@ -34,6 +37,32 @@ func main() {
 			Usage:  "Solder API token",
 			EnvVar: "SOLDER_TOKEN",
 		},
+		cli.BoolFlag{
+			Name:   "update, u",
+			Usage:  "Enable auto update",
+			EnvVar: "SOLDER_UPDATE",
+		},
+	}
+
+	app.Before = func(c *cli.Context) error {
+		if c.Bool("update") {
+			if version == "0.0.0-dev" {
+				fmt.Fprintf(os.Stderr, "Updates are disabled for development versions.\n")
+			} else {
+				updater := &selfupdate.Updater{
+					CurrentVersion: version,
+					ApiURL:         updates,
+					BinURL:         updates,
+					DiffURL:        updates,
+					Dir:            "updates/",
+					CmdName:        app.Name,
+				}
+
+				go updater.BackgroundRun()
+			}
+		}
+
+		return nil
 	}
 
 	app.Commands = []cli.Command{

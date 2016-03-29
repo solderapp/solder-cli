@@ -10,6 +10,7 @@ build:
   release:
     image: webhippie/golang:latest
     commands:
+      - make clean
       - make release
     when:
       event: tag
@@ -21,10 +22,31 @@ publish:
     when:
       branch: master
 
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/publish/
+    target: public_html/solder-cli/updates
+    recursive: true
+    when:
+      event: tag
+
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/github/
+    target: public_html/solder-cli/$$TAG
+    recursive: true
+    commands:
+      - cd public_html/solder-cli
+      - ln -sf $$TAG latest
+    when:
+      event: tag
+
   github_release:
     api_key: $$GITHUB_APIKEY
     files:
-      - dist/*
+      - dist/github/*
     when:
       event: tag
 
