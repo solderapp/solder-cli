@@ -46,33 +46,36 @@ func User() cli.Command {
 				Name:      "update",
 				Usage:     "Update a user",
 				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to update",
+				Flags: append(
+					[]cli.Flag{
+						cli.StringFlag{
+							Name:  "id, i",
+							Value: "",
+							Usage: "User ID or slug to update",
+						},
+						cli.StringFlag{
+							Name:  "slug",
+							Value: "",
+							Usage: "Provide a slug",
+						},
+						cli.StringFlag{
+							Name:  "username",
+							Value: "",
+							Usage: "Provide an username",
+						},
+						cli.StringFlag{
+							Name:  "email",
+							Value: "",
+							Usage: "Provide an email",
+						},
+						cli.StringFlag{
+							Name:  "password",
+							Value: "",
+							Usage: "Provide a password",
+						},
 					},
-					cli.StringFlag{
-						Name:  "slug",
-						Value: "",
-						Usage: "Provide a slug",
-					},
-					cli.StringFlag{
-						Name:  "username",
-						Value: "",
-						Usage: "Provide an username",
-					},
-					cli.StringFlag{
-						Name:  "email",
-						Value: "",
-						Usage: "Provide an email",
-					},
-					cli.StringFlag{
-						Name:  "password",
-						Value: "",
-						Usage: "Provide a password",
-					},
-				},
+					userPermissionFlags()...,
+				),
 				Action: func(c *cli.Context) {
 					Handle(c, UserUpdate)
 				},
@@ -97,28 +100,31 @@ func User() cli.Command {
 				Name:      "create",
 				Usage:     "Create a user",
 				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "slug",
-						Value: "",
-						Usage: "Provide a slug",
+				Flags: append(
+					[]cli.Flag{
+						cli.StringFlag{
+							Name:  "slug",
+							Value: "",
+							Usage: "Provide a slug",
+						},
+						cli.StringFlag{
+							Name:  "username",
+							Value: "",
+							Usage: "Provide an username",
+						},
+						cli.StringFlag{
+							Name:  "email",
+							Value: "",
+							Usage: "Provide an email",
+						},
+						cli.StringFlag{
+							Name:  "password",
+							Value: "",
+							Usage: "Provide a password",
+						},
 					},
-					cli.StringFlag{
-						Name:  "username",
-						Value: "",
-						Usage: "Provide an username",
-					},
-					cli.StringFlag{
-						Name:  "email",
-						Value: "",
-						Usage: "Provide an email",
-					},
-					cli.StringFlag{
-						Name:  "password",
-						Value: "",
-						Usage: "Provide a password",
-					},
-				},
+					userPermissionFlags()...,
+				),
 				Action: func(c *cli.Context) {
 					Handle(c, UserCreate)
 				},
@@ -435,4 +441,129 @@ func UserModRemove(c *cli.Context, client solder.ClientAPI) error {
 
 	fmt.Fprintf(os.Stderr, "Successfully removed from user\n")
 	return nil
+}
+
+func userPermissionFlags() []cli.Flag {
+	return []cli.Flag{
+		cli.BoolFlag{
+			Name:  "users-display",
+			Usage: "Permit display users",
+		},
+		cli.BoolFlag{
+			Name:  "no-users-display",
+			Usage: "Deny display users",
+		},
+		cli.BoolFlag{
+			Name:  "users-change",
+			Usage: "Permit change users",
+		},
+		cli.BoolFlag{
+			Name:  "no-users-change",
+			Usage: "Deny change users",
+		},
+		cli.BoolFlag{
+			Name:  "users-delete",
+			Usage: "Permit delete users",
+		},
+		cli.BoolFlag{
+			Name:  "no-users-delete",
+			Usage: "Deny delete users",
+		},
+		cli.BoolFlag{
+			Name:  "keys-display",
+			Usage: "Permit display keys",
+		},
+		cli.BoolFlag{
+			Name:  "no-keys-display",
+			Usage: "Deny display keys",
+		},
+		cli.BoolFlag{
+			Name:  "keys-change",
+			Usage: "Permit change keys",
+		},
+		cli.BoolFlag{
+			Name:  "no-keys-change",
+			Usage: "Deny change keys",
+		},
+		cli.BoolFlag{
+			Name:  "keys-delete",
+			Usage: "Permit delete keys",
+		},
+		cli.BoolFlag{
+			Name:  "no-keys-delete",
+			Usage: "Deny delete keys",
+		},
+		cli.BoolFlag{
+			Name:  "clients-display",
+			Usage: "Permit display clients",
+		},
+		cli.BoolFlag{
+			Name:  "no-clients-display",
+			Usage: "Deny display clients",
+		},
+		cli.BoolFlag{
+			Name:  "clients-change",
+			Usage: "Permit change clients",
+		},
+		cli.BoolFlag{
+			Name:  "no-clients-change",
+			Usage: "Deny change clients",
+		},
+		cli.BoolFlag{
+			Name:  "clients-delete",
+			Usage: "Permit delete clients",
+		},
+		cli.BoolFlag{
+			Name:  "no-clients-delete",
+			Usage: "Deny delete clients",
+		},
+		cli.BoolFlag{
+			Name:  "packs-display",
+			Usage: "Permit display packs",
+		},
+		cli.BoolFlag{
+			Name:  "no-packs-display",
+			Usage: "Deny display packs",
+		},
+		cli.BoolFlag{
+			Name:  "packs-change",
+			Usage: "Permit change packs",
+		},
+		cli.BoolFlag{
+			Name:  "no-packs-change",
+			Usage: "Deny change packs",
+		},
+		cli.BoolFlag{
+			Name:  "packs-delete",
+			Usage: "Permit delete packs",
+		},
+		cli.BoolFlag{
+			Name:  "no-packs-delete",
+			Usage: "Deny delete packs",
+		},
+		cli.BoolFlag{
+			Name:  "mods-display",
+			Usage: "Permit display mods",
+		},
+		cli.BoolFlag{
+			Name:  "no-mods-display",
+			Usage: "Deny display mods",
+		},
+		cli.BoolFlag{
+			Name:  "mods-change",
+			Usage: "Permit change mods",
+		},
+		cli.BoolFlag{
+			Name:  "no-mods-change",
+			Usage: "Deny change mods",
+		},
+		cli.BoolFlag{
+			Name:  "mods-delete",
+			Usage: "Permit delete mods",
+		},
+		cli.BoolFlag{
+			Name:  "no-mods-delete",
+			Usage: "Deny delete mods",
+		},
+	}
 }

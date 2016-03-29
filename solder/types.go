@@ -307,13 +307,30 @@ func (s *Pack) EncodeBackground(path string) error {
 
 // User represents a user API response.
 type User struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID         int64     `json:"id"`
+	Slug       string    `json:"slug"`
+	Username   string    `json:"username"`
+	Password   string    `json:"password"`
+	Email      string    `json:"email"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
+	Permission struct {
+		DisplayUsers   bool `json:"display_users"`
+		ChangeUsers    bool `json:"change_users"`
+		DeleteUsers    bool `json:"delete_users"`
+		DisplayKeys    bool `json:"display_keys"`
+		ChangeKeys     bool `json:"change_keys"`
+		DeleteKeys     bool `json:"delete_keys"`
+		DisplayClients bool `json:"display_clients"`
+		ChangeClients  bool `json:"change_clients"`
+		DeleteClients  bool `json:"delete_clients"`
+		DisplayPacks   bool `json:"display_packs"`
+		ChangePacks    bool `json:"change_packs"`
+		DeletePacks    bool `json:"delete_packs"`
+		DisplayMods    bool `json:"display_mods"`
+		ChangeMods     bool `json:"change_mods"`
+		DeleteMods     bool `json:"delete_mods"`
+	}
 }
 
 func (s *User) String() string {
