@@ -105,8 +105,16 @@ func Build() cli.Command {
 						Usage: "Mark build published",
 					},
 					cli.BoolFlag{
+						Name:  "hidden",
+						Usage: "Mark pack hidden",
+					},
+					cli.BoolFlag{
 						Name:  "private",
 						Usage: "Mark build private",
+					},
+					cli.BoolFlag{
+						Name:  "public",
+						Usage: "Mark pack public",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -179,8 +187,16 @@ func Build() cli.Command {
 						Usage: "Mark build published",
 					},
 					cli.BoolFlag{
+						Name:  "hidden",
+						Usage: "Mark pack hidden",
+					},
+					cli.BoolFlag{
 						Name:  "private",
 						Usage: "Mark build private",
+					},
+					cli.BoolFlag{
+						Name:  "public",
+						Usage: "Mark pack public",
 					},
 				},
 				Action: func(c *cli.Context) {
@@ -503,13 +519,31 @@ func BuildUpdate(c *cli.Context, client solder.ClientAPI) error {
 		changed = true
 	}
 
-	if val := c.Bool("published"); c.IsSet("published") && val != record.Published {
-		record.Published = val
+	if c.IsSet("published") && c.IsSet("hidden") {
+		return fmt.Errorf("Conflict, you can mark it only published OR hidden!")
+	}
+
+	if c.IsSet("published") {
+		record.Published = true
 		changed = true
 	}
 
-	if val := c.Bool("private"); c.IsSet("private") && val != record.Private {
-		record.Private = val
+	if c.IsSet("hidden") {
+		record.Published = false
+		changed = true
+	}
+
+	if c.IsSet("private") && c.IsSet("public") {
+		return fmt.Errorf("Conflict, you can mark it only private OR public!")
+	}
+
+	if c.IsSet("private") {
+		record.Private = true
+		changed = true
+	}
+
+	if c.IsSet("public") {
+		record.Private = false
 		changed = true
 	}
 
@@ -623,12 +657,28 @@ func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
 		record.MinMemory = val
 	}
 
+	if c.IsSet("published") && c.IsSet("hidden") {
+		return fmt.Errorf("Conflict, you can mark it only published OR hidden!")
+	}
+
 	if c.IsSet("published") {
-		record.Published = c.Bool("published")
+		record.Published = true
+	}
+
+	if c.IsSet("hidden") {
+		record.Published = false
+	}
+
+	if c.IsSet("private") && c.IsSet("public") {
+		return fmt.Errorf("Conflict, you can mark it only private OR public!")
 	}
 
 	if c.IsSet("private") {
-		record.Private = c.Bool("private")
+		record.Private = true
+	}
+
+	if c.IsSet("public") {
+		record.Private = false
 	}
 
 	_, err := client.BuildPost(
