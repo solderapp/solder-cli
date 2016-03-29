@@ -65,9 +65,12 @@ $(BIN)/$(EXECUTABLE)-%:
 	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags '-s -w $(LDFLAGS)' -o $@
 	mkdir -p $(DIST)/updater
 	cp $@ $(DIST)/updater/$(GOOS)-$(GOARCH)
-	mkdir -p $(DIST)/github
-	cp $@ $(DIST)/github/$(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH)
-	cd $(DIST)/github && sha256sum $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH).sha256
+	mkdir -p $(DIST)/release
+	cp $@ $(DIST)/release/$(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH)
+	cd $(DIST)/release && sha256sum $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-$(VERSION)-$(GOOS)-$(GOARCH).sha256
+	mkdir -p $(DIST)/latest
+	cp $@ $(DIST)/latest/$(EXECUTABLE)-latest-$(GOOS)-$(GOARCH)
+	cd $(DIST)/latest && sha256sum $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH).sha256
 
 .PHONY: all clean deps vendor generate fmt vet lint test build
 .PRECIOUS: $(BIN)/$(EXECUTABLE)-%

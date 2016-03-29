@@ -28,25 +28,34 @@ publish:
     source: dist/publish/
     target: public_html/solder-cli/updates
     recursive: true
+    delete: false
     when:
       event: tag
 
   rsync:
     user: dl
     host: dl.webhippie.de
-    source: dist/github/
+    source: dist/latest/
+    target: public_html/solder-cli/latest
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/release/
     target: public_html/solder-cli/$$TAG
     recursive: true
-    commands:
-      - cd public_html/solder-cli
-      - ln -sf $$TAG latest
+    delete: true
     when:
       event: tag
 
   github_release:
     api_key: $$GITHUB_APIKEY
     files:
-      - dist/github/*
+      - dist/release/*
     when:
       event: tag
 
