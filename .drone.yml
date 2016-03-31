@@ -22,13 +22,20 @@ publish:
     when:
       branch: master
 
+  github_release:
+    api_key: $$GITHUB_APIKEY
+    files:
+      - dist/release/*
+    when:
+      event: tag
+
   rsync:
     user: dl
     host: dl.webhippie.de
-    source: dist/publish/
-    target: public_html/solder-cli/updates
+    source: dist/release/
+    target: public_html/solder-cli/$$TAG
     recursive: true
-    delete: false
+    delete: true
     when:
       event: tag
 
@@ -45,17 +52,10 @@ publish:
   rsync:
     user: dl
     host: dl.webhippie.de
-    source: dist/release/
-    target: public_html/solder-cli/$$TAG
+    source: dist/publish/
+    target: public_html/solder-cli/updates
     recursive: true
-    delete: true
-    when:
-      event: tag
-
-  github_release:
-    api_key: $$GITHUB_APIKEY
-    files:
-      - dist/release/*
+    delete: false
     when:
       event: tag
 
