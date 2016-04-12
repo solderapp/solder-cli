@@ -8,11 +8,11 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/sanbornm/go-selfupdate/selfupdate"
 	"github.com/solderapp/solder-cli/cmd"
+	"github.com/solderapp/solder-cli/config"
 )
 
 var (
 	updates string = "http://dl.webhippie.de/"
-	version string = "0.0.0-dev"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "solder-cli"
-	app.Version = version
+	app.Version = config.Version
 	app.Author = "Thomas Boerger <thomas@webhippie.de>"
 	app.Usage = "Manage mod packs for the Technic launcher"
 
@@ -46,11 +46,11 @@ func main() {
 
 	app.Before = func(c *cli.Context) error {
 		if c.Bool("update") {
-			if version == "0.0.0-dev" {
+			if config.VersionDev == "dev" {
 				fmt.Fprintf(os.Stderr, "Updates are disabled for development versions.\n")
 			} else {
 				updater := &selfupdate.Updater{
-					CurrentVersion: version,
+					CurrentVersion: config.StrippedVersion,
 					ApiURL:         updates,
 					BinURL:         updates,
 					DiffURL:        updates,

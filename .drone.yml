@@ -6,14 +6,7 @@ build:
       - make deps
       - make build
       - make test
-
-  release:
-    image: webhippie/golang:latest
-    commands:
-      - make clean
       - make release
-    when:
-      event: tag
 
 publish:
   coverage:
@@ -22,6 +15,46 @@ publish:
     when:
       branch: master
 
+  rsync:
+    user: deploy
+    host: dl.webhippie.de
+    source: dist/latest/
+    target: $$BASE_PATH/solder-cli/master
+    recursive: true
+    delete: true
+    when:
+      branch: master
+
+  rsync:
+    user: deploy
+    host: dl.webhippie.de
+    source: dist/release/
+    target: $$BASE_PATH/solder-cli/$$TAG
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: deploy
+    host: dl.webhippie.de
+    source: dist/latest/
+    target: $$BASE_PATH/solder-cli/latest
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: deploy
+    host: dl.webhippie.de
+    source: dist/publish/
+    target: $$BASE_PATH/solder-cli/updates
+    recursive: true
+    delete: false
+    when:
+      event: tag
+
   github_release:
     api_key: $$GITHUB_APIKEY
     files:
@@ -29,42 +62,10 @@ publish:
     when:
       event: tag
 
-  rsync:
-    user: dl
-    host: dl.webhippie.de
-    source: dist/release/
-    target: public_html/solder-cli/$$TAG
-    recursive: true
-    delete: true
-    when:
-      event: tag
-
-  rsync:
-    user: dl
-    host: dl.webhippie.de
-    source: dist/latest/
-    target: public_html/solder-cli/latest
-    recursive: true
-    delete: true
-    when:
-      event: tag
-
-  rsync:
-    user: dl
-    host: dl.webhippie.de
-    source: dist/publish/
-    target: public_html/solder-cli/updates
-    recursive: true
-    delete: false
-    when:
-      event: tag
-
 notify:
   gitter:
     webhook:
       - $$GITTER_WEBHOOK
-    when:
-      repo: solderapp/solder-cli
 
 cache:
   mount:

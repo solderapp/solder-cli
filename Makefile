@@ -1,9 +1,9 @@
 DIST := dist
 BIN := bin
 EXECUTABLE := solder-cli
-VERSION := $(shell cat VERSION)
+SHA := $(shell git rev-parse --short HEAD)
 
-LDFLAGS += -X "main.version=$(VERSION)"
+LDFLAGS += -X "github.com/solderapp/solder-cli/config.VersionDev=$(SHA)"
 
 RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
 	$(BIN)/$(EXECUTABLE)-linux-386 \

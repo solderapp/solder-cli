@@ -4,7 +4,7 @@
 [![Coverage Status](http://coverage.dronehippie.de/badges/solderapp/solder-cli/coverage.svg)](http://coverage.dronehippie.de/solderapp/solder-cli)
 [![Go Doc](https://godoc.org/github.com/solderapp/solder-cli?status.svg)](http://godoc.org/github.com/solderapp/solder-cli)
 [![Go Report](http://goreportcard.com/badge/solderapp/solder-cli)](http://goreportcard.com/report/solderapp/solder-cli)
-[![Join the chat at https://gitter.im/solderapp/solder](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solderapp/solder)
+[![Join the chat at https://gitter.im/solderapp/solder](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/solderapp/solder-api)
 ![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
 
 **This project is under heavy development, it's not in a working state yet!**
@@ -23,7 +23,7 @@ this awesome project!
 
 You can download prebuilt binaries from the GitHub releases or from our
 [download site](http://dl.webhippie.de/solder-cli). If you are missing an
-architecture just write us on the [Gitter](https://gitter.im/solderapp/solder)
+architecture just write us on the [Gitter](https://gitter.im/solderapp/solder-api)
 chat. Take a look at the help output, you can enable auto updates to the binary
 to avoid bugs related to old versions. If you find a security issue please
 contact thomas@webhippie.de first.
@@ -42,7 +42,7 @@ go get -d github.com/solderapp/solder-cli
 cd $GOPATH/src/github.com/solderapp/solder-cli
 make deps build
 
-bin/drone-cli -h
+bin/solder-cli -h
 ```
 
 

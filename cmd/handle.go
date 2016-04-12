@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/solderapp/solder-cli/solder"
+	"github.com/solderapp/solder-go/solder"
 )
 
 // HandleFunc is the real handle implementation.

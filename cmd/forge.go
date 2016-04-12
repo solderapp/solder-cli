@@ -7,7 +7,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-cli/solder"
+	"github.com/solderapp/solder-go/solder"
 )
 
 // Forge provides the sub-command for the Forge API.
