@@ -37,7 +37,7 @@ func main() {
 			Usage:  "Solder API token",
 			EnvVar: "SOLDER_TOKEN",
 		},
-		cli.BoolFlag{
+		cli.BoolTFlag{
 			Name:   "update, u",
 			Usage:  "Enable auto update",
 			EnvVar: "SOLDER_UPDATE",
@@ -45,17 +45,22 @@ func main() {
 	}
 
 	app.Before = func(c *cli.Context) error {
-		if c.Bool("update") {
+		if c.BoolT("update") {
 			if config.VersionDev == "dev" {
 				fmt.Fprintf(os.Stderr, "Updates are disabled for development versions.\n")
 			} else {
 				updater := &selfupdate.Updater{
-					CurrentVersion: config.StrippedVersion,
-					ApiURL:         updates,
-					BinURL:         updates,
-					DiffURL:        updates,
-					Dir:            "updates/",
-					CmdName:        app.Name,
+					CurrentVersion: fmt.Sprintf(
+						"%d.%d.%d",
+						config.VersionMajor,
+						config.VersionMinor,
+						config.VersionPatch,
+					),
+					ApiURL:  updates,
+					BinURL:  updates,
+					DiffURL: updates,
+					Dir:     "updates/",
+					CmdName: app.Name,
 				}
 
 				go updater.BackgroundRun()
