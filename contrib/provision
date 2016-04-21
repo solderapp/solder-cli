@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+ROOT=$(realpath -e $(dirname $0))
+
+bin/solder-cli forge ref
+bin/solder-cli minecraft ref
+
+bin/solder-cli key create --name Technic --key 5ad58ae1ac2efc0ea3592522213f6903
+bin/solder-cli key create --name Foobar --key 6ad58ae1ac2efc0ea3592522213f6903
+bin/solder-cli key create --name Mompelz --key 7ad58ae1ac2efc0ea3592522213f6903
+
+bin/solder-cli client create --name Mompelz --uuid e640f53a44a14d6d89b4988b649cbb6d
+bin/solder-cli client create --name Felix --uuid e540f53a44a14d6d89b4988b649cbb6d
+bin/solder-cli client create --name Armin --uuid e440f53a44a14d6d89b4988b649cbb6d
+
+bin/solder-cli pack create --name Awesome \
+  --icon-path ${ROOT}/fixtures/width1.jpg \
+  --bg-path ${ROOT}/fixtures/width2.jpg \
+  --logo-path ${ROOT}/fixtures/width3.jpg
+
+bin/solder-cli build create --pack awesome --name v0.0.1 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack awesome --name v1.0.0 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack awesome --name v1.0.1 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+
+bin/solder-cli pack create --name Godlike \
+  --icon-path ${ROOT}/fixtures/height1.jpg \
+  --bg-path ${ROOT}/fixtures/height2.jpg \
+  --logo-path ${ROOT}/fixtures/height3.jpg
+
+bin/solder-cli build create --pack godlike --name v1.0.0 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack godlike --name v2.0.0 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack godlike --name v3.0.0 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+
+bin/solder-cli pack create --name Sucks \
+  --icon-path ${ROOT}/fixtures/width1.jpg \
+  --bg-path ${ROOT}/fixtures/width2.jpg \
+  --logo-path ${ROOT}/fixtures/width3.jpg
+
+bin/solder-cli build create --pack sucks --name v0.0.1 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack sucks --name v0.0.2 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+bin/solder-cli build create --pack sucks --name v0.0.3 --minecraft f67d7e34d04dae24952fbb7cfe792c16 --forge 33611fddfe51e342f8c16e846a0be94a
+
+bin/solder-cli mod create --name "Not Enough Items"
+bin/solder-cli version create --mod not-enough-items --name 1.5.2.26 --file-path ${ROOT}/fixtures/nei.zip
+bin/solder-cli version create --mod not-enough-items --name 1.5.2.27 --file-path ${ROOT}/fixtures/nei.zip
+bin/solder-cli version create --mod not-enough-items --name 1.5.2.28 --file-path ${ROOT}/fixtures/nei.zip
+
+bin/solder-cli mod create --name "Artifice"
+bin/solder-cli version create --mod artifice --name 1.1.0.182 --file-path ${ROOT}/fixtures/artifice.zip
+bin/solder-cli version create --mod artifice --name 1.1.1.182 --file-path ${ROOT}/fixtures/artifice.zip
+bin/solder-cli version create --mod artifice --name 1.1.2.182 --file-path ${ROOT}/fixtures/artifice.zip
+
+bin/solder-cli mod create --name "Armor Bar"
+bin/solder-cli version create --mod armor-bar --name 0.6.5 --file-path ${ROOT}/fixtures/armorbar.zip
+bin/solder-cli version create --mod armor-bar --name 0.7.0 --file-path ${ROOT}/fixtures/armorbar.zip
+bin/solder-cli version create --mod armor-bar --name 0.7.1 --file-path ${ROOT}/fixtures/armorbar.zip
