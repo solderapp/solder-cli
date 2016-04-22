@@ -419,7 +419,7 @@ func VersionCreate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("mod") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("mod")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("mod")); match {
 			if val, err := strconv.ParseInt(c.String("mod"), 10, 64); err == nil && val != 0 {
 				record.ModID = val
 			}

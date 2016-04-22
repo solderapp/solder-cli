@@ -507,7 +507,7 @@ func PackUpdate(c *cli.Context, client solder.ClientAPI) error {
 	changed := false
 
 	if c.IsSet("recommended") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("recommended")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("recommended")); match {
 			if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
 				record.RecommendedID = val
 				changed = true
@@ -532,7 +532,7 @@ func PackUpdate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("latest") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("latest")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("latest")); match {
 			if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
 				record.LatestID = val
 				changed = true

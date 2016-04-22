@@ -452,7 +452,7 @@ func BuildUpdate(c *cli.Context, client solder.ClientAPI) error {
 	changed := false
 
 	if c.IsSet("minecraft") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("minecraft")); match {
 			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
 				record.MinecraftID = val
 				changed = true
@@ -476,7 +476,7 @@ func BuildUpdate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("forge") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("forge")); match {
 			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
 				record.ForgeID = val
 				changed = true
@@ -574,7 +574,7 @@ func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("pack") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("pack")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("pack")); match {
 			if val, err := strconv.ParseInt(c.String("pack"), 10, 64); err == nil && val != 0 {
 				record.PackID = val
 			}
@@ -596,7 +596,7 @@ func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("minecraft") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("minecraft")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("minecraft")); match {
 			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
 				record.MinecraftID = val
 			}
@@ -618,7 +618,7 @@ func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
 	}
 
 	if c.IsSet("forge") {
-		if match, _ := regexp.MatchString("([0-9]+)", c.String("forge")); match {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("forge")); match {
 			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
 				record.ForgeID = val
 			}
