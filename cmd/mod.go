@@ -446,14 +446,12 @@ func ModUserList(c *cli.Context, client solder.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Username"})
+	table.SetHeader([]string{"User"})
 
 	for _, record := range records {
 		table.Append(
 			[]string{
-				strconv.FormatInt(record.ID, 10),
 				record.Slug,
-				record.Username,
 			},
 		)
 	}

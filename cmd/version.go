@@ -187,6 +187,11 @@ func Version() cli.Command {
 						Usage: "Version ID or slug to append to",
 					},
 					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "Pack ID or slug to append to",
+					},
+					cli.StringFlag{
 						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append to",
@@ -210,6 +215,11 @@ func Version() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Version ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "Pack ID or slug to append to",
 					},
 					cli.StringFlag{
 						Name:  "build, b",
@@ -502,14 +512,13 @@ func VersionBuildList(c *cli.Context, client solder.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	table.SetHeader([]string{"Pack", "Build"})
 
 	for _, record := range records {
 		table.Append(
 			[]string{
-				strconv.FormatInt(record.ID, 10),
+				record.Pack.Slug,
 				record.Slug,
-				record.Name,
 			},
 		)
 	}
@@ -523,6 +532,7 @@ func VersionBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.VersionBuildAppend(
 		GetModParam(c),
 		GetIdentifierParam(c),
+		GetPackParam(c),
 		GetBuildParam(c),
 	)
 
@@ -539,6 +549,7 @@ func VersionBuildRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.VersionBuildDelete(
 		GetModParam(c),
 		GetIdentifierParam(c),
+		GetPackParam(c),
 		GetBuildParam(c),
 	)
 

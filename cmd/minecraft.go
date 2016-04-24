@@ -60,6 +60,11 @@ func Minecraft() cli.Command {
 						Usage: "Minecraft ID or slug to append to",
 					},
 					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "Pack ID or slug to append",
+					},
+					cli.StringFlag{
 						Name:  "build, b",
 						Value: "",
 						Usage: "Build ID or slug to append",
@@ -78,6 +83,11 @@ func Minecraft() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Minecraft ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "pack, p",
+						Value: "",
+						Usage: "Pack ID or slug to remove",
 					},
 					cli.StringFlag{
 						Name:  "build, b",
@@ -154,14 +164,13 @@ func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	table.SetHeader([]string{"Pack", "Build"})
 
 	for _, record := range records {
 		table.Append(
 			[]string{
-				strconv.FormatInt(record.ID, 10),
+				record.Pack.Slug,
 				record.Slug,
-				record.Name,
 			},
 		)
 	}
@@ -174,6 +183,7 @@ func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
 func MinecraftBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.MinecraftBuildAppend(
 		GetIdentifierParam(c),
+		GetPackParam(c),
 		GetBuildParam(c),
 	)
 
@@ -189,6 +199,7 @@ func MinecraftBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 func MinecraftBuildRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.MinecraftBuildDelete(
 		GetIdentifierParam(c),
+		GetPackParam(c),
 		GetBuildParam(c),
 	)
 
