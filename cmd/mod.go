@@ -432,7 +432,9 @@ func ModCreate(c *cli.Context, client solder.ClientAPI) error {
 // ModUserList provides the sub-command to list users of the mod.
 func ModUserList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ModUserList(
-		GetIdentifierParam(c),
+		solder.ModUserParams{
+			Mod: GetIdentifierParam(c),
+		},
 	)
 
 	if err != nil {
@@ -462,9 +464,11 @@ func ModUserList(c *cli.Context, client solder.ClientAPI) error {
 
 // ModUserAppend provides the sub-command to append a user to the mod.
 func ModUserAppend(c *cli.Context, client solder.ClientAPI) error {
-	err := client.PackClientAppend(
-		GetIdentifierParam(c),
-		GetUserParam(c),
+	err := client.ModUserAppend(
+		solder.ModUserParams{
+			Mod:  GetIdentifierParam(c),
+			User: GetUserParam(c),
+		},
 	)
 
 	if err != nil {
@@ -477,9 +481,11 @@ func ModUserAppend(c *cli.Context, client solder.ClientAPI) error {
 
 // ModUserRemove provides the sub-command to remove a user from the mod.
 func ModUserRemove(c *cli.Context, client solder.ClientAPI) error {
-	err := client.PackClientDelete(
-		GetIdentifierParam(c),
-		GetUserParam(c),
+	err := client.ModUserDelete(
+		solder.ModUserParams{
+			Mod:  GetIdentifierParam(c),
+			User: GetUserParam(c),
+		},
 	)
 
 	if err != nil {

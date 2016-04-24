@@ -356,7 +356,9 @@ func ClientCreate(c *cli.Context, client solder.ClientAPI) error {
 // ClientPackList provides the sub-command to list packs of the client.
 func ClientPackList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.ClientPackList(
-		GetIdentifierParam(c),
+		solder.ClientPackParams{
+			Client: GetIdentifierParam(c),
+		},
 	)
 
 	if err != nil {
@@ -388,8 +390,10 @@ func ClientPackList(c *cli.Context, client solder.ClientAPI) error {
 // ClientPackAppend provides the sub-command to append a pack to the client.
 func ClientPackAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ClientPackAppend(
-		GetIdentifierParam(c),
-		GetPackParam(c),
+		solder.ClientPackParams{
+			Client: GetIdentifierParam(c),
+			Pack:   GetPackParam(c),
+		},
 	)
 
 	if err != nil {
@@ -403,8 +407,10 @@ func ClientPackAppend(c *cli.Context, client solder.ClientAPI) error {
 // ClientPackRemove provides the sub-command to remove a pack from the client.
 func ClientPackRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.ClientPackDelete(
-		GetIdentifierParam(c),
-		GetPackParam(c),
+		solder.ClientPackParams{
+			Client: GetIdentifierParam(c),
+			Pack:   GetPackParam(c),
+		},
 	)
 
 	if err != nil {

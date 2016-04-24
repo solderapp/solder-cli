@@ -438,7 +438,9 @@ func UserCreate(c *cli.Context, client solder.ClientAPI) error {
 // UserModList provides the sub-command to list mods of the user.
 func UserModList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.UserModList(
-		GetIdentifierParam(c),
+		solder.UserModParams{
+			User: GetIdentifierParam(c),
+		},
 	)
 
 	if err != nil {
@@ -471,8 +473,10 @@ func UserModList(c *cli.Context, client solder.ClientAPI) error {
 // UserModAppend provides the sub-command to append a mod to the user.
 func UserModAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.UserModAppend(
-		GetIdentifierParam(c),
-		GetModParam(c),
+		solder.UserModParams{
+			User: GetIdentifierParam(c),
+			Mod:  GetModParam(c),
+		},
 	)
 
 	if err != nil {
@@ -486,8 +490,10 @@ func UserModAppend(c *cli.Context, client solder.ClientAPI) error {
 // UserModRemove provides the sub-command to remove a mod from the user.
 func UserModRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.UserModDelete(
-		GetIdentifierParam(c),
-		GetModParam(c),
+		solder.UserModParams{
+			User: GetIdentifierParam(c),
+			Mod:  GetModParam(c),
+		},
 	)
 
 	if err != nil {
@@ -501,7 +507,9 @@ func UserModRemove(c *cli.Context, client solder.ClientAPI) error {
 // UserPackList provides the sub-command to list packs of the user.
 func UserPackList(c *cli.Context, client solder.ClientAPI) error {
 	records, err := client.UserPackList(
-		GetIdentifierParam(c),
+		solder.UserPackParams{
+			User: GetIdentifierParam(c),
+		},
 	)
 
 	if err != nil {
@@ -532,8 +540,10 @@ func UserPackList(c *cli.Context, client solder.ClientAPI) error {
 // UserPackAppend provides the sub-command to append a pack to the user.
 func UserPackAppend(c *cli.Context, client solder.ClientAPI) error {
 	err := client.UserPackAppend(
-		GetIdentifierParam(c),
-		GetPackParam(c),
+		solder.UserPackParams{
+			User: GetIdentifierParam(c),
+			Pack: GetPackParam(c),
+		},
 	)
 
 	if err != nil {
@@ -547,8 +557,10 @@ func UserPackAppend(c *cli.Context, client solder.ClientAPI) error {
 // UserPackRemove provides the sub-command to remove a pack from the user.
 func UserPackRemove(c *cli.Context, client solder.ClientAPI) error {
 	err := client.UserPackDelete(
-		GetIdentifierParam(c),
-		GetPackParam(c),
+		solder.UserPackParams{
+			User: GetIdentifierParam(c),
+			Pack: GetPackParam(c),
+		},
 	)
 
 	if err != nil {

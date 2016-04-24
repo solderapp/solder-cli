@@ -16,7 +16,7 @@ vendors:
 - path: github.com/sanbornm/go-selfupdate
   rev: 333a93f08e13e4389fb21bfa530140fc0b884582
 - path: github.com/solderapp/solder-go
-  rev: 2002dd39b005ac49b661c1b830c0a25cf3803f98
+  rev: 79e08c1c64bca959e721129c956fad4c0e0c3ce2
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
