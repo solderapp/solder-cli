@@ -727,9 +727,15 @@ func BuildVersionList(c *cli.Context, client solder.ClientAPI) error {
 	table.SetHeader([]string{"Mod", "Version"})
 
 	for _, record := range records {
+		mod := "n/a"
+
+		if record.Mod != nil {
+			mod = record.Mod.Slug
+		}
+
 		table.Append(
 			[]string{
-				record.Mod.Slug,
+				mod,
 				record.Slug,
 			},
 		)

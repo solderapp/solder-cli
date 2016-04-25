@@ -377,7 +377,6 @@ func ClientPackList(c *cli.Context, client solder.ClientAPI) error {
 	for _, record := range records {
 		table.Append(
 			[]string{
-				strconv.FormatInt(record.ID, 10),
 				record.Slug,
 			},
 		)

@@ -169,9 +169,15 @@ func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
 	table.SetHeader([]string{"Pack", "Build"})
 
 	for _, record := range records {
+		pack := "n/a"
+
+		if record.Pack != nil {
+			pack = record.Pack.Slug
+		}
+
 		table.Append(
 			[]string{
-				record.Pack.Slug,
+				pack,
 				record.Slug,
 			},
 		)
