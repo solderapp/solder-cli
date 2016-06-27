@@ -1,0 +1,23 @@
+vendors:
+- path: github.com/davecgh/go-spew
+  rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+- path: github.com/golang/protobuf
+  rev: dda510ac0fd43b39770f22ac6260eb91d377bce3
+- path: github.com/jackspirou/syscerts
+  rev: 5ecaea8f7ec96a0826ced1ff106d30083066bf35
+- path: github.com/pmezard/go-difflib
+  rev: 792786c7400a136282c1664665ae0a8db921c6c2
+- path: github.com/solderapp/solder-cli
+  rev: fc0587503316af1c996edee29fb96c8dbb2be862
+- path: github.com/stretchr/objx
+  rev: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
+- path: github.com/stretchr/testify
+  rev: 0744955171b0b6e1871ff9d7366abc2b7a7fcec0
+- path: github.com/vincent-petithory/dataurl
+  rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
+- path: golang.org/x/net
+  rev: 589fda73dd0faec3dc59e7d7dab5b069e3fce0f9
+- path: golang.org/x/oauth2
+  rev: b0e2337fe6ec0c637fa4f123268b972f334504eb
+- path: google.golang.org/appengine
+  rev: b67c870a16a2d58b3afa024461dcc51805f52e9d
