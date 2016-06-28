@@ -17,6 +17,12 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+// Token represents a session token.
+type Token struct {
+	Token  string `json:"token"`
+	Expite string `json:"expire,omitempty"`
+}
+
 // Attachment represents a attachment API response.
 type Attachment struct {
 	URL       string    `json:"url,omitempty"`
@@ -321,6 +327,7 @@ type User struct {
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	Packs      []*Pack   `json:"packs,omitempty"`
+	Mods       []*Mod    `json:"mods,omitempty"`
 	Permission struct {
 		DisplayUsers   bool `json:"display_users"`
 		ChangeUsers    bool `json:"change_users"`

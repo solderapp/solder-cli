@@ -4,6 +4,9 @@ package solder
 
 // ClientAPI describes a client API.
 type ClientAPI interface {
+	// ProfileToken returns a token.
+	ProfileToken() (*Token, error)
+
 	// ProfileGet returns a profile.
 	ProfileGet() (*Profile, error)
 

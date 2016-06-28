@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	pathProfile        = "%s/api/profile"
+	pathProfile        = "%s/api/profile/self"
+	pathProfileToken   = "%s/api/profile/token"
 	pathForge          = "%s/api/forge"
 	pathForgeBuild     = "%s/api/forge/%v/builds"
 	pathMinecraft      = "%s/api/minecraft"
@@ -88,6 +89,16 @@ func NewClientToken(uri, token string) ClientAPI {
 // authenticate requests to the Solder API.
 func (c *DefaultClient) SetClient(client *http.Client) {
 	c.client = client
+}
+
+// ProfileToken returns a profile.
+func (c *DefaultClient) ProfileToken() (*Token, error) {
+	out := &Token{}
+
+	uri := fmt.Sprintf(pathProfileToken, c.base)
+	err := c.get(uri, out)
+
+	return out, err
 }
 
 // ProfileGet returns a profile.
