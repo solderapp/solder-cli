@@ -454,7 +454,6 @@ func VersionCreate(c *cli.Context, client solder.ClientAPI) error {
 		record.Name = val
 	} else {
 		return fmt.Errorf("You must provide a name.")
-		os.Exit(1)
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {

@@ -2,7 +2,7 @@ vendors:
 - path: github.com/codegangsta/cli
   rev: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
 - path: github.com/golang/protobuf
-  rev: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
+  rev: 78b168c14fc28c8c711844d210f7ab845083e3b1
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
@@ -16,7 +16,7 @@ vendors:
 - path: github.com/sanbornm/go-selfupdate
   rev: 8d409ca53a740932c8e3a6cd1d8ea4c111f5e539
 - path: github.com/solderapp/solder-go
-  rev: c9fdd692437be5dffd249d74267ae3490f558308
+  rev: 1316b1f82ff73eda3572ba054fbe10e1f96ab870
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
