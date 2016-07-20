@@ -1,4 +1,4 @@
-package solder
+package kleister
 
 // ForgeBuildParams is used to assign builds to a forge.
 type ForgeBuildParams struct {

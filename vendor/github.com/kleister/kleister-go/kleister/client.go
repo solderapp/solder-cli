@@ -1,4 +1,4 @@
-package solder
+package kleister
 
 import (
 	"bytes"
@@ -86,7 +86,7 @@ func NewClientToken(uri, token string) ClientAPI {
 
 // SetClient sets the default http client. This should
 // be used in conjunction with golang.org/x/oauth2 to
-// authenticate requests to the Solder API.
+// authenticate requests to the Kleister API.
 func (c *DefaultClient) SetClient(client *http.Client) {
 	c.client = client
 }
@@ -867,7 +867,7 @@ func (c *DefaultClient) stream(rawurl, method string, in, out interface{}) (io.R
 
 	req.Header.Set(
 		"User-Agent",
-		"Solder CLI",
+		"Kleister CLI",
 	)
 
 	if in != nil {

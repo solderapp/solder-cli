@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Mod provides the sub-command for the mod API.
@@ -203,7 +203,7 @@ func Mod() cli.Command {
 }
 
 // ModList provides the sub-command to list all mods.
-func ModList(c *cli.Context, client solder.ClientAPI) error {
+func ModList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ModList()
 
 	if err != nil {
@@ -234,7 +234,7 @@ func ModList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModShow provides the sub-command to show mod details.
-func ModShow(c *cli.Context, client solder.ClientAPI) error {
+func ModShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -315,7 +315,7 @@ func ModShow(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModDelete provides the sub-command to delete a mod.
-func ModDelete(c *cli.Context, client solder.ClientAPI) error {
+func ModDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModDelete(
 		GetIdentifierParam(c),
 	)
@@ -329,7 +329,7 @@ func ModDelete(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModUpdate provides the sub-command to update a mod.
-func ModUpdate(c *cli.Context, client solder.ClientAPI) error {
+func ModUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -388,8 +388,8 @@ func ModUpdate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModCreate provides the sub-command to create a mod.
-func ModCreate(c *cli.Context, client solder.ClientAPI) error {
-	record := &solder.Mod{}
+func ModCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Mod{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
@@ -430,9 +430,9 @@ func ModCreate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModUserList provides the sub-command to list users of the mod.
-func ModUserList(c *cli.Context, client solder.ClientAPI) error {
+func ModUserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ModUserList(
-		solder.ModUserParams{
+		kleister.ModUserParams{
 			Mod: GetIdentifierParam(c),
 		},
 	)
@@ -463,9 +463,9 @@ func ModUserList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModUserAppend provides the sub-command to append a user to the mod.
-func ModUserAppend(c *cli.Context, client solder.ClientAPI) error {
+func ModUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModUserAppend(
-		solder.ModUserParams{
+		kleister.ModUserParams{
 			Mod:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -480,9 +480,9 @@ func ModUserAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ModUserRemove provides the sub-command to remove a user from the mod.
-func ModUserRemove(c *cli.Context, client solder.ClientAPI) error {
+func ModUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModUserDelete(
-		solder.ModUserParams{
+		kleister.ModUserParams{
 			Mod:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},

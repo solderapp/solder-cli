@@ -1,9 +1,9 @@
 DIST := dist
 BIN := bin
-EXECUTABLE := solder-cli
+EXECUTABLE := kleister-cli
 SHA := $(shell git rev-parse --short HEAD)
 
-LDFLAGS += -X "github.com/solderapp/solder-cli/config.VersionDev=$(SHA)"
+LDFLAGS += -X "github.com/kleister/kleister-cli/config.VersionDev=$(SHA)"
 
 RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
 	$(BIN)/$(EXECUTABLE)-linux-386 \

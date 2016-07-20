@@ -1,4 +1,4 @@
-package solder
+package kleister
 
 //go:generate mockery -all -case=underscore
 

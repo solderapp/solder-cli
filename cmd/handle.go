@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codegangsta/cli"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/kleister/kleister-go/kleister"
+	"github.com/urfave/cli"
 )
 
 // HandleFunc is the real handle implementation.
-type HandleFunc func(c *cli.Context, client solder.ClientAPI) error
+type HandleFunc func(c *cli.Context, client kleister.ClientAPI) error
 
 // Handle wraps the command function handler.
 func Handle(c *cli.Context, fn HandleFunc) {
@@ -26,7 +26,7 @@ func Handle(c *cli.Context, fn HandleFunc) {
 		os.Exit(2)
 	}
 
-	client := solder.NewClientToken(
+	client := kleister.NewClientToken(
 		server,
 		token,
 	)

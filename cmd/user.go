@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // User provides the sub-command for the user API.
@@ -244,7 +244,7 @@ func User() cli.Command {
 }
 
 // UserList provides the sub-command to list all users.
-func UserList(c *cli.Context, client solder.ClientAPI) error {
+func UserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserList()
 
 	if err != nil {
@@ -275,7 +275,7 @@ func UserList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserShow provides the sub-command to show user details.
-func UserShow(c *cli.Context, client solder.ClientAPI) error {
+func UserShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -335,7 +335,7 @@ func UserShow(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserDelete provides the sub-command to delete a user.
-func UserDelete(c *cli.Context, client solder.ClientAPI) error {
+func UserDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserDelete(
 		GetIdentifierParam(c),
 	)
@@ -349,7 +349,7 @@ func UserDelete(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserUpdate provides the sub-command to update a user.
-func UserUpdate(c *cli.Context, client solder.ClientAPI) error {
+func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -398,8 +398,8 @@ func UserUpdate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserCreate provides the sub-command to create a user.
-func UserCreate(c *cli.Context, client solder.ClientAPI) error {
-	record := &solder.User{}
+func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.User{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -436,9 +436,9 @@ func UserCreate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserModList provides the sub-command to list mods of the user.
-func UserModList(c *cli.Context, client solder.ClientAPI) error {
+func UserModList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserModList(
-		solder.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -469,9 +469,9 @@ func UserModList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserModAppend provides the sub-command to append a mod to the user.
-func UserModAppend(c *cli.Context, client solder.ClientAPI) error {
+func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserModAppend(
-		solder.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 		},
@@ -486,9 +486,9 @@ func UserModAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserModRemove provides the sub-command to remove a mod from the user.
-func UserModRemove(c *cli.Context, client solder.ClientAPI) error {
+func UserModRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserModDelete(
-		solder.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 		},
@@ -503,9 +503,9 @@ func UserModRemove(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserPackList provides the sub-command to list packs of the user.
-func UserPackList(c *cli.Context, client solder.ClientAPI) error {
+func UserPackList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserPackList(
-		solder.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -536,9 +536,9 @@ func UserPackList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserPackAppend provides the sub-command to append a pack to the user.
-func UserPackAppend(c *cli.Context, client solder.ClientAPI) error {
+func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserPackAppend(
-		solder.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 		},
@@ -553,9 +553,9 @@ func UserPackAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // UserPackRemove provides the sub-command to remove a pack from the user.
-func UserPackRemove(c *cli.Context, client solder.ClientAPI) error {
+func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserPackDelete(
-		solder.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 		},

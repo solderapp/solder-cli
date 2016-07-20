@@ -1,5 +1,5 @@
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
-GENERATE ?= github.com/solderapp/solder-go/solder
+GENERATE ?= github.com/kleister/kleister-go/kleister
 
 all: clean deps test
 

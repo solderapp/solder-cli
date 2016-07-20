@@ -5,10 +5,10 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-cli/cmd"
+	"github.com/kleister/kleister-cli/config"
 	"github.com/sanbornm/go-selfupdate/selfupdate"
-	"github.com/solderapp/solder-cli/cmd"
-	"github.com/solderapp/solder-cli/config"
+	"github.com/urfave/cli"
 )
 
 var (
@@ -19,7 +19,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	app := cli.NewApp()
-	app.Name = "solder-cli"
+	app.Name = "kleister-cli"
 	app.Version = config.Version
 	app.Author = "Thomas Boerger <thomas@webhippie.de>"
 	app.Usage = "Manage mod packs for the Technic launcher"
@@ -28,19 +28,19 @@ func main() {
 		cli.StringFlag{
 			Name:   "server, s",
 			Value:  "",
-			Usage:  "Solder API server",
-			EnvVar: "SOLDER_SERVER",
+			Usage:  "Kleister API server",
+			EnvVar: "KLEISTER_SERVER",
 		},
 		cli.StringFlag{
 			Name:   "token, t",
 			Value:  "",
-			Usage:  "Solder API token",
-			EnvVar: "SOLDER_TOKEN",
+			Usage:  "Kleister API token",
+			EnvVar: "KLEISTER_TOKEN",
 		},
 		cli.BoolTFlag{
 			Name:   "update, u",
 			Usage:  "Enable auto update",
-			EnvVar: "SOLDER_UPDATE",
+			EnvVar: "KLEISTER_UPDATE",
 		},
 	}
 

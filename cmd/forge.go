@@ -5,9 +5,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Forge provides the sub-command for the Forge API.
@@ -104,7 +104,7 @@ func Forge() cli.Command {
 }
 
 // ForgeList provides the sub-command to list all Forge versions.
-func ForgeList(c *cli.Context, client solder.ClientAPI) error {
+func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ForgeList()
 
 	if err != nil {
@@ -136,7 +136,7 @@ func ForgeList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
-func ForgeRefresh(c *cli.Context, client solder.ClientAPI) error {
+func ForgeRefresh(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeRefresh()
 
 	if err != nil {
@@ -148,9 +148,9 @@ func ForgeRefresh(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ForgeBuildList provides the sub-command to list builds of the Forge.
-func ForgeBuildList(c *cli.Context, client solder.ClientAPI) error {
+func ForgeBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ForgeBuildList(
-		solder.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 		},
 	)
@@ -188,9 +188,9 @@ func ForgeBuildList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ForgeBuildAppend provides the sub-command to append a build to the Forge.
-func ForgeBuildAppend(c *cli.Context, client solder.ClientAPI) error {
+func ForgeBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeBuildAppend(
-		solder.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 			Pack:  GetPackParam(c),
 			Build: GetBuildParam(c),
@@ -206,9 +206,9 @@ func ForgeBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ForgeBuildRemove provides the sub-command to remove a build from the Forge.
-func ForgeBuildRemove(c *cli.Context, client solder.ClientAPI) error {
+func ForgeBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeBuildDelete(
-		solder.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 			Pack:  GetPackParam(c),
 			Build: GetBuildParam(c),

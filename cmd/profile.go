@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Profile provides the sub-command for the profile API.
@@ -65,7 +65,7 @@ func Profile() cli.Command {
 }
 
 // ProfileToken provides the sub-command to show your token.
-func ProfileToken(c *cli.Context, client solder.ClientAPI) error {
+func ProfileToken(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ProfileToken()
 
 	if err != nil {
@@ -77,7 +77,7 @@ func ProfileToken(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ProfileShow provides the sub-command to show profile details.
-func ProfileShow(c *cli.Context, client solder.ClientAPI) error {
+func ProfileShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {
@@ -135,7 +135,7 @@ func ProfileShow(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // ProfileUpdate provides the sub-command to update the profile.
-func ProfileUpdate(c *cli.Context, client solder.ClientAPI) error {
+func ProfileUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {

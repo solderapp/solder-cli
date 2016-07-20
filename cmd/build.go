@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Build provides the sub-command for the build API.
@@ -288,7 +288,7 @@ func Build() cli.Command {
 }
 
 // BuildList provides the sub-command to list all builds.
-func BuildList(c *cli.Context, client solder.ClientAPI) error {
+func BuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.BuildList(
 		GetPackParam(c),
 	)
@@ -321,7 +321,7 @@ func BuildList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildShow provides the sub-command to show build details.
-func BuildShow(c *cli.Context, client solder.ClientAPI) error {
+func BuildShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.BuildGet(
 		GetPackParam(c),
 		GetIdentifierParam(c),
@@ -434,7 +434,7 @@ func BuildShow(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildDelete provides the sub-command to delete a build.
-func BuildDelete(c *cli.Context, client solder.ClientAPI) error {
+func BuildDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.BuildDelete(
 		GetPackParam(c),
 		GetIdentifierParam(c),
@@ -449,7 +449,7 @@ func BuildDelete(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildUpdate provides the sub-command to update a build.
-func BuildUpdate(c *cli.Context, client solder.ClientAPI) error {
+func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.BuildGet(
 		GetPackParam(c),
 		GetIdentifierParam(c),
@@ -576,8 +576,8 @@ func BuildUpdate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildCreate provides the sub-command to create a build.
-func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
-	record := &solder.Build{}
+func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Build{}
 
 	if c.String("pack") == "" {
 		return fmt.Errorf("You must provide a pack ID or slug.")
@@ -705,9 +705,9 @@ func BuildCreate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildVersionList provides the sub-command to list versions of the build.
-func BuildVersionList(c *cli.Context, client solder.ClientAPI) error {
+func BuildVersionList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.BuildVersionList(
-		solder.BuildVersionParams{
+		kleister.BuildVersionParams{
 			Pack:  GetPackParam(c),
 			Build: GetIdentifierParam(c),
 		},
@@ -746,9 +746,9 @@ func BuildVersionList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildVersionAppend provides the sub-command to append a version to the build.
-func BuildVersionAppend(c *cli.Context, client solder.ClientAPI) error {
+func BuildVersionAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.BuildVersionAppend(
-		solder.BuildVersionParams{
+		kleister.BuildVersionParams{
 			Pack:    GetPackParam(c),
 			Build:   GetIdentifierParam(c),
 			Mod:     GetModParam(c),
@@ -765,9 +765,9 @@ func BuildVersionAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // BuildVersionRemove provides the sub-command to remove a version from the build.
-func BuildVersionRemove(c *cli.Context, client solder.ClientAPI) error {
+func BuildVersionRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.BuildVersionDelete(
-		solder.BuildVersionParams{
+		kleister.BuildVersionParams{
 			Pack:    GetPackParam(c),
 			Build:   GetIdentifierParam(c),
 			Mod:     GetModParam(c),

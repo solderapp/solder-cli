@@ -1,4 +1,4 @@
-package solder
+package kleister
 
 import (
 	"bytes"

@@ -5,9 +5,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Minecraft provides the sub-command for the Minecraft API.
@@ -104,7 +104,7 @@ func Minecraft() cli.Command {
 }
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList(c *cli.Context, client solder.ClientAPI) error {
+func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.MinecraftList()
 
 	if err != nil {
@@ -136,7 +136,7 @@ func MinecraftList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh(c *cli.Context, client solder.ClientAPI) error {
+func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftRefresh()
 
 	if err != nil {
@@ -148,9 +148,9 @@ func MinecraftRefresh(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // MinecraftBuildList provides the sub-command to list builds of the Minecraft.
-func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
+func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.MinecraftBuildList(
-		solder.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 		},
 	)
@@ -188,9 +188,9 @@ func MinecraftBuildList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
-func MinecraftBuildAppend(c *cli.Context, client solder.ClientAPI) error {
+func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftBuildAppend(
-		solder.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),
@@ -206,9 +206,9 @@ func MinecraftBuildAppend(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
-func MinecraftBuildRemove(c *cli.Context, client solder.ClientAPI) error {
+func MinecraftBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftBuildDelete(
-		solder.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),

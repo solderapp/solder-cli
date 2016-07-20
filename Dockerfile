@@ -6,6 +6,6 @@ RUN apk update && \
   rm -rf \
     /var/cache/apk/*
 
-ADD bin/solder-cli /usr/bin/
-ENTRYPOINT ["/usr/bin/solder-cli"]
+ADD bin/kleister-cli /usr/bin/
+ENTRYPOINT ["/usr/bin/kleister-cli"]
 CMD ["help"]

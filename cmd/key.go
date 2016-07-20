@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/olekukonko/tablewriter"
-	"github.com/solderapp/solder-go/solder"
+	"github.com/urfave/cli"
 )
 
 // Key provides the sub-command for the key API.
@@ -118,7 +118,7 @@ func Key() cli.Command {
 }
 
 // KeyList provides the sub-command to list all keys.
-func KeyList(c *cli.Context, client solder.ClientAPI) error {
+func KeyList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.KeyList()
 
 	if err != nil {
@@ -149,7 +149,7 @@ func KeyList(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // KeyShow provides the sub-command to show key details.
-func KeyShow(c *cli.Context, client solder.ClientAPI) error {
+func KeyShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -209,7 +209,7 @@ func KeyShow(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // KeyDelete provides the sub-command to delete a key.
-func KeyDelete(c *cli.Context, client solder.ClientAPI) error {
+func KeyDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.KeyDelete(
 		GetIdentifierParam(c),
 	)
@@ -223,7 +223,7 @@ func KeyDelete(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // KeyUpdate provides the sub-command to update a key.
-func KeyUpdate(c *cli.Context, client solder.ClientAPI) error {
+func KeyUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -267,8 +267,8 @@ func KeyUpdate(c *cli.Context, client solder.ClientAPI) error {
 }
 
 // KeyCreate provides the sub-command to create a key.
-func KeyCreate(c *cli.Context, client solder.ClientAPI) error {
-	record := &solder.Key{}
+func KeyCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Key{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
