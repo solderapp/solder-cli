@@ -4,6 +4,7 @@
 [![Coverage Status](http://coverage.dronehippie.de/badges/kleister/kleister-cli/coverage.svg)](http://coverage.dronehippie.de/kleister/kleister-cli)
 [![Go Doc](https://godoc.org/github.com/kleister/kleister-cli?status.svg)](http://godoc.org/github.com/kleister/kleister-cli)
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-cli)](http://goreportcard.com/report/github.com/kleister/kleister-cli)
+[![](https://images.microbadger.com/badges/image/kleister/kleister-cli.svg)](http://microbadger.com/images/kleister/kleister-cli "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/kleister/kleister](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kleister/kleister)
 ![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
 
