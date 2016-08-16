@@ -12,9 +12,13 @@ import (
 type HandleFunc func(c *cli.Context, client kleister.ClientAPI) error
 
 // Handle wraps the command function handler.
-func Handle(c *cli.Context, fn HandleFunc) {
-	token := c.GlobalString("token")
-	server := c.GlobalString("server")
+func Handle(c *cli.Context, fn HandleFunc) error {
+	var (
+		server = c.GlobalString("server")
+		token  = c.GlobalString("token")
+
+		client kleister.ClientAPI
+	)
 
 	if server == "" {
 		fmt.Fprintf(os.Stderr, "Error: You must provide the server address.\n")
@@ -22,17 +26,20 @@ func Handle(c *cli.Context, fn HandleFunc) {
 	}
 
 	if token == "" {
-		fmt.Fprintf(os.Stderr, "Error: You must provide your access token.\n")
-		os.Exit(2)
+		client = kleister.NewClient(
+			server,
+		)
+	} else {
+		client = kleister.NewClientToken(
+			server,
+			token,
+		)
 	}
-
-	client := kleister.NewClientToken(
-		server,
-		token,
-	)
 
 	if err := fn(c, client); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
-		os.Exit(3)
+		os.Exit(2)
 	}
+
+	return nil
 }
