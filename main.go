@@ -22,7 +22,7 @@ func main() {
 	app.Name = "kleister-cli"
 	app.Version = config.Version
 	app.Author = "Thomas Boerger <thomas@webhippie.de>"
-	app.Usage = "Manage mod packs for the Technic launcher"
+	app.Usage = "Manage mod packs for Minecraft"
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
