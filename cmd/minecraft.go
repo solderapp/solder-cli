@@ -21,8 +21,8 @@ func Minecraft() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all Minecraft versions",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, MinecraftList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, MinecraftList)
 				},
 			},
 			{
@@ -30,8 +30,8 @@ func Minecraft() cli.Command {
 				Aliases:   []string{"ref"},
 				Usage:     "Refresh Minecraft versions",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, MinecraftRefresh)
+				Action: func(c *cli.Context) error {
+					return Handle(c, MinecraftRefresh)
 				},
 			},
 			{
@@ -45,8 +45,8 @@ func Minecraft() cli.Command {
 						Usage: "Minecraft ID or slug to list builds",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, MinecraftBuildList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, MinecraftBuildList)
 				},
 			},
 			{
@@ -70,8 +70,8 @@ func Minecraft() cli.Command {
 						Usage: "Build ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, MinecraftBuildAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, MinecraftBuildAppend)
 				},
 			},
 			{
@@ -95,8 +95,8 @@ func Minecraft() cli.Command {
 						Usage: "Build ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, MinecraftBuildRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, MinecraftBuildRemove)
 				},
 			},
 		},

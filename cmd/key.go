@@ -23,8 +23,8 @@ func Key() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all keys",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, KeyList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, KeyList)
 				},
 			},
 			{
@@ -38,8 +38,8 @@ func Key() cli.Command {
 						Usage: "Key ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, KeyShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, KeyShow)
 				},
 			},
 			{
@@ -68,8 +68,8 @@ func Key() cli.Command {
 						Usage: "Provide a key",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, KeyUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, KeyUpdate)
 				},
 			},
 			{
@@ -84,8 +84,8 @@ func Key() cli.Command {
 						Usage: "Key ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, KeyDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, KeyDelete)
 				},
 			},
 			{
@@ -109,8 +109,8 @@ func Key() cli.Command {
 						Usage: "Provide a key",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, KeyCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, KeyCreate)
 				},
 			},
 		},

@@ -23,8 +23,8 @@ func Client() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all clients",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, ClientList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientList)
 				},
 			},
 			{
@@ -38,8 +38,8 @@ func Client() cli.Command {
 						Usage: "Client ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientShow)
 				},
 			},
 			{
@@ -68,8 +68,8 @@ func Client() cli.Command {
 						Usage: "Provide a UUID",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientUpdate)
 				},
 			},
 			{
@@ -84,8 +84,8 @@ func Client() cli.Command {
 						Usage: "Client ID or slug to delete",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientDelete)
 				},
 			},
 			{
@@ -109,8 +109,8 @@ func Client() cli.Command {
 						Usage: "Provide a UUID",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientCreate)
 				},
 			},
 			{
@@ -124,8 +124,8 @@ func Client() cli.Command {
 						Usage: "Client ID or slug to list packs",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientPackList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientPackList)
 				},
 			},
 			{
@@ -144,8 +144,8 @@ func Client() cli.Command {
 						Usage: "Pack ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientPackAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientPackAppend)
 				},
 			},
 			{
@@ -164,8 +164,8 @@ func Client() cli.Command {
 						Usage: "Pack ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ClientPackRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientPackRemove)
 				},
 			},
 		},

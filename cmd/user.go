@@ -23,8 +23,8 @@ func User() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all users",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, UserList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserList)
 				},
 			},
 			{
@@ -38,8 +38,8 @@ func User() cli.Command {
 						Usage: "User ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserShow)
 				},
 			},
 			{
@@ -76,8 +76,8 @@ func User() cli.Command {
 					},
 					userPermissionFlags()...,
 				),
-				Action: func(c *cli.Context) {
-					Handle(c, UserUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserUpdate)
 				},
 			},
 			{
@@ -92,8 +92,8 @@ func User() cli.Command {
 						Usage: "User ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserDelete)
 				},
 			},
 			{
@@ -125,8 +125,8 @@ func User() cli.Command {
 					},
 					userPermissionFlags()...,
 				),
-				Action: func(c *cli.Context) {
-					Handle(c, UserCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserCreate)
 				},
 			},
 			{
@@ -140,8 +140,8 @@ func User() cli.Command {
 						Usage: "User ID or slug to list mods",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserModList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserModList)
 				},
 			},
 			{
@@ -160,8 +160,8 @@ func User() cli.Command {
 						Usage: "Mod ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserModAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserModAppend)
 				},
 			},
 			{
@@ -180,8 +180,8 @@ func User() cli.Command {
 						Usage: "Mod ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserModRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserModRemove)
 				},
 			},
 			{
@@ -195,8 +195,8 @@ func User() cli.Command {
 						Usage: "User ID or slug to list packs",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserPackList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserPackList)
 				},
 			},
 			{
@@ -215,8 +215,8 @@ func User() cli.Command {
 						Usage: "Pack ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserPackAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserPackAppend)
 				},
 			},
 			{
@@ -235,8 +235,8 @@ func User() cli.Command {
 						Usage: "Pack ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, UserPackRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserPackRemove)
 				},
 			},
 		},

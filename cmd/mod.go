@@ -23,8 +23,8 @@ func Mod() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all mods",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, ModList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModList)
 				},
 			},
 			{
@@ -38,8 +38,8 @@ func Mod() cli.Command {
 						Usage: "Mod ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModShow)
 				},
 			},
 			{
@@ -83,8 +83,8 @@ func Mod() cli.Command {
 						Usage: "Provide a donate link",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModUpdate)
 				},
 			},
 			{
@@ -99,8 +99,8 @@ func Mod() cli.Command {
 						Usage: "Mod ID or slug to delete",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModDelete)
 				},
 			},
 			{
@@ -139,8 +139,8 @@ func Mod() cli.Command {
 						Usage: "Provide a donate link",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModCreate)
 				},
 			},
 			{
@@ -154,8 +154,8 @@ func Mod() cli.Command {
 						Usage: "Mod ID or slug to list users",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModUserList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModUserList)
 				},
 			},
 			{
@@ -174,8 +174,8 @@ func Mod() cli.Command {
 						Usage: "User ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModUserAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModUserAppend)
 				},
 			},
 			{
@@ -194,8 +194,8 @@ func Mod() cli.Command {
 						Usage: "User ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ModUserRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModUserRemove)
 				},
 			},
 		},

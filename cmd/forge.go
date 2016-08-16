@@ -21,8 +21,8 @@ func Forge() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all Forge versions",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, ForgeList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ForgeList)
 				},
 			},
 			{
@@ -30,8 +30,8 @@ func Forge() cli.Command {
 				Aliases:   []string{"ref"},
 				Usage:     "Refresh Forge versions",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, ForgeRefresh)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ForgeRefresh)
 				},
 			},
 			{
@@ -45,8 +45,8 @@ func Forge() cli.Command {
 						Usage: "Forge ID or slug to list builds",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ForgeBuildList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ForgeBuildList)
 				},
 			},
 			{
@@ -70,8 +70,8 @@ func Forge() cli.Command {
 						Usage: "Build ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ForgeBuildAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ForgeBuildAppend)
 				},
 			},
 			{
@@ -95,8 +95,8 @@ func Forge() cli.Command {
 						Usage: "Build ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ForgeBuildRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ForgeBuildRemove)
 				},
 			},
 		},

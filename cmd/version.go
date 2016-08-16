@@ -31,8 +31,8 @@ func Version() cli.Command {
 						Usage: "ID or slug of the related mod",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionList)
 				},
 			},
 			{
@@ -51,8 +51,8 @@ func Version() cli.Command {
 						Usage: "Version ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionShow)
 				},
 			},
 			{
@@ -91,8 +91,8 @@ func Version() cli.Command {
 						Usage: "Provide a file path",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionUpdate)
 				},
 			},
 			{
@@ -112,8 +112,8 @@ func Version() cli.Command {
 						Usage: "Version ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionDelete)
 				},
 			},
 			{
@@ -147,8 +147,8 @@ func Version() cli.Command {
 						Usage: "Provide a file path",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionCreate)
 				},
 			},
 			{
@@ -167,8 +167,8 @@ func Version() cli.Command {
 						Usage: "Version ID or slug to list builds",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionBuildList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionBuildList)
 				},
 			},
 			{
@@ -197,8 +197,8 @@ func Version() cli.Command {
 						Usage: "Build ID or slug to append to",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionBuildAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionBuildAppend)
 				},
 			},
 			{
@@ -227,8 +227,8 @@ func Version() cli.Command {
 						Usage: "Build ID or slug to append to",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, VersionBuildRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionBuildRemove)
 				},
 			},
 		},

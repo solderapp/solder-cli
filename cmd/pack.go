@@ -24,8 +24,8 @@ func Pack() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all packs",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, PackList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackList)
 				},
 			},
 			{
@@ -39,8 +39,8 @@ func Pack() cli.Command {
 						Usage: "Pack ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackShow)
 				},
 			},
 			{
@@ -125,8 +125,8 @@ func Pack() cli.Command {
 						Usage: "Mark pack public",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackUpdate)
 				},
 			},
 			{
@@ -141,8 +141,8 @@ func Pack() cli.Command {
 						Usage: "Pack ID or slug to delete",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackDelete)
 				},
 			},
 			{
@@ -212,8 +212,8 @@ func Pack() cli.Command {
 						Usage: "Mark pack public",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackCreate)
 				},
 			},
 			{
@@ -227,8 +227,8 @@ func Pack() cli.Command {
 						Usage: "Pack ID or slug to list clients",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackClientList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackClientList)
 				},
 			},
 			{
@@ -247,8 +247,8 @@ func Pack() cli.Command {
 						Usage: "Client ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackClientAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackClientAppend)
 				},
 			},
 			{
@@ -267,8 +267,8 @@ func Pack() cli.Command {
 						Usage: "Client ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackClientRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackClientRemove)
 				},
 			},
 			{
@@ -282,8 +282,8 @@ func Pack() cli.Command {
 						Usage: "Pack ID or slug to list users",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackUserList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackUserList)
 				},
 			},
 			{
@@ -302,8 +302,8 @@ func Pack() cli.Command {
 						Usage: "User ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackUserAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackUserAppend)
 				},
 			},
 			{
@@ -322,8 +322,8 @@ func Pack() cli.Command {
 						Usage: "User ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, PackUserRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackUserRemove)
 				},
 			},
 		},
