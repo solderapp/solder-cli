@@ -227,19 +227,4 @@ type ClientAPI interface {
 
 	// UserPackDelete remove a pack from a user.
 	UserPackDelete(UserPackParams) error
-
-	// KeyList returns a list of all keys.
-	KeyList() ([]*Key, error)
-
-	// KeyGet returns a key.
-	KeyGet(string) (*Key, error)
-
-	// KeyPost creates a key.
-	KeyPost(*Key) (*Key, error)
-
-	// KeyPatch updates a key.
-	KeyPatch(*Key) (*Key, error)
-
-	// KeyDelete deletes a key.
-	KeyDelete(string) error
 }

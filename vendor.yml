@@ -1,12 +1,12 @@
 vendors:
 - path: github.com/golang/protobuf
-  rev: 7390af9dcd3c33042ebaf2474a1724a83cf1a7e6
+  rev: f592bd283e9ef86337a432eb50e592278c3d534d
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kleister/kleister-go
-  rev: 984d66bbce0baefd7695f1910652bed6683862bd
+  rev: 3e80c0f61e3b1304bd04f099eedbff11bb2b4245
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/mattn/go-runewidth
@@ -22,7 +22,7 @@ vendors:
 - path: golang.org/x/net
   rev: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
 - path: golang.org/x/oauth2
-  rev: 4784bb855e56a530f1ce5d788959359ed6cb4a16
+  rev: 3b966c7f301c0c71c53d94dc632a62df0a682cd7
 - path: google.golang.org/appengine
   rev: e951d3868b377b14f4e60efa3a301532ee3c1ebf
 - path: gopkg.in/inconshreveable/go-update.v0

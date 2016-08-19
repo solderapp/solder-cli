@@ -39,8 +39,6 @@ const (
 	pathUser           = "%s/api/users/%v"
 	pathUserMod        = "%s/api/users/%v/mods"
 	pathUserPack       = "%s/api/users/%v/packs"
-	pathKeys           = "%s/api/keys"
-	pathKey            = "%s/api/keys/%v"
 )
 
 // DefaultClient implements the client interface.
@@ -801,54 +799,6 @@ func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 func (c *DefaultClient) UserPackDelete(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
 	err := c.delete(uri, opts)
-
-	return err
-}
-
-// KeyList returns a list of all keys.
-func (c *DefaultClient) KeyList() ([]*Key, error) {
-	var out []*Key
-
-	uri := fmt.Sprintf(pathKeys, c.base)
-	err := c.get(uri, &out)
-
-	return out, err
-}
-
-// KeyGet returns a key.
-func (c *DefaultClient) KeyGet(id string) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKey, c.base, id)
-	err := c.get(uri, out)
-
-	return out, err
-}
-
-// KeyPost creates a key.
-func (c *DefaultClient) KeyPost(in *Key) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKeys, c.base)
-	err := c.post(uri, in, out)
-
-	return out, err
-}
-
-// KeyPatch updates a key.
-func (c *DefaultClient) KeyPatch(in *Key) (*Key, error) {
-	out := &Key{}
-
-	uri := fmt.Sprintf(pathKey, c.base, in.ID)
-	err := c.patch(uri, in, out)
-
-	return out, err
-}
-
-// KeyDelete deletes a key.
-func (c *DefaultClient) KeyDelete(id string) error {
-	uri := fmt.Sprintf(pathKey, c.base, id)
-	err := c.delete(uri, nil)
 
 	return err
 }

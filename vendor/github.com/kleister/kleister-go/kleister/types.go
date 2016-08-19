@@ -23,6 +23,21 @@ type Token struct {
 	Expite string `json:"expire,omitempty"`
 }
 
+// Profile represents a profile API response.
+type Profile struct {
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (s *Profile) String() string {
+	return s.Username
+}
+
 // Attachment represents a attachment API response.
 type Attachment struct {
 	URL       string    `json:"url,omitempty"`
@@ -85,20 +100,6 @@ type Forge struct {
 
 func (s *Forge) String() string {
 	return s.Version
-}
-
-// Key represents a key API response.
-type Key struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	Value     string    `json:"key"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func (s *Key) String() string {
-	return s.Name
 }
 
 // Minecraft represents a minecraft API response.
@@ -319,32 +320,15 @@ func (s *Pack) EncodeBackground(path string) error {
 
 // User represents a user API response.
 type User struct {
-	ID         int64     `json:"id"`
-	Slug       string    `json:"slug"`
-	Username   string    `json:"username"`
-	Password   string    `json:"password"`
-	Email      string    `json:"email"`
-	CreatedAt  time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
-	Packs      []*Pack   `json:"packs,omitempty"`
-	Mods       []*Mod    `json:"mods,omitempty"`
-	Permission struct {
-		DisplayUsers   bool `json:"display_users"`
-		ChangeUsers    bool `json:"change_users"`
-		DeleteUsers    bool `json:"delete_users"`
-		DisplayKeys    bool `json:"display_keys"`
-		ChangeKeys     bool `json:"change_keys"`
-		DeleteKeys     bool `json:"delete_keys"`
-		DisplayClients bool `json:"display_clients"`
-		ChangeClients  bool `json:"change_clients"`
-		DeleteClients  bool `json:"delete_clients"`
-		DisplayPacks   bool `json:"display_packs"`
-		ChangePacks    bool `json:"change_packs"`
-		DeletePacks    bool `json:"delete_packs"`
-		DisplayMods    bool `json:"display_mods"`
-		ChangeMods     bool `json:"change_mods"`
-		DeleteMods     bool `json:"delete_mods"`
-	}
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Packs     []*Pack   `json:"packs,omitempty"`
+	Mods      []*Mod    `json:"mods,omitempty"`
 }
 
 func (s *User) String() string {
@@ -419,19 +403,4 @@ func (s *Version) EncodeFile(path string) error {
 	}
 
 	return nil
-}
-
-// Profile represents a profile API response.
-type Profile struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func (s *Profile) String() string {
-	return s.Username
 }
