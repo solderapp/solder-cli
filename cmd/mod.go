@@ -57,7 +57,7 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 // tmplModUserList represents a row within mod user listing.
 var tmplModUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
-Name: {{ .Name }}
+Username: {{ .Username }}
 `
 
 // tmplModTeamList represents a row within mod team listing.

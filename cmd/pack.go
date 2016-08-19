@@ -79,7 +79,7 @@ Name: {{ .Name }}
 // tmplPackUserList represents a row within pack user listing.
 var tmplPackUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
-Name: {{ .Name }}
+Username: {{ .Username }}
 `
 
 // tmplPackTeamList represents a row within pack team listing.
