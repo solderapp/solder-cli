@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
@@ -12,7 +13,35 @@ import (
 )
 
 // userFuncMap provides template helper functions.
-var userFuncMap = template.FuncMap{}
+var userFuncMap = template.FuncMap{
+	"teamList": func(s []*kleister.Team) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"packList": func(s []*kleister.Pack) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"modList": func(s []*kleister.Mod) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
 
 // tmplUserList represents a row within forge listing.
 var tmplUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -25,6 +54,10 @@ var tmplUserShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Username: {{ .Username }}
 Email: {{ .Email }}
+Active: {{ .Active }}{{with .Teams}}
+Teams: {{ teamList . }}{{end}}{{with .Packs}}
+Packs: {{ packList . }}{{end}}{{with .Mods}}
+Mods: {{ modList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `

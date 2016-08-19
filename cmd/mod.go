@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
@@ -12,7 +13,26 @@ import (
 )
 
 // modFuncMap provides template helper functions.
-var modFuncMap = template.FuncMap{}
+var modFuncMap = template.FuncMap{
+	"userList": func(s []*kleister.User) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"teamList": func(s []*kleister.Team) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
 
 // tmplModList represents a row within forge listing.
 var tmplModList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -27,7 +47,9 @@ Name: {{ .Name }}{{with .Description}}
 Description: {{ . }}{{end}}{{with .Author}}
 Author: {{ . }}{{end}}{{with .Website}}
 Website: {{ . }}{{end}}{{with .Donate}}
-Donate: {{ . }}{{end}}
+Donate: {{ . }}{{end}}{{with .Users}}
+Users: {{ userList . }}{{end}}{{with .Teams}}
+Teams: {{ teamList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `

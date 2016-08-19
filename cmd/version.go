@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
@@ -14,7 +15,17 @@ import (
 )
 
 // VersionFuncMap provides template helper functions.
-var versionFuncMap = template.FuncMap{}
+var versionFuncMap = template.FuncMap{
+	"buildList": func(s []*kleister.Build) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
 
 // tmplVersionList represents a row within forge listing.
 var tmplVersionList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -27,7 +38,8 @@ var tmplVersionShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}{{with .Mod}}
 Mod: {{ . }}{{end}}{{with .File}}
-File: {{ . }}{{end}}
+File: {{ . }}{{end}}{{with .Builds}}
+Builds: {{ buildList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `

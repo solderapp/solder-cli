@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
@@ -14,7 +15,35 @@ import (
 )
 
 // PackFuncMap provides template helper functions.
-var packFuncMap = template.FuncMap{}
+var packFuncMap = template.FuncMap{
+	"clientList": func(s []*kleister.Client) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"userList": func(s []*kleister.User) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"teamList": func(s []*kleister.Team) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
 
 // tmplPackList represents a row within forge listing.
 var tmplPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -33,7 +62,10 @@ Icon: {{ . }}{{end}}{{with .Logo}}
 Logo: {{ . }}{{end}}{{with .Background}}
 Background: {{ . }}{{end}}
 Published: {{ .Published }}
-Private: {{ .Private }}
+Private: {{ .Private }}{{with .Clients}}
+Clients: {{ clientList . }}{{end}}{{with .Users}}
+Users: {{ userList . }}{{end}}{{with .Teams}}
+Teams: {{ teamList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `

@@ -6,13 +6,9 @@ vendors:
 - path: github.com/kardianos/osext
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kleister/kleister-go
-  rev: d61b5c113ae2e086323d55160b6ee3a66c539ab5
+  rev: 49c07a33897aa0d7ef8936e29723bc652d9bacab
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
-- path: github.com/mattn/go-runewidth
-  rev: d6bea18f789704b5f83375793155289da36a3c7f
-- path: github.com/olekukonko/tablewriter
-  rev: daf2955e742cf123959884fdff4685aa79b63135
 - path: github.com/sanbornm/go-selfupdate
   rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/urfave/cli
