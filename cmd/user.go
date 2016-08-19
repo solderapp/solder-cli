@@ -162,6 +162,14 @@ func User() cli.Command {
 						Value: "",
 						Usage: "Provide a password",
 					},
+					cli.BoolFlag{
+						Name:  "active",
+						Usage: "Mark user as active",
+					},
+					cli.BoolFlag{
+						Name:  "blocked",
+						Usage: "Mark user as blocked",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserUpdate)
@@ -207,6 +215,14 @@ func User() cli.Command {
 						Name:  "password",
 						Value: "",
 						Usage: "Provide a password",
+					},
+					cli.BoolFlag{
+						Name:  "active",
+						Usage: "Mark user as active",
+					},
+					cli.BoolFlag{
+						Name:  "blocked",
+						Usage: "Mark user as blocked",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -512,6 +528,20 @@ func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		changed = true
 	}
 
+	if c.IsSet("active") && c.IsSet("blocked") {
+		return fmt.Errorf("Conflict, you can mark it only active OR blocked!")
+	}
+
+	if c.IsSet("active") {
+		record.Active = true
+		changed = true
+	}
+
+	if c.IsSet("blocked") {
+		record.Active = false
+		changed = true
+	}
+
 	if changed {
 		_, patch := client.UserPatch(
 			record,
@@ -553,6 +583,18 @@ func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
 		record.Password = val
 	} else {
 		return fmt.Errorf("You must provide a password.")
+	}
+
+	if c.IsSet("active") && c.IsSet("blocked") {
+		return fmt.Errorf("Conflict, you can mark it only active OR blocked!")
+	}
+
+	if c.IsSet("active") {
+		record.Active = true
+	}
+
+	if c.IsSet("blocked") {
+		record.Active = false
 	}
 
 	_, err := client.UserPost(
