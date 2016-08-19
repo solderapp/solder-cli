@@ -127,6 +127,8 @@ type Mod struct {
 	Donate      string    `json:"donate"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+	Users       []*User   `json:"users,omitempty"`
+	Teams       []*Team   `json:"teams,omitempty"`
 }
 
 func (s *Mod) String() string {
@@ -150,6 +152,8 @@ type Pack struct {
 	Private       bool        `json:"private"`
 	CreatedAt     time.Time   `json:"created_at"`
 	UpdatedAt     time.Time   `json:"updated_at"`
+	Users         []*User     `json:"users,omitempty"`
+	Teams         []*Team     `json:"teams,omitempty"`
 }
 
 func (s *Pack) String() string {
@@ -318,23 +322,6 @@ func (s *Pack) EncodeBackground(path string) error {
 	return nil
 }
 
-// User represents a user API response.
-type User struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Packs     []*Pack   `json:"packs,omitempty"`
-	Mods      []*Mod    `json:"mods,omitempty"`
-}
-
-func (s *User) String() string {
-	return s.Username
-}
-
 // Version represents a version API response.
 type Version struct {
 	ID        int64       `json:"id"`
@@ -403,4 +390,38 @@ func (s *Version) EncodeFile(path string) error {
 	}
 
 	return nil
+}
+
+// User represents a user API response.
+type User struct {
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Teams     []*Team   `json:"teams,omitempty"`
+	Packs     []*Pack   `json:"packs,omitempty"`
+	Mods      []*Mod    `json:"mods,omitempty"`
+}
+
+func (s *User) String() string {
+	return s.Username
+}
+
+// Team represents a team API response.
+type Team struct {
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Users     []*User   `json:"users,omitempty"`
+	Mods      []*Mod    `json:"mods,omitempty"`
+	Packs     []*Pack   `json:"packs,omitempty"`
+}
+
+func (s *Team) String() string {
+	return s.Name
 }

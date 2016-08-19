@@ -6,7 +6,7 @@ vendors:
 - path: github.com/kardianos/osext
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kleister/kleister-go
-  rev: 3e80c0f61e3b1304bd04f099eedbff11bb2b4245
+  rev: d61b5c113ae2e086323d55160b6ee3a66c539ab5
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/mattn/go-runewidth

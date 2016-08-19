@@ -23,12 +23,14 @@ const (
 	pathPack           = "%s/api/packs/%v"
 	pathPackClient     = "%s/api/packs/%v/clients"
 	pathPackUser       = "%s/api/packs/%v/users"
+	pathPackTeam       = "%s/api/packs/%v/teams"
 	pathBuilds         = "%s/api/packs/%v/builds"
 	pathBuild          = "%s/api/packs/%v/builds/%v"
 	pathBuildVersion   = "%s/api/packs/%v/builds/%v/versions"
 	pathMods           = "%s/api/mods"
 	pathMod            = "%s/api/mods/%v"
 	pathModUser        = "%s/api/mods/%v/users"
+	pathModTeam        = "%s/api/mods/%v/teams"
 	pathVersions       = "%s/api/mods/%v/versions"
 	pathVersion        = "%s/api/mods/%v/versions/%v"
 	pathVersionBuild   = "%s/api/mods/%v/versions/%v/builds"
@@ -37,8 +39,14 @@ const (
 	pathClientPack     = "%s/api/clients/%v/packs"
 	pathUsers          = "%s/api/users"
 	pathUser           = "%s/api/users/%v"
+	pathUserTeam       = "%s/api/users/%v/teams"
 	pathUserMod        = "%s/api/users/%v/mods"
 	pathUserPack       = "%s/api/users/%v/packs"
+	pathTeams          = "%s/api/teams"
+	pathTeam           = "%s/api/teams/%v"
+	pathTeamUser       = "%s/api/teams/%v/users"
+	pathTeamMod        = "%s/api/teams/%v/mods"
+	pathTeamPack       = "%s/api/teams/%v/packs"
 )
 
 // DefaultClient implements the client interface.
@@ -407,6 +415,32 @@ func (c *DefaultClient) PackUserDelete(opts PackUserParams) error {
 	return err
 }
 
+// PackTeamList returns a list of related teams for a pack.
+func (c *DefaultClient) PackTeamList(opts PackTeamParams) ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// PackTeamAppend appends a team to a pack.
+func (c *DefaultClient) PackTeamAppend(opts PackTeamParams) error {
+	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// PackTeamDelete remove a team from a pack.
+func (c *DefaultClient) PackTeamDelete(opts PackTeamParams) error {
+	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
 // BuildList returns a list of all builds for a specific pack.
 func (c *DefaultClient) BuildList(pack string) ([]*Build, error) {
 	var out []*Build
@@ -550,6 +584,32 @@ func (c *DefaultClient) ModUserAppend(opts ModUserParams) error {
 // ModUserDelete remove a user from a mod.
 func (c *DefaultClient) ModUserDelete(opts ModUserParams) error {
 	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// ModTeamList returns a list of related teams for a mod.
+func (c *DefaultClient) ModTeamList(opts ModTeamParams) ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// ModTeamAppend appends a team to a mod.
+func (c *DefaultClient) ModTeamAppend(opts ModTeamParams) error {
+	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// ModTeamDelete remove a team from a mod.
+func (c *DefaultClient) ModTeamDelete(opts ModTeamParams) error {
+	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
 	err := c.delete(uri, opts)
 
 	return err
@@ -751,6 +811,32 @@ func (c *DefaultClient) UserDelete(id string) error {
 	return err
 }
 
+// UserTeamList returns a list of related teams for a user.
+func (c *DefaultClient) UserTeamList(opts UserTeamParams) ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// UserTeamAppend appends a team to a user.
+func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
+	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// UserTeamDelete remove a team from a user.
+func (c *DefaultClient) UserTeamDelete(opts UserTeamParams) error {
+	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
 // UserModList returns a list of related mods for a user.
 func (c *DefaultClient) UserModList(opts UserModParams) ([]*Mod, error) {
 	var out []*Mod
@@ -798,6 +884,132 @@ func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 // UserPackDelete remove a pack from a user.
 func (c *DefaultClient) UserPackDelete(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// TeamList returns a list of all teams.
+func (c *DefaultClient) TeamList() ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathTeams, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TeamGet returns a team.
+func (c *DefaultClient) TeamGet(id string) (*Team, error) {
+	out := &Team{}
+
+	uri := fmt.Sprintf(pathTeam, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// TeamPost creates a team.
+func (c *DefaultClient) TeamPost(in *Team) (*Team, error) {
+	out := &Team{}
+
+	uri := fmt.Sprintf(pathTeams, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
+}
+
+// TeamPatch updates a team.
+func (c *DefaultClient) TeamPatch(in *Team) (*Team, error) {
+	out := &Team{}
+
+	uri := fmt.Sprintf(pathTeam, c.base, in.ID)
+	err := c.patch(uri, in, out)
+
+	return out, err
+}
+
+// TeamDelete deletes a team.
+func (c *DefaultClient) TeamDelete(id string) error {
+	uri := fmt.Sprintf(pathTeam, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
+}
+
+// TeamUserList returns a list of related users for a team.
+func (c *DefaultClient) TeamUserList(opts TeamUserParams) ([]*User, error) {
+	var out []*User
+
+	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TeamUserAppend appends a user to a team.
+func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
+	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// TeamUserDelete remove a user from a team.
+func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
+	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// TeamModList returns a list of related mods for a team.
+func (c *DefaultClient) TeamModList(opts TeamModParams) ([]*Mod, error) {
+	var out []*Mod
+
+	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TeamModAppend appends a mod to a team.
+func (c *DefaultClient) TeamModAppend(opts TeamModParams) error {
+	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// TeamModDelete remove a mod from a team.
+func (c *DefaultClient) TeamModDelete(opts TeamModParams) error {
+	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// TeamPackList returns a list of related packs for a team.
+func (c *DefaultClient) TeamPackList(opts TeamPackParams) ([]*Pack, error) {
+	var out []*Pack
+
+	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TeamPackAppend appends a pack to a team.
+func (c *DefaultClient) TeamPackAppend(opts TeamPackParams) error {
+	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// TeamPackDelete remove a pack from a team.
+func (c *DefaultClient) TeamPackDelete(opts TeamPackParams) error {
+	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
 	err := c.delete(uri, opts)
 
 	return err

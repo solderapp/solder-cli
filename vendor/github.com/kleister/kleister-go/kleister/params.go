@@ -65,3 +65,39 @@ type UserModParams struct {
 	User string `json:"user"`
 	Mod  string `json:"mod"`
 }
+
+// TeamUserParams is used to assign users to a team.
+type TeamUserParams struct {
+	Team string `json:"team"`
+	User string `json:"user"`
+}
+
+// UserTeamParams is used to assign teams to a user.
+type UserTeamParams struct {
+	User string `json:"user"`
+	Team string `json:"team"`
+}
+
+// PackTeamParams is used to assign teams to a pack.
+type PackTeamParams struct {
+	Pack string `json:"pack"`
+	Team string `json:"team"`
+}
+
+// TeamPackParams is used to assign packs to a team.
+type TeamPackParams struct {
+	Team string `json:"team"`
+	Pack string `json:"pack"`
+}
+
+// ModTeamParams is used to assign teams to a mod.
+type ModTeamParams struct {
+	Mod  string `json:"mod"`
+	Team string `json:"team"`
+}
+
+// TeamModParams is used to assign mods to a team.
+type TeamModParams struct {
+	Team string `json:"team"`
+	Mod  string `json:"mod"`
+}

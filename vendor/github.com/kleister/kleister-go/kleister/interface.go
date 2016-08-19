@@ -99,6 +99,15 @@ type ClientAPI interface {
 	// PackUserDelete remove a user from a pack.
 	PackUserDelete(PackUserParams) error
 
+	// PackTeamList returns a list of related teams for a pack.
+	PackTeamList(PackTeamParams) ([]*Team, error)
+
+	// PackTeamAppend appends a team to a pack.
+	PackTeamAppend(PackTeamParams) error
+
+	// PackTeamDelete remove a team from a pack.
+	PackTeamDelete(PackTeamParams) error
+
 	// BuildList returns a list of all builds for a specific pack.
 	BuildList(string) ([]*Build, error)
 
@@ -146,6 +155,15 @@ type ClientAPI interface {
 
 	// ModUserDelete remove a user from a mod.
 	ModUserDelete(ModUserParams) error
+
+	// ModTeamList returns a list of related teams for a mod.
+	ModTeamList(ModTeamParams) ([]*Team, error)
+
+	// ModTeamAppend appends a team to a mod.
+	ModTeamAppend(ModTeamParams) error
+
+	// ModTeamDelete remove a team from a mod.
+	ModTeamDelete(ModTeamParams) error
 
 	// VersionList returns a list of all versions for a specific mod.
 	VersionList(string) ([]*Version, error)
@@ -227,4 +245,46 @@ type ClientAPI interface {
 
 	// UserPackDelete remove a pack from a user.
 	UserPackDelete(UserPackParams) error
+
+	// TeamList returns a list of all teams.
+	TeamList() ([]*Team, error)
+
+	// TeamGet returns a team.
+	TeamGet(string) (*Team, error)
+
+	// TeamPost creates a team.
+	TeamPost(*Team) (*Team, error)
+
+	// TeamPatch updates a team.
+	TeamPatch(*Team) (*Team, error)
+
+	// TeamDelete deletes a team.
+	TeamDelete(string) error
+
+	// TeamUserList returns a list of related users for a team.
+	TeamUserList(TeamUserParams) ([]*User, error)
+
+	// TeamUserAppend appends a user to a team.
+	TeamUserAppend(TeamUserParams) error
+
+	// TeamUserDelete remove a user from a team.
+	TeamUserDelete(TeamUserParams) error
+
+	// TeamModList returns a list of related mods for a team.
+	TeamModList(TeamModParams) ([]*Mod, error)
+
+	// TeamModAppend appends a mod to a team.
+	TeamModAppend(TeamModParams) error
+
+	// TeamModDelete remove a mod from a team.
+	TeamModDelete(TeamModParams) error
+
+	// TeamPackList returns a list of related packs for a team.
+	TeamPackList(TeamPackParams) ([]*Pack, error)
+
+	// TeamPackAppend appends a pack to a team.
+	TeamPackAppend(TeamPackParams) error
+
+	// TeamPackDelete remove a pack from a team.
+	TeamPackDelete(TeamPackParams) error
 }
