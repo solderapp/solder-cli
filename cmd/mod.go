@@ -14,9 +14,8 @@ import (
 // Mod provides the sub-command for the mod API.
 func Mod() cli.Command {
 	return cli.Command{
-		Name:    "mod",
-		Aliases: []string{"m"},
-		Usage:   "Mod related sub-commands",
+		Name:  "mod",
+		Usage: "Mod related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

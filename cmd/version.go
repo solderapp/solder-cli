@@ -15,9 +15,8 @@ import (
 // Version provides the sub-command for the version API.
 func Version() cli.Command {
 	return cli.Command{
-		Name:    "version",
-		Aliases: []string{"v"},
-		Usage:   "Version related sub-commands",
+		Name:  "version",
+		Usage: "Version related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

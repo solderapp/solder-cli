@@ -14,9 +14,8 @@ import (
 // Key provides the sub-command for the key API.
 func Key() cli.Command {
 	return cli.Command{
-		Name:    "key",
-		Aliases: []string{"k"},
-		Usage:   "Key related sub-commands",
+		Name:  "key",
+		Usage: "Key related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

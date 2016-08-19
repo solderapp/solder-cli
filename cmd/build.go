@@ -15,9 +15,8 @@ import (
 // Build provides the sub-command for the build API.
 func Build() cli.Command {
 	return cli.Command{
-		Name:    "build",
-		Aliases: []string{"b"},
-		Usage:   "Build related sub-commands",
+		Name:  "build",
+		Usage: "Build related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

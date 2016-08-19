@@ -15,9 +15,8 @@ import (
 // Pack provides the sub-command for the pack API.
 func Pack() cli.Command {
 	return cli.Command{
-		Name:    "pack",
-		Aliases: []string{"p"},
-		Usage:   "Pack related sub-commands",
+		Name:  "pack",
+		Usage: "Pack related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

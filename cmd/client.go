@@ -14,9 +14,8 @@ import (
 // Client provides the sub-command for the client API.
 func Client() cli.Command {
 	return cli.Command{
-		Name:    "client",
-		Aliases: []string{"c"},
-		Usage:   "Client related sub-commands",
+		Name:  "client",
+		Usage: "Client related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
