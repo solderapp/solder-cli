@@ -38,6 +38,12 @@ ID: {{ .ID }}
 Name: {{ .Name }}
 `
 
+// tmplModTeamList represents a row within mod team listing.
+var tmplModTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
 // Mod provides the sub-command for the mod API.
 func Mod() cli.Command {
 	return cli.Command{
@@ -263,6 +269,74 @@ func Mod() cli.Command {
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, ModUserRemove)
+				},
+			},
+			{
+				Name:      "team-list",
+				Usage:     "List assigned teams",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to list teams",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplModTeamList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModTeamList)
+				},
+			},
+			{
+				Name:      "team-append",
+				Usage:     "Append a team to mod",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "team, t",
+						Value: "",
+						Usage: "Team ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModTeamAppend)
+				},
+			},
+			{
+				Name:      "team-remove",
+				Usage:     "Remove a team from mod",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Mod ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "team, t",
+						Value: "",
+						Usage: "Team ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ModTeamRemove)
 				},
 			},
 		},
@@ -594,5 +668,105 @@ func ModUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully removed from mod\n")
+	return nil
+}
+
+// ModTeamList provides the sub-command to list teams of the mod.
+func ModTeamList(c *cli.Context, client kleister.ClientAPI) error {
+	records, err := client.ModTeamList(
+		kleister.ModTeamParams{
+			Mod: GetIdentifierParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		modFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ModTeamAppend provides the sub-command to append a team to the mod.
+func ModTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.ModTeamAppend(
+		kleister.ModTeamParams{
+			Mod:  GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	return nil
+}
+
+// ModTeamRemove provides the sub-command to remove a team from the mod.
+func ModTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.ModTeamDelete(
+		kleister.ModTeamParams{
+			Mod:  GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from team\n")
 	return nil
 }

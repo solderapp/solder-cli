@@ -90,3 +90,15 @@ func GetUserParam(c *cli.Context) string {
 
 	return val
 }
+
+// GetTeamParam checks and returns the team id/slug parameter.
+func GetTeamParam(c *cli.Context) string {
+	val := c.String("team")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a team ID or slug.")
+		os.Exit(1)
+	}
+
+	return val
+}

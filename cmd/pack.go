@@ -50,6 +50,12 @@ ID: {{ .ID }}
 Name: {{ .Name }}
 `
 
+// tmplPackTeamList represents a row within pack team listing.
+var tmplPackTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
 // Pack provides the sub-command for the pack API.
 func Pack() cli.Command {
 	return cli.Command{
@@ -415,6 +421,74 @@ func Pack() cli.Command {
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, PackUserRemove)
+				},
+			},
+			{
+				Name:      "team-list",
+				Usage:     "List assigned teams",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to list teams",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplPackTeamList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackTeamList)
+				},
+			},
+			{
+				Name:      "team-append",
+				Usage:     "Append a team to pack",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "team, t",
+						Value: "",
+						Usage: "Team ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackTeamAppend)
+				},
+			},
+			{
+				Name:      "team-remove",
+				Usage:     "Remove a team from pack",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "team, t",
+						Value: "",
+						Usage: "Team ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackTeamRemove)
 				},
 			},
 		},
@@ -1054,5 +1128,105 @@ func PackUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully removed from pack\n")
+	return nil
+}
+
+// PackTeamList provides the sub-command to list teams of the pack.
+func PackTeamList(c *cli.Context, client kleister.ClientAPI) error {
+	records, err := client.PackTeamList(
+		kleister.PackTeamParams{
+			Pack: GetIdentifierParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		packFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// PackTeamAppend provides the sub-command to append a team to the pack.
+func PackTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.PackTeamAppend(
+		kleister.PackTeamParams{
+			Pack: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	return nil
+}
+
+// PackTeamRemove provides the sub-command to remove a team from the pack.
+func PackTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.PackTeamDelete(
+		kleister.PackTeamParams{
+			Pack: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from team\n")
 	return nil
 }
