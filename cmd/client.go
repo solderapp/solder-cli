@@ -1,15 +1,51 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
-	"strconv"
-	"time"
+	"strings"
+	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
+
+// clientFuncMap provides template helper functions.
+var clientFuncMap = template.FuncMap{
+	"packList": func(s []*kleister.Pack) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
+
+// tmplClientList represents a row within client listing.
+var tmplClientList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplClientShow represents a client within details view.
+var tmplClientShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+UUID: {{ .Value }}{{with .Packs}}
+Packs: {{ packList . }}{{end}}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
+
+// tmplClientPackList represents a row within client pack listing.
+var tmplClientPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
 
 // Client provides the sub-command for the client API.
 func Client() cli.Command {
@@ -22,6 +58,21 @@ func Client() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all clients",
 				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplClientList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, ClientList)
 				},
@@ -35,6 +86,19 @@ func Client() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplClientShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -122,6 +186,19 @@ func Client() cli.Command {
 						Value: "",
 						Usage: "Client ID or slug to list packs",
 					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplClientPackList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, ClientPackList)
@@ -179,26 +256,57 @@ func ClientList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		clientFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Slug,
-				record.Name,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -212,54 +320,45 @@ func ClientShow(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
 
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		clientFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
 	)
 
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
+	if err != nil {
+		return err
+	}
 
-	table.Append(
-		[]string{
-			"Name",
-			record.Name,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"UUID",
-			record.Value,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Render()
-	return nil
+	return tmpl.Execute(os.Stdout, record)
 }
 
 // ClientDelete provides the sub-command to delete a client.
@@ -364,24 +463,57 @@ func ClientPackList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Pack"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		clientFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

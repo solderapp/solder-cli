@@ -1,14 +1,32 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
-	"strconv"
+	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
+
+// forgeFuncMap provides template helper functions.
+var forgeFuncMap = template.FuncMap{}
+
+// tmplForgeList represents a row within forge listing.
+var tmplForgeList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Version: {{ .Version }}
+Minecraft: {{ .Minecraft }}
+`
+
+// tmplForgeBuildList represents a row within forge build listing.
+var tmplForgeBuildList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+Pack: {{with .Pack}}{{ . }}{{else}}n/a{{end}}
+`
 
 // Forge provides the sub-command for the Forge API.
 func Forge() cli.Command {
@@ -21,6 +39,21 @@ func Forge() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all Forge versions",
 				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplForgeList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, ForgeList)
 				},
@@ -43,6 +76,19 @@ func Forge() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Forge ID or slug to list builds",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplForgeBuildList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -111,27 +157,57 @@ func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Version", "Minecraft"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		forgeFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Slug,
-				record.Version,
-				record.Minecraft,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -159,31 +235,57 @@ func ForgeBuildList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Pack", "Build"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		forgeFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		pack := "n/a"
-
-		if record.Pack != nil {
-			pack = record.Pack.Slug
-		}
-
-		table.Append(
-			[]string{
-				pack,
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

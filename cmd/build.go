@@ -1,16 +1,59 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
 	"regexp"
 	"strconv"
-	"time"
+	"strings"
+	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
+
+// buildFuncMap provides template helper functions.
+var buildFuncMap = template.FuncMap{
+	"versionList": func(s []*kleister.Version) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
+
+// tmplBuildList represents a row within build listing.
+var tmplBuildList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplBuildShow represents a build within details view.
+var tmplBuildShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}{{with .Pack}}
+Pack: {{ .Name }}{{end}}{{with .Minecraft}}
+Minecraft: {{ .Name }}{{end}}{{with .Forge}}
+Forge: {{ .Name }}{{end}}{{with .MinJava}}
+Java: {{ . }}{{end}}{{with .MinMemory}}
+Memory: {{ . }}{{end}}
+Published: {{ .Published }}
+Private: {{ .Private }}{{with .Versions}}
+Versions: {{ versionList . }}{{end}}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
+
+// tmplBuildVersionList represents a row within build version listing.
+var tmplBuildVersionList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
 
 // Build provides the sub-command for the build API.
 func Build() cli.Command {
@@ -28,6 +71,19 @@ func Build() cli.Command {
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplBuildList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -48,6 +104,19 @@ func Build() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplBuildShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -217,6 +286,19 @@ func Build() cli.Command {
 						Value: "",
 						Usage: "Build ID or slug to list versions",
 					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplBuildVersionList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, BuildVersionList)
@@ -296,26 +378,57 @@ func BuildList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		buildFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Slug,
-				record.Name,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -330,106 +443,45 @@ func BuildShow(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
-
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Name",
-			record.Name,
-		},
-	)
-
-	if record.Pack != nil {
-		table.Append(
-			[]string{
-				"Pack",
-				record.Pack.String(),
-			},
-		)
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
 	}
 
-	if record.Minecraft != nil {
-		table.Append(
-			[]string{
-				"Minecraft",
-				record.Minecraft.String(),
-			},
-		)
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
 	}
 
-	if record.Forge != nil {
-		table.Append(
-			[]string{
-				"Forge",
-				record.Forge.String(),
-			},
-		)
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
 	}
 
-	if record.MinJava != "" {
-		table.Append(
-			[]string{
-				"Java",
-				record.MinJava,
-			},
-		)
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		buildFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
 	}
 
-	if record.MinMemory != "" {
-		table.Append(
-			[]string{
-				"Memory",
-				record.MinMemory,
-			},
-		)
-	}
-
-	table.Append(
-		[]string{
-			"Published",
-			strconv.FormatBool(record.Published),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Private",
-			strconv.FormatBool(record.Private),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Render()
-	return nil
+	return tmpl.Execute(os.Stdout, record)
 }
 
 // BuildDelete provides the sub-command to delete a build.
@@ -716,31 +768,57 @@ func BuildVersionList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Mod", "Version"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		buildFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		mod := "n/a"
-
-		if record.Mod != nil {
-			mod = record.Mod.Slug
-		}
-
-		table.Append(
-			[]string{
-				mod,
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

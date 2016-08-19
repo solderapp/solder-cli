@@ -1,15 +1,45 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
-	"strconv"
-	"time"
+	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
+
+// userFuncMap provides template helper functions.
+var userFuncMap = template.FuncMap{}
+
+// tmplUserList represents a row within forge listing.
+var tmplUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Username: {{ .Username }}
+`
+
+// tmplUserShow represents a user within details view.
+var tmplUserShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Username: {{ .Username }}
+Email: {{ .Email }}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
+
+// tmplUserModList represents a row within user mod listing.
+var tmplUserModList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplUserPackList represents a row within user pack listing.
+var tmplUserPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
 
 // User provides the sub-command for the user API.
 func User() cli.Command {
@@ -22,6 +52,21 @@ func User() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all users",
 				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplUserList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserList)
 				},
@@ -36,6 +81,19 @@ func User() cli.Command {
 						Value: "",
 						Usage: "User ID or slug to show",
 					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplUserShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserShow)
@@ -45,36 +103,33 @@ func User() cli.Command {
 				Name:      "update",
 				Usage:     "Update a user",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "id, i",
-							Value: "",
-							Usage: "User ID or slug to update",
-						},
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "username",
-							Value: "",
-							Usage: "Provide an username",
-						},
-						cli.StringFlag{
-							Name:  "email",
-							Value: "",
-							Usage: "Provide an email",
-						},
-						cli.StringFlag{
-							Name:  "password",
-							Value: "",
-							Usage: "Provide a password",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to update",
 					},
-					userPermissionFlags()...,
-				),
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "username",
+						Value: "",
+						Usage: "Provide an username",
+					},
+					cli.StringFlag{
+						Name:  "email",
+						Value: "",
+						Usage: "Provide an email",
+					},
+					cli.StringFlag{
+						Name:  "password",
+						Value: "",
+						Usage: "Provide a password",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserUpdate)
 				},
@@ -99,31 +154,28 @@ func User() cli.Command {
 				Name:      "create",
 				Usage:     "Create a user",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "username",
-							Value: "",
-							Usage: "Provide an username",
-						},
-						cli.StringFlag{
-							Name:  "email",
-							Value: "",
-							Usage: "Provide an email",
-						},
-						cli.StringFlag{
-							Name:  "password",
-							Value: "",
-							Usage: "Provide a password",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
 					},
-					userPermissionFlags()...,
-				),
+					cli.StringFlag{
+						Name:  "username",
+						Value: "",
+						Usage: "Provide an username",
+					},
+					cli.StringFlag{
+						Name:  "email",
+						Value: "",
+						Usage: "Provide an email",
+					},
+					cli.StringFlag{
+						Name:  "password",
+						Value: "",
+						Usage: "Provide a password",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserCreate)
 				},
@@ -137,6 +189,19 @@ func User() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "User ID or slug to list mods",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplUserModList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -192,6 +257,19 @@ func User() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "User ID or slug to list packs",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplUserPackList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -250,26 +328,57 @@ func UserList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Username", "Email"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		userFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Username,
-				record.Email,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -283,54 +392,45 @@ func UserShow(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
 
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		userFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
 	)
 
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
+	if err != nil {
+		return err
+	}
 
-	table.Append(
-		[]string{
-			"Username",
-			record.Username,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Email",
-			record.Email,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Render()
-	return nil
+	return tmpl.Execute(os.Stdout, record)
 }
 
 // UserDelete provides the sub-command to delete a user.
@@ -446,24 +546,57 @@ func UserModList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Mod"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		userFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -513,24 +646,57 @@ func UserPackList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Pack"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		userFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -566,129 +732,4 @@ func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 
 	fmt.Fprintf(os.Stderr, "Successfully removed from user\n")
 	return nil
-}
-
-func userPermissionFlags() []cli.Flag {
-	return []cli.Flag{
-		cli.BoolFlag{
-			Name:  "users-display",
-			Usage: "Permit display users",
-		},
-		cli.BoolFlag{
-			Name:  "no-users-display",
-			Usage: "Deny display users",
-		},
-		cli.BoolFlag{
-			Name:  "users-change",
-			Usage: "Permit change users",
-		},
-		cli.BoolFlag{
-			Name:  "no-users-change",
-			Usage: "Deny change users",
-		},
-		cli.BoolFlag{
-			Name:  "users-delete",
-			Usage: "Permit delete users",
-		},
-		cli.BoolFlag{
-			Name:  "no-users-delete",
-			Usage: "Deny delete users",
-		},
-		cli.BoolFlag{
-			Name:  "keys-display",
-			Usage: "Permit display keys",
-		},
-		cli.BoolFlag{
-			Name:  "no-keys-display",
-			Usage: "Deny display keys",
-		},
-		cli.BoolFlag{
-			Name:  "keys-change",
-			Usage: "Permit change keys",
-		},
-		cli.BoolFlag{
-			Name:  "no-keys-change",
-			Usage: "Deny change keys",
-		},
-		cli.BoolFlag{
-			Name:  "keys-delete",
-			Usage: "Permit delete keys",
-		},
-		cli.BoolFlag{
-			Name:  "no-keys-delete",
-			Usage: "Deny delete keys",
-		},
-		cli.BoolFlag{
-			Name:  "clients-display",
-			Usage: "Permit display clients",
-		},
-		cli.BoolFlag{
-			Name:  "no-clients-display",
-			Usage: "Deny display clients",
-		},
-		cli.BoolFlag{
-			Name:  "clients-change",
-			Usage: "Permit change clients",
-		},
-		cli.BoolFlag{
-			Name:  "no-clients-change",
-			Usage: "Deny change clients",
-		},
-		cli.BoolFlag{
-			Name:  "clients-delete",
-			Usage: "Permit delete clients",
-		},
-		cli.BoolFlag{
-			Name:  "no-clients-delete",
-			Usage: "Deny delete clients",
-		},
-		cli.BoolFlag{
-			Name:  "packs-display",
-			Usage: "Permit display packs",
-		},
-		cli.BoolFlag{
-			Name:  "no-packs-display",
-			Usage: "Deny display packs",
-		},
-		cli.BoolFlag{
-			Name:  "packs-change",
-			Usage: "Permit change packs",
-		},
-		cli.BoolFlag{
-			Name:  "no-packs-change",
-			Usage: "Deny change packs",
-		},
-		cli.BoolFlag{
-			Name:  "packs-delete",
-			Usage: "Permit delete packs",
-		},
-		cli.BoolFlag{
-			Name:  "no-packs-delete",
-			Usage: "Deny delete packs",
-		},
-		cli.BoolFlag{
-			Name:  "mods-display",
-			Usage: "Permit display mods",
-		},
-		cli.BoolFlag{
-			Name:  "no-mods-display",
-			Usage: "Deny display mods",
-		},
-		cli.BoolFlag{
-			Name:  "mods-change",
-			Usage: "Permit change mods",
-		},
-		cli.BoolFlag{
-			Name:  "no-mods-change",
-			Usage: "Deny change mods",
-		},
-		cli.BoolFlag{
-			Name:  "mods-delete",
-			Usage: "Permit delete mods",
-		},
-		cli.BoolFlag{
-			Name:  "no-mods-delete",
-			Usage: "Deny delete mods",
-		},
-	}
 }

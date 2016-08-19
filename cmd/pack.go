@@ -1,16 +1,54 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
 	"regexp"
 	"strconv"
-	"time"
+	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli"
 )
+
+// PackFuncMap provides template helper functions.
+var packFuncMap = template.FuncMap{}
+
+// tmplPackList represents a row within forge listing.
+var tmplPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplPackShow represents a pack within details view.
+var tmplPackShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}{{with .Website}}
+Website: {{ . }}{{end}}{{with .Recommended}}
+Recommended: {{ . }}{{end}}{{with .Latest}}
+Latest: {{ . }}{{end}}{{with .Icon}}
+Icon: {{ . }}{{end}}{{with .Logo}}
+Logo: {{ . }}{{end}}{{with .Background}}
+Background: {{ . }}{{end}}
+Published: {{ .Published }}
+Private: {{ .Private }}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
+
+// tmplPackClientList represents a row within pack client listing.
+var tmplPackClientList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplPackUserList represents a row within pack user listing.
+var tmplPackUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
 
 // Pack provides the sub-command for the pack API.
 func Pack() cli.Command {
@@ -23,6 +61,21 @@ func Pack() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all packs",
 				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplPackList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, PackList)
 				},
@@ -36,6 +89,19 @@ func Pack() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplPackShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -225,6 +291,19 @@ func Pack() cli.Command {
 						Value: "",
 						Usage: "Pack ID or slug to list clients",
 					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplPackClientList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, PackClientList)
@@ -279,6 +358,19 @@ func Pack() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to list users",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplPackUserList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -337,26 +429,57 @@ func PackList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		packFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Slug,
-				record.Name,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -370,113 +493,45 @@ func PackShow(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
-
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Name",
-			record.Name,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Website",
-			record.Website,
-		},
-	)
-
-	if record.Recommended != nil {
-		table.Append(
-			[]string{
-				"Recommended",
-				record.Recommended.String(),
-			},
-		)
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
 	}
 
-	if record.Latest != nil {
-		table.Append(
-			[]string{
-				"Latest",
-				record.Latest.String(),
-			},
-		)
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
 	}
 
-	if record.Icon != nil {
-		table.Append(
-			[]string{
-				"Icon",
-				record.Icon.String(),
-			},
-		)
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
 	}
 
-	if record.Logo != nil {
-		table.Append(
-			[]string{
-				"Logo",
-				record.Logo.String(),
-			},
-		)
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		packFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
 	}
 
-	if record.Background != nil {
-		table.Append(
-			[]string{
-				"Background",
-				record.Background.String(),
-			},
-		)
-	}
-
-	table.Append(
-		[]string{
-			"Published",
-			strconv.FormatBool(record.Published),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Private",
-			strconv.FormatBool(record.Private),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Render()
-	return nil
+	return tmpl.Execute(os.Stdout, record)
 }
 
 // PackDelete provides the sub-command to delete a pack.
@@ -813,24 +868,57 @@ func PackClientList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Client"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		packFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -881,24 +969,57 @@ func PackUserList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"User"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		packFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
