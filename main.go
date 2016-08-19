@@ -78,6 +78,7 @@ func main() {
 		cmd.Minecraft(),
 		cmd.Forge(),
 		cmd.User(),
+		cmd.Team(),
 		cmd.Client(),
 		cmd.Profile(),
 	}
