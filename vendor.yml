@@ -6,7 +6,7 @@ vendors:
 - path: github.com/kardianos/osext
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kleister/kleister-go
-  rev: 75ccb31356a1eb45b56656023c5a7ddca5f0bc50
+  rev: d0f39b3e62ceca6211b86d4f644de57807072ff7
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/sanbornm/go-selfupdate
@@ -16,7 +16,7 @@ vendors:
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
+  rev: 7394c112eae4dba7e96bfcfe738e6373d61772b4
 - path: golang.org/x/oauth2
   rev: 3b966c7f301c0c71c53d94dc632a62df0a682cd7
 - path: google.golang.org/appengine

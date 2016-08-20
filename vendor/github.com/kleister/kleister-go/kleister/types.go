@@ -82,6 +82,7 @@ type Client struct {
 	Value     string    `json:"uuid"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Packs     []*Pack   `json:"packs,omitempty"`
 }
 
 func (s *Client) String() string {
@@ -154,6 +155,7 @@ type Pack struct {
 	UpdatedAt     time.Time   `json:"updated_at"`
 	Users         []*User     `json:"users,omitempty"`
 	Teams         []*Team     `json:"teams,omitempty"`
+	Clients       []*Client   `json:"clients,omitempty"`
 }
 
 func (s *Pack) String() string {
