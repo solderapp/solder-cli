@@ -246,6 +246,15 @@ type ClientAPI interface {
 	// UserPackDelete remove a pack from a user.
 	UserPackDelete(UserPackParams) error
 
+	// UserTeamList returns a list of related teams for a user.
+	UserTeamList(UserTeamParams) ([]*Team, error)
+
+	// UserTeamAppend appends a team to a user.
+	UserTeamAppend(UserTeamParams) error
+
+	// UserTeamDelete remove a team from a user.
+	UserTeamDelete(UserTeamParams) error
+
 	// TeamList returns a list of all teams.
 	TeamList() ([]*Team, error)
 

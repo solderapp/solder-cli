@@ -74,6 +74,12 @@ ID: {{ .ID }}
 Name: {{ .Name }}
 `
 
+// tmplUserTeamList represents a row within user team listing.
+var tmplUserTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
 // User provides the sub-command for the user API.
 func User() cli.Command {
 	return cli.Command{
@@ -363,6 +369,74 @@ func User() cli.Command {
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserPackRemove)
+				},
+			},
+			{
+				Name:      "team-list",
+				Usage:     "List assigned teams",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to list teams",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplUserTeamList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserTeamList)
+				},
+			},
+			{
+				Name:      "team-append",
+				Usage:     "Append a team to user",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "team, p",
+						Value: "",
+						Usage: "Team ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserTeamAppend)
+				},
+			},
+			{
+				Name:      "team-remove",
+				Usage:     "Remove a team from user",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "team, p",
+						Value: "",
+						Usage: "Team ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserTeamRemove)
 				},
 			},
 		},
@@ -798,6 +872,106 @@ func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from user\n")
+	return nil
+}
+
+// UserTeamList provides the sub-command to list teams of the user.
+func UserTeamList(c *cli.Context, client kleister.ClientAPI) error {
+	records, err := client.UserTeamList(
+		kleister.UserTeamParams{
+			User: GetIdentifierParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		userFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// UserTeamAppend provides the sub-command to append a team to the user.
+func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.UserTeamAppend(
+		kleister.UserTeamParams{
+			User: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// UserTeamRemove provides the sub-command to remove a team from the user.
+func UserTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.UserTeamDelete(
+		kleister.UserTeamParams{
+			User: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
 		},
 	)
 
