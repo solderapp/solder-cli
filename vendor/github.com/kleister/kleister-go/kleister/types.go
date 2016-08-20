@@ -68,6 +68,7 @@ type Build struct {
 	Private     bool       `json:"private"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
+	Versions    []*Version `json:"versions,omitempty"`
 }
 
 func (s *Build) String() string {
@@ -334,6 +335,7 @@ type Version struct {
 	File      *Attachment `json:"file"`
 	CreatedAt time.Time   `json:"created_at"`
 	UpdatedAt time.Time   `json:"updated_at"`
+	Builds    []*Build    `json:"builds,omitempty"`
 }
 
 func (s *Version) String() string {
