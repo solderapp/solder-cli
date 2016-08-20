@@ -38,8 +38,8 @@ var tmplBuildShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}{{with .Pack}}
 Pack: {{ .Name }}{{end}}{{with .Minecraft}}
-Minecraft: {{ .Name }}{{end}}{{with .Forge}}
-Forge: {{ .Name }}{{end}}{{with .MinJava}}
+Minecraft: {{ . }}{{end}}{{with .Forge}}
+Forge: {{ . }}{{end}}{{with .MinJava}}
 Java: {{ . }}{{end}}{{with .MinMemory}}
 Memory: {{ . }}{{end}}
 Published: {{ .Published }}
