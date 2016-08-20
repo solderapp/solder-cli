@@ -1067,7 +1067,6 @@ func PackUserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.PackUserList(
 		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
-			User: GetUserParam(c),
 		},
 	)
 
