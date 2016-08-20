@@ -54,7 +54,8 @@ var tmplUserShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Username: {{ .Username }}
 Email: {{ .Email }}
-Active: {{ .Active }}{{with .Teams}}
+Active: {{ .Active }}
+Admin: {{ .Admin }}{{with .Teams}}
 Teams: {{ teamList . }}{{end}}{{with .Packs}}
 Packs: {{ packList . }}{{end}}{{with .Mods}}
 Mods: {{ modList . }}{{end}}
@@ -176,6 +177,14 @@ func User() cli.Command {
 						Name:  "blocked",
 						Usage: "Mark user as blocked",
 					},
+					cli.BoolFlag{
+						Name:  "admin",
+						Usage: "Mark user as admin",
+					},
+					cli.BoolFlag{
+						Name:  "user",
+						Usage: "Mark user as user",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserUpdate)
@@ -229,6 +238,14 @@ func User() cli.Command {
 					cli.BoolFlag{
 						Name:  "blocked",
 						Usage: "Mark user as blocked",
+					},
+					cli.BoolFlag{
+						Name:  "admin",
+						Usage: "Mark user as admin",
+					},
+					cli.BoolFlag{
+						Name:  "user",
+						Usage: "Mark user as user",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -616,6 +633,20 @@ func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		changed = true
 	}
 
+	if c.IsSet("admin") && c.IsSet("user") {
+		return fmt.Errorf("Conflict, you can mark it only admin OR user!")
+	}
+
+	if c.IsSet("admin") {
+		record.Admin = true
+		changed = true
+	}
+
+	if c.IsSet("user") {
+		record.Admin = false
+		changed = true
+	}
+
 	if changed {
 		_, patch := client.UserPatch(
 			record,
@@ -669,6 +700,18 @@ func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if c.IsSet("blocked") {
 		record.Active = false
+	}
+
+	if c.IsSet("admin") && c.IsSet("user") {
+		return fmt.Errorf("Conflict, you can mark it only admin OR user!")
+	}
+
+	if c.IsSet("admin") {
+		record.Admin = true
+	}
+
+	if c.IsSet("user") {
+		record.Admin = false
 	}
 
 	_, err := client.UserPost(
