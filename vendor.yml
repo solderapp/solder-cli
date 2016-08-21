@@ -6,7 +6,7 @@ vendors:
 - path: github.com/kardianos/osext
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kleister/kleister-go
-  rev: ae99c62c172ab3fb01d2fcc1d8ee3cd28ec56027
+  rev: 2a3fd154b97080630b7f833b17493bf09f393961
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/sanbornm/go-selfupdate

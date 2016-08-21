@@ -4,17 +4,18 @@ import (
 	"time"
 )
 
-// Client represents a client API response.
-type Client struct {
+// Team represents a team API response.
+type Team struct {
 	ID        int64     `json:"id"`
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
-	Value     string    `json:"uuid"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Users     []*User   `json:"users,omitempty"`
+	Mods      []*Mod    `json:"mods,omitempty"`
 	Packs     []*Pack   `json:"packs,omitempty"`
 }
 
-func (s *Client) String() string {
+func (s *Team) String() string {
 	return s.Name
 }
