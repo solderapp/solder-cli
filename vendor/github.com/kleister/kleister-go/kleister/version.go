@@ -13,15 +13,16 @@ import (
 
 // Version represents a version API response.
 type Version struct {
-	ID        int64       `json:"id"`
-	Mod       *Mod        `json:"mod,omitempty"`
-	ModID     int64       `json:"mod_id"`
-	Slug      string      `json:"slug"`
-	Name      string      `json:"name"`
-	File      *Attachment `json:"file"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
-	Builds    []*Build    `json:"builds,omitempty"`
+	ID            int64           `json:"id"`
+	Mod           *Mod            `json:"mod,omitempty"`
+	ModID         int64           `json:"mod_id"`
+	Slug          string          `json:"slug"`
+	Name          string          `json:"name"`
+	File          *Attachment     `json:"file"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
+	Builds        []*Build        `json:"builds,omitempty"`
+	BuildVersions []*BuildVersion `json:"build_versions,omitempty"`
 }
 
 func (s *Version) String() string {

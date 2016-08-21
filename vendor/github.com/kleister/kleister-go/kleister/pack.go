@@ -13,26 +13,27 @@ import (
 
 // Pack represents a pack API response.
 type Pack struct {
-	ID            int64       `json:"id"`
-	Slug          string      `json:"slug"`
-	Name          string      `json:"name"`
-	Icon          *Attachment `json:"icon,omitempty"`
-	Logo          *Attachment `json:"logo,omitempty"`
-	Background    *Attachment `json:"background,omitempty"`
-	RecommendedID int64       `json:"recommended_id"`
-	Recommended   *Build      `json:"recommended,omitempty"`
-	LatestID      int64       `json:"latest_id"`
-	Latest        *Build      `json:"latest,omitempty"`
-	Website       string      `json:"website"`
-	Published     bool        `json:"published"`
-	Private       bool        `json:"private"`
-	CreatedAt     time.Time   `json:"created_at"`
-	UpdatedAt     time.Time   `json:"updated_at"`
-	Clients       []*Client   `json:"clients,omitempty"`
-	Users         []*User     `json:"users,omitempty"`
-	UserPacks     []*UserPack `json:"user_packs,omitempty"`
-	Teams         []*Team     `json:"teams,omitempty"`
-	TeamPacks     []*TeamPack `json:"team_packs,omitempty"`
+	ID            int64         `json:"id"`
+	Slug          string        `json:"slug"`
+	Name          string        `json:"name"`
+	Icon          *Attachment   `json:"icon,omitempty"`
+	Logo          *Attachment   `json:"logo,omitempty"`
+	Background    *Attachment   `json:"background,omitempty"`
+	RecommendedID int64         `json:"recommended_id"`
+	Recommended   *Build        `json:"recommended,omitempty"`
+	LatestID      int64         `json:"latest_id"`
+	Latest        *Build        `json:"latest,omitempty"`
+	Website       string        `json:"website"`
+	Published     bool          `json:"published"`
+	Private       bool          `json:"private"`
+	CreatedAt     time.Time     `json:"created_at"`
+	UpdatedAt     time.Time     `json:"updated_at"`
+	Clients       []*Client     `json:"clients,omitempty"`
+	ClientPacks   []*ClientPack `json:"client_packs,omitempty"`
+	Users         []*User       `json:"users,omitempty"`
+	UserPacks     []*UserPack   `json:"user_packs,omitempty"`
+	Teams         []*Team       `json:"teams,omitempty"`
+	TeamPacks     []*TeamPack   `json:"team_packs,omitempty"`
 }
 
 func (s *Pack) String() string {
