@@ -298,6 +298,7 @@ func Pack() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned clients",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -346,6 +347,7 @@ func Pack() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a client from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -372,6 +374,7 @@ func Pack() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned users",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -450,6 +453,7 @@ func Pack() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a user from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -476,6 +480,7 @@ func Pack() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned teams",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -554,6 +559,7 @@ func Pack() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a team from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{

@@ -171,6 +171,7 @@ func Client() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned packs",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -219,6 +220,7 @@ func Client() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a pack from client",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{

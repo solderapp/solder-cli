@@ -213,6 +213,7 @@ func Mod() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned users",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -291,6 +292,7 @@ func Mod() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a user from mod",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -317,6 +319,7 @@ func Mod() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned teams",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -395,6 +398,7 @@ func Mod() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a team from mod",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{

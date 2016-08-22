@@ -210,6 +210,7 @@ func Version() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned builds",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -273,6 +274,7 @@ func Version() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a build from version",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{

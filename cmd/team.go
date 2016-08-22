@@ -181,6 +181,7 @@ func Team() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned users",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -259,6 +260,7 @@ func Team() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a user from team",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -285,6 +287,7 @@ func Team() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned packs",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -363,6 +366,7 @@ func Team() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a pack from team",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -389,6 +393,7 @@ func Team() cli.Command {
 				Subcommands: []cli.Command{
 					{
 						Name:      "list",
+						Aliases:   []string{"ls"},
 						Usage:     "List assigned mods",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
@@ -467,6 +472,7 @@ func Team() cli.Command {
 					},
 					{
 						Name:      "remove",
+						Aliases:   []string{"rm"},
 						Usage:     "Remove a mod from team",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
