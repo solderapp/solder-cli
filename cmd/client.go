@@ -5,25 +5,14 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
 
-// clientFuncMap provides template helper functions.
-var clientFuncMap = template.FuncMap{
-	"packList": func(s []*kleister.Pack) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+// clientFuncMap provides client template helper functions.
+var clientFuncMap = template.FuncMap{}
 
 // tmplClientList represents a row within client listing.
 var tmplClientList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -290,6 +279,8 @@ func ClientList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		clientFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -348,6 +339,8 @@ func ClientShow(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		clientFuncMap,
 	).Parse(
@@ -496,6 +489,8 @@ func ClientPackList(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		clientFuncMap,
 	).Parse(

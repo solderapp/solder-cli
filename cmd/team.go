@@ -5,43 +5,14 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
 
-// teamFuncMap provides template helper functions.
-var teamFuncMap = template.FuncMap{
-	"userList": func(s []*kleister.User) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"packList": func(s []*kleister.Pack) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"modList": func(s []*kleister.Mod) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+// teamFuncMap provides team template helper functions.
+var teamFuncMap = template.FuncMap{}
 
 // tmplTeamList represents a row within user listing.
 var tmplTeamList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -451,6 +422,8 @@ func TeamList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		teamFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -509,6 +482,8 @@ func TeamShow(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		teamFuncMap,
 	).Parse(
@@ -647,6 +622,8 @@ func TeamUserList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		teamFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -747,6 +724,8 @@ func TeamPackList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		teamFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -846,6 +825,8 @@ func TeamModList(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		teamFuncMap,
 	).Parse(

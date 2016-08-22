@@ -3,9 +3,85 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
+	"text/template"
 
+	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
+
+// globalFuncMap provides global template helper functions.
+var globalFuncMap = template.FuncMap{
+	"split":    strings.Split,
+	"join":     strings.Join,
+	"toUpper":  strings.ToUpper,
+	"toLower":  strings.ToLower,
+	"contains": strings.Contains,
+	"replace":  strings.Replace,
+	"buildList": func(s []*kleister.Build) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"clientList": func(s []*kleister.Client) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"modList": func(s []*kleister.Mod) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"packList": func(s []*kleister.Pack) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"teamList": func(s []*kleister.Team) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"userList": func(s []*kleister.User) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"versionList": func(s []*kleister.Version) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
 
 // GetIdentifierParam checks and returns the record id/slug parameter.
 func GetIdentifierParam(c *cli.Context) string {

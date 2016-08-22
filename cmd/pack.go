@@ -7,43 +7,14 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
 
-// PackFuncMap provides template helper functions.
-var packFuncMap = template.FuncMap{
-	"clientList": func(s []*kleister.Client) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"userList": func(s []*kleister.User) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"teamList": func(s []*kleister.Team) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+// PackFuncMap provides pack template helper functions.
+var packFuncMap = template.FuncMap{}
 
 // tmplPackList represents a row within forge listing.
 var tmplPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -569,6 +540,8 @@ func PackList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		packFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -627,6 +600,8 @@ func PackShow(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		packFuncMap,
 	).Parse(
@@ -1008,6 +983,8 @@ func PackClientList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		packFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -1108,6 +1085,8 @@ func PackUserList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		packFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -1207,6 +1186,8 @@ func PackTeamList(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		packFuncMap,
 	).Parse(

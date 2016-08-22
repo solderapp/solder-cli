@@ -7,25 +7,14 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
 
-// VersionFuncMap provides template helper functions.
-var versionFuncMap = template.FuncMap{
-	"buildList": func(s []*kleister.Build) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+// VersionFuncMap provides version template helper functions.
+var versionFuncMap = template.FuncMap{}
 
 // tmplVersionList represents a row within forge listing.
 var tmplVersionList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -356,6 +345,8 @@ func VersionList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		versionFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -415,6 +406,8 @@ func VersionShow(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		versionFuncMap,
 	).Parse(
@@ -627,6 +620,8 @@ func VersionBuildList(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		versionFuncMap,
 	).Parse(

@@ -5,34 +5,14 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
 
-// modFuncMap provides template helper functions.
-var modFuncMap = template.FuncMap{
-	"userList": func(s []*kleister.User) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"teamList": func(s []*kleister.Team) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+// modFuncMap provides mod template helper functions.
+var modFuncMap = template.FuncMap{}
 
 // tmplModList represents a row within forge listing.
 var tmplModList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -407,6 +387,8 @@ func ModList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		modFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -465,6 +447,8 @@ func ModShow(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		modFuncMap,
 	).Parse(
@@ -639,6 +623,8 @@ func ModUserList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		modFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -738,6 +724,8 @@ func ModTeamList(c *cli.Context, client kleister.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		modFuncMap,
 	).Parse(
