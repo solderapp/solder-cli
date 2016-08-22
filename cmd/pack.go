@@ -71,21 +71,21 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplPackClientList represents a row within pack client listing.
-var tmplPackClientList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplPackClientList = "Slug: \x1b[33m{{ .Client.Slug }}\x1b[0m" + `
+ID: {{ .Client.ID }}
+Name: {{ .Client.Name }}
 `
 
 // tmplPackUserList represents a row within pack user listing.
-var tmplPackUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Username: {{ .Username }}
+var tmplPackUserList = "Slug: \x1b[33m{{ .User.Slug }}\x1b[0m" + `
+ID: {{ .User.ID }}
+Username: {{ .User.Username }}
 `
 
 // tmplPackTeamList represents a row within pack team listing.
-var tmplPackTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplPackTeamList = "Slug: \x1b[33m{{ .Team.Slug }}\x1b[0m" + `
+ID: {{ .Team.ID }}
+Name: {{ .Team.Name }}
 `
 
 // Pack provides the sub-command for the pack API.

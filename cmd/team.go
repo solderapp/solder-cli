@@ -61,21 +61,21 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplTeamUserList represents a row within team user listing.
-var tmplTeamUserList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
-ID: {{ .ID }}
-Username: {{ .Username }}
+var tmplTeamUserList = "Slug: \x1b[33m{{ .User.Slug }} \x1b[0m" + `
+ID: {{ .User.ID }}
+Username: {{ .User.Username }}
 `
 
 // tmplTeamPackList represents a row within team pack listing.
-var tmplTeamPackList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplTeamPackList = "Slug: \x1b[33m{{ .Pack.Slug }} \x1b[0m" + `
+ID: {{ .Pack.ID }}
+Name: {{ .Pack.Name }}
 `
 
 // tmplTeamModList represents a row within team mod listing.
-var tmplTeamModList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplTeamModList = "Slug: \x1b[33m{{ .Mod.Slug }} \x1b[0m" + `
+ID: {{ .Mod.ID }}
+Name: {{ .Mod.Name }}
 `
 
 // Team provides the sub-command for the team API.

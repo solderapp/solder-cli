@@ -42,9 +42,9 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplClientPackList represents a row within client pack listing.
-var tmplClientPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplClientPackList = "Slug: \x1b[33m{{ .Pack.Slug }}\x1b[0m" + `
+ID: {{ .Pack.ID }}
+Name: {{ .Pack.Name }}
 `
 
 // Client provides the sub-command for the client API.

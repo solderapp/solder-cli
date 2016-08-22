@@ -50,9 +50,10 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplBuildVersionList represents a row within build version listing.
-var tmplBuildVersionList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplBuildVersionList = "Slug: \x1b[33m{{ .Version.Slug }}\x1b[0m" + `
+ID: {{ .Version.ID }}
+Name: {{ .Version.Name }}
+Mod: {{with .Version.Mod}}{{ . }}{{else}}n/a{{end}}
 `
 
 // Build provides the sub-command for the build API.

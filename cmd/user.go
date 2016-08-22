@@ -64,21 +64,21 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplUserModList represents a row within user mod listing.
-var tmplUserModList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplUserModList = "Slug: \x1b[33m{{ .Mod.Slug }}\x1b[0m" + `
+ID: {{ .Mod.ID }}
+Name: {{ .Mod.Name }}
 `
 
 // tmplUserPackList represents a row within user pack listing.
-var tmplUserPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplUserPackList = "Slug: \x1b[33m{{ .Pack.Slug }}\x1b[0m" + `
+ID: {{ .Pack.ID }}
+Name: {{ .Pack.Name }}
 `
 
 // tmplUserTeamList represents a row within user team listing.
-var tmplUserTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplUserTeamList = "Slug: \x1b[33m{{ .Team.Slug }}\x1b[0m" + `
+ID: {{ .Team.ID }}
+Name: {{ .Team.Name }}
 `
 
 // User provides the sub-command for the user API.

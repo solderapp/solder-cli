@@ -55,15 +55,15 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplModUserList represents a row within mod user listing.
-var tmplModUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Username: {{ .Username }}
+var tmplModUserList = "Slug: \x1b[33m{{ .User.Slug }}\x1b[0m" + `
+ID: {{ .User.ID }}
+Username: {{ .User.Username }}
 `
 
 // tmplModTeamList represents a row within mod team listing.
-var tmplModTeamList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplModTeamList = "Slug: \x1b[33m{{ .Team.Slug }}\x1b[0m" + `
+ID: {{ .Team.ID }}
+Name: {{ .Team.Name }}
 `
 
 // Mod provides the sub-command for the mod API.
