@@ -1,18 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 
 	"github.com/kleister/kleister-cli/cmd"
 	"github.com/kleister/kleister-cli/config"
-	"github.com/sanbornm/go-selfupdate/selfupdate"
 	"github.com/urfave/cli"
-)
-
-var (
-	updates = "http://dl.webhippie.de/"
 )
 
 func main() {
@@ -37,37 +31,6 @@ func main() {
 			Usage:  "Kleister API token",
 			EnvVar: "KLEISTER_TOKEN",
 		},
-		cli.BoolTFlag{
-			Name:   "update, u",
-			Usage:  "Enable auto update",
-			EnvVar: "KLEISTER_UPDATE",
-		},
-	}
-
-	app.Before = func(c *cli.Context) error {
-		if c.BoolT("update") {
-			if config.VersionDev == "dev" {
-				fmt.Fprintf(os.Stderr, "Updates are disabled for development versions.\n")
-			} else {
-				updater := &selfupdate.Updater{
-					CurrentVersion: fmt.Sprintf(
-						"%d.%d.%d",
-						config.VersionMajor,
-						config.VersionMinor,
-						config.VersionPatch,
-					),
-					ApiURL:  updates,
-					BinURL:  updates,
-					DiffURL: updates,
-					Dir:     "updates/",
-					CmdName: app.Name,
-				}
-
-				go updater.BackgroundRun()
-			}
-		}
-
-		return nil
 	}
 
 	app.Commands = []cli.Command{
