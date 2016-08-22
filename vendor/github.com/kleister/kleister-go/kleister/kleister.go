@@ -562,7 +562,7 @@ func (c *DefaultClient) ForgeBuildList(opts ForgeBuildParams) ([]*Build, error) 
 // ForgeBuildAppend appends a Forge version to a build.
 func (c *DefaultClient) ForgeBuildAppend(opts ForgeBuildParams) error {
 	uri := fmt.Sprintf(pathForgeBuild, c.base, opts.Forge)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -626,7 +626,7 @@ func (c *DefaultClient) MinecraftBuildList(opts MinecraftBuildParams) ([]*Build,
 // MinecraftBuildAppend appends a Minecraft version to a build.
 func (c *DefaultClient) MinecraftBuildAppend(opts MinecraftBuildParams) error {
 	uri := fmt.Sprintf(pathMinecraftBuild, c.base, opts.Minecraft)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -700,7 +700,7 @@ func (c *DefaultClient) PackClientList(opts PackClientParams) ([]*ClientPack, er
 // PackClientAppend appends a client to a pack.
 func (c *DefaultClient) PackClientAppend(opts PackClientParams) error {
 	uri := fmt.Sprintf(pathPackClient, c.base, opts.Pack)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -726,7 +726,7 @@ func (c *DefaultClient) PackUserList(opts PackUserParams) ([]*UserPack, error) {
 // PackUserAppend appends a user to a pack.
 func (c *DefaultClient) PackUserAppend(opts PackUserParams) error {
 	uri := fmt.Sprintf(pathPackUser, c.base, opts.Pack)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -734,7 +734,7 @@ func (c *DefaultClient) PackUserAppend(opts PackUserParams) error {
 // PackUserPerm updates perms for pack team.
 func (c *DefaultClient) PackUserPerm(opts PackUserParams) error {
 	uri := fmt.Sprintf(pathPackUser, c.base, opts.Pack)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -760,7 +760,7 @@ func (c *DefaultClient) PackTeamList(opts PackTeamParams) ([]*TeamPack, error) {
 // PackTeamAppend appends a team to a pack.
 func (c *DefaultClient) PackTeamAppend(opts PackTeamParams) error {
 	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -768,7 +768,7 @@ func (c *DefaultClient) PackTeamAppend(opts PackTeamParams) error {
 // PackTeamPerm updates perms for pack team.
 func (c *DefaultClient) PackTeamPerm(opts PackTeamParams) error {
 	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -842,7 +842,7 @@ func (c *DefaultClient) BuildVersionList(opts BuildVersionParams) ([]*BuildVersi
 // BuildVersionAppend appends a version to a build.
 func (c *DefaultClient) BuildVersionAppend(opts BuildVersionParams) error {
 	uri := fmt.Sprintf(pathBuildVersion, c.base, opts.Pack, opts.Build)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -916,7 +916,7 @@ func (c *DefaultClient) ModUserList(opts ModUserParams) ([]*UserMod, error) {
 // ModUserAppend appends a user to a mod.
 func (c *DefaultClient) ModUserAppend(opts ModUserParams) error {
 	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -924,7 +924,7 @@ func (c *DefaultClient) ModUserAppend(opts ModUserParams) error {
 // ModUserPerm updates perms for mod user.
 func (c *DefaultClient) ModUserPerm(opts ModUserParams) error {
 	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -950,7 +950,7 @@ func (c *DefaultClient) ModTeamList(opts ModTeamParams) ([]*TeamMod, error) {
 // ModTeamAppend appends a team to a mod.
 func (c *DefaultClient) ModTeamAppend(opts ModTeamParams) error {
 	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -958,7 +958,7 @@ func (c *DefaultClient) ModTeamAppend(opts ModTeamParams) error {
 // ModTeamPerm updates perms for mod team.
 func (c *DefaultClient) ModTeamPerm(opts ModTeamParams) error {
 	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1032,7 +1032,7 @@ func (c *DefaultClient) VersionBuildList(opts VersionBuildParams) ([]*BuildVersi
 // VersionBuildAppend appends a build to a version.
 func (c *DefaultClient) VersionBuildAppend(opts VersionBuildParams) error {
 	uri := fmt.Sprintf(pathVersionBuild, c.base, opts.Mod, opts.Version)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1106,7 +1106,7 @@ func (c *DefaultClient) ClientPackList(opts ClientPackParams) ([]*ClientPack, er
 // ClientPackAppend appends a pack to a client.
 func (c *DefaultClient) ClientPackAppend(opts ClientPackParams) error {
 	uri := fmt.Sprintf(pathClientPack, c.base, opts.Client)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1180,7 +1180,7 @@ func (c *DefaultClient) UserTeamList(opts UserTeamParams) ([]*TeamUser, error) {
 // UserTeamAppend appends a team to a user.
 func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1188,7 +1188,7 @@ func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 // UserTeamPerm updates perms for user team.
 func (c *DefaultClient) UserTeamPerm(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1214,7 +1214,7 @@ func (c *DefaultClient) UserModList(opts UserModParams) ([]*UserMod, error) {
 // UserModAppend appends a mod to a user.
 func (c *DefaultClient) UserModAppend(opts UserModParams) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1222,7 +1222,7 @@ func (c *DefaultClient) UserModAppend(opts UserModParams) error {
 // UserModPerm updates perms for user mod.
 func (c *DefaultClient) UserModPerm(opts UserModParams) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, opts.User)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1248,7 +1248,7 @@ func (c *DefaultClient) UserPackList(opts UserPackParams) ([]*UserPack, error) {
 // UserPackAppend appends a pack to a user.
 func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1256,7 +1256,7 @@ func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 // UserPackPerm updates perms for user pack.
 func (c *DefaultClient) UserPackPerm(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1330,7 +1330,7 @@ func (c *DefaultClient) TeamUserList(opts TeamUserParams) ([]*TeamUser, error) {
 // TeamUserAppend appends a user to a team.
 func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1338,7 +1338,7 @@ func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 // TeamUserPerm updates perms for team user.
 func (c *DefaultClient) TeamUserPerm(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1364,7 +1364,7 @@ func (c *DefaultClient) TeamModList(opts TeamModParams) ([]*TeamMod, error) {
 // TeamModAppend appends a mod to a team.
 func (c *DefaultClient) TeamModAppend(opts TeamModParams) error {
 	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1372,7 +1372,7 @@ func (c *DefaultClient) TeamModAppend(opts TeamModParams) error {
 // TeamModPerm updates perms for team mod.
 func (c *DefaultClient) TeamModPerm(opts TeamModParams) error {
 	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
@@ -1398,7 +1398,7 @@ func (c *DefaultClient) TeamPackList(opts TeamPackParams) ([]*TeamPack, error) {
 // TeamPackAppend appends a pack to a team.
 func (c *DefaultClient) TeamPackAppend(opts TeamPackParams) error {
 	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1406,7 +1406,7 @@ func (c *DefaultClient) TeamPackAppend(opts TeamPackParams) error {
 // TeamPackPerm updates perms for team pack.
 func (c *DefaultClient) TeamPackPerm(opts TeamPackParams) error {
 	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
-	err := c.post(uri, opts, nil)
+	err := c.patch(uri, opts, nil)
 
 	return err
 }
