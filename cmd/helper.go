@@ -178,3 +178,24 @@ func GetTeamParam(c *cli.Context) string {
 
 	return val
 }
+
+// GetPermParam checks and returns the permission parameter.
+func GetPermParam(c *cli.Context) string {
+	val := c.String("perm")
+
+	if val == "" {
+		fmt.Println("Error: You must provide a permission.")
+		os.Exit(1)
+	}
+
+	for _, perm := range []string{"user", "admin", "owner"} {
+		if perm == val {
+			return val
+		}
+	}
+
+	fmt.Println("Error: Invalid permission, can be user, admin or owner.")
+	os.Exit(1)
+
+	return ""
+}

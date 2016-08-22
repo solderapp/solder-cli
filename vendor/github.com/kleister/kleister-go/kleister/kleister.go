@@ -141,6 +141,9 @@ type ClientAPI interface {
 	// PackUserAppend appends a user to a pack.
 	PackUserAppend(PackUserParams) error
 
+	// PackUserPerm updates perms for pack user.
+	PackUserPerm(PackUserParams) error
+
 	// PackUserDelete remove a user from a pack.
 	PackUserDelete(PackUserParams) error
 
@@ -149,6 +152,9 @@ type ClientAPI interface {
 
 	// PackTeamAppend appends a team to a pack.
 	PackTeamAppend(PackTeamParams) error
+
+	// PackTeamPerm updates perms for pack team.
+	PackTeamPerm(PackTeamParams) error
 
 	// PackTeamDelete remove a team from a pack.
 	PackTeamDelete(PackTeamParams) error
@@ -198,6 +204,9 @@ type ClientAPI interface {
 	// ModUserAppend appends a user to a mod.
 	ModUserAppend(ModUserParams) error
 
+	// ModUserPerm updates perms for mod user.
+	ModUserPerm(ModUserParams) error
+
 	// ModUserDelete remove a user from a mod.
 	ModUserDelete(ModUserParams) error
 
@@ -206,6 +215,9 @@ type ClientAPI interface {
 
 	// ModTeamAppend appends a team to a mod.
 	ModTeamAppend(ModTeamParams) error
+
+	// ModTeamPerm updates perms for mod team.
+	ModTeamPerm(ModTeamParams) error
 
 	// ModTeamDelete remove a team from a mod.
 	ModTeamDelete(ModTeamParams) error
@@ -279,6 +291,9 @@ type ClientAPI interface {
 	// UserModAppend appends a mod to a user.
 	UserModAppend(UserModParams) error
 
+	// UserModPerm updates perms for user mod.
+	UserModPerm(UserModParams) error
+
 	// UserModDelete remove a mod from a user.
 	UserModDelete(UserModParams) error
 
@@ -288,6 +303,9 @@ type ClientAPI interface {
 	// UserPackAppend appends a pack to a user.
 	UserPackAppend(UserPackParams) error
 
+	// UserPackPerm updates perms for user pack.
+	UserPackPerm(UserPackParams) error
+
 	// UserPackDelete remove a pack from a user.
 	UserPackDelete(UserPackParams) error
 
@@ -296,6 +314,9 @@ type ClientAPI interface {
 
 	// UserTeamAppend appends a team to a user.
 	UserTeamAppend(UserTeamParams) error
+
+	// UserTeamPerm updates perms for user team.
+	UserTeamPerm(UserTeamParams) error
 
 	// UserTeamDelete remove a team from a user.
 	UserTeamDelete(UserTeamParams) error
@@ -321,6 +342,9 @@ type ClientAPI interface {
 	// TeamUserAppend appends a user to a team.
 	TeamUserAppend(TeamUserParams) error
 
+	// TeamUserPerm updates perms for team user.
+	TeamUserPerm(TeamUserParams) error
+
 	// TeamUserDelete remove a user from a team.
 	TeamUserDelete(TeamUserParams) error
 
@@ -330,6 +354,9 @@ type ClientAPI interface {
 	// TeamModAppend appends a mod to a team.
 	TeamModAppend(TeamModParams) error
 
+	// TeamModPerm updates perms for team mod.
+	TeamModPerm(TeamModParams) error
+
 	// TeamModDelete remove a mod from a team.
 	TeamModDelete(TeamModParams) error
 
@@ -338,6 +365,9 @@ type ClientAPI interface {
 
 	// TeamPackAppend appends a pack to a team.
 	TeamPackAppend(TeamPackParams) error
+
+	// TeamPackPerm updates perms for team pack.
+	TeamPackPerm(TeamPackParams) error
 
 	// TeamPackDelete remove a pack from a team.
 	TeamPackDelete(TeamPackParams) error
@@ -701,6 +731,14 @@ func (c *DefaultClient) PackUserAppend(opts PackUserParams) error {
 	return err
 }
 
+// PackUserPerm updates perms for pack team.
+func (c *DefaultClient) PackUserPerm(opts PackUserParams) error {
+	uri := fmt.Sprintf(pathPackUser, c.base, opts.Pack)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // PackUserDelete remove a user from a pack.
 func (c *DefaultClient) PackUserDelete(opts PackUserParams) error {
 	uri := fmt.Sprintf(pathPackUser, c.base, opts.Pack)
@@ -723,6 +761,14 @@ func (c *DefaultClient) PackTeamList(opts PackTeamParams) ([]*TeamPack, error) {
 func (c *DefaultClient) PackTeamAppend(opts PackTeamParams) error {
 	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
 	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// PackTeamPerm updates perms for pack team.
+func (c *DefaultClient) PackTeamPerm(opts PackTeamParams) error {
+	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -875,6 +921,14 @@ func (c *DefaultClient) ModUserAppend(opts ModUserParams) error {
 	return err
 }
 
+// ModUserPerm updates perms for mod user.
+func (c *DefaultClient) ModUserPerm(opts ModUserParams) error {
+	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // ModUserDelete remove a user from a mod.
 func (c *DefaultClient) ModUserDelete(opts ModUserParams) error {
 	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
@@ -897,6 +951,14 @@ func (c *DefaultClient) ModTeamList(opts ModTeamParams) ([]*TeamMod, error) {
 func (c *DefaultClient) ModTeamAppend(opts ModTeamParams) error {
 	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
 	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// ModTeamPerm updates perms for mod team.
+func (c *DefaultClient) ModTeamPerm(opts ModTeamParams) error {
+	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1123,6 +1185,14 @@ func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 	return err
 }
 
+// UserTeamPerm updates perms for user team.
+func (c *DefaultClient) UserTeamPerm(opts UserTeamParams) error {
+	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // UserTeamDelete remove a team from a user.
 func (c *DefaultClient) UserTeamDelete(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
@@ -1149,6 +1219,14 @@ func (c *DefaultClient) UserModAppend(opts UserModParams) error {
 	return err
 }
 
+// UserModPerm updates perms for user mod.
+func (c *DefaultClient) UserModPerm(opts UserModParams) error {
+	uri := fmt.Sprintf(pathUserMod, c.base, opts.User)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // UserModDelete remove a mod from a user.
 func (c *DefaultClient) UserModDelete(opts UserModParams) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, opts.User)
@@ -1171,6 +1249,14 @@ func (c *DefaultClient) UserPackList(opts UserPackParams) ([]*UserPack, error) {
 func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
 	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// UserPackPerm updates perms for user pack.
+func (c *DefaultClient) UserPackPerm(opts UserPackParams) error {
+	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
+	err := c.post(uri, opts, nil)
 
 	return err
 }
@@ -1249,6 +1335,14 @@ func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 	return err
 }
 
+// TeamUserPerm updates perms for team user.
+func (c *DefaultClient) TeamUserPerm(opts TeamUserParams) error {
+	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // TeamUserDelete remove a user from a team.
 func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
@@ -1275,6 +1369,14 @@ func (c *DefaultClient) TeamModAppend(opts TeamModParams) error {
 	return err
 }
 
+// TeamModPerm updates perms for team mod.
+func (c *DefaultClient) TeamModPerm(opts TeamModParams) error {
+	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
 // TeamModDelete remove a mod from a team.
 func (c *DefaultClient) TeamModDelete(opts TeamModParams) error {
 	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
@@ -1297,6 +1399,14 @@ func (c *DefaultClient) TeamPackList(opts TeamPackParams) ([]*TeamPack, error) {
 func (c *DefaultClient) TeamPackAppend(opts TeamPackParams) error {
 	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
 	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// TeamPackPerm updates perms for team pack.
+func (c *DefaultClient) TeamPackPerm(opts TeamPackParams) error {
+	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
+	err := c.post(uri, opts, nil)
 
 	return err
 }

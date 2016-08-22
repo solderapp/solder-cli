@@ -109,6 +109,27 @@ func Version() cli.Command {
 				},
 			},
 			{
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a version",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "mod, m",
+						Value: "",
+						Usage: "ID or slug of the related mod",
+					},
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Version ID or slug to show",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, VersionDelete)
+				},
+			},
+			{
 				Name:      "update",
 				Usage:     "Update a version",
 				ArgsUsage: " ",
@@ -149,27 +170,6 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:      "delete",
-				Aliases:   []string{"rm"},
-				Usage:     "Delete a version",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Version ID or slug to show",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, VersionDelete)
-				},
-			},
-			{
 				Name:      "create",
 				Usage:     "Create a version",
 				ArgsUsage: " ",
@@ -205,96 +205,102 @@ func Version() cli.Command {
 				},
 			},
 			{
-				Name:      "build-list",
-				Usage:     "List assigned builds",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
+				Name:  "build",
+				Usage: "Build assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned builds",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "mod, m",
+								Value: "",
+								Usage: "ID or slug of the related mod",
+							},
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Version ID or slug to list builds",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplVersionBuildList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, VersionBuildList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Version ID or slug to list builds",
+					{
+						Name:      "append",
+						Usage:     "Append a build to version",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "mod, m",
+								Value: "",
+								Usage: "ID or slug of the related mod",
+							},
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Version ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "build, b",
+								Value: "",
+								Usage: "Build ID or slug to append to",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, VersionBuildAppend)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplVersionBuildList,
-						Usage: "Custom output format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a build from version",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "mod, m",
+								Value: "",
+								Usage: "ID or slug of the related mod",
+							},
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Version ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "build, b",
+								Value: "",
+								Usage: "Build ID or slug to append to",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, VersionBuildRemove)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, VersionBuildList)
-				},
-			},
-			{
-				Name:      "build-append",
-				Usage:     "Append a build to version",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Version ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "build, b",
-						Value: "",
-						Usage: "Build ID or slug to append to",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, VersionBuildAppend)
-				},
-			},
-			{
-				Name:      "build-remove",
-				Usage:     "Remove a build from version",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "ID or slug of the related mod",
-					},
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Version ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "build, b",
-						Value: "",
-						Usage: "Build ID or slug to append to",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, VersionBuildRemove)
 				},
 			},
 		},

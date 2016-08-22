@@ -51,12 +51,14 @@ Name: {{ .Client.Name }}
 var tmplPackUserList = "Slug: \x1b[33m{{ .User.Slug }}\x1b[0m" + `
 ID: {{ .User.ID }}
 Username: {{ .User.Username }}
+Permission: {{ .Perm }}
 `
 
 // tmplPackTeamList represents a row within pack team listing.
 var tmplPackTeamList = "Slug: \x1b[33m{{ .Team.Slug }}\x1b[0m" + `
 ID: {{ .Team.ID }}
 Name: {{ .Team.Name }}
+Permission: {{ .Perm }}
 `
 
 // Pack provides the sub-command for the pack API.
@@ -115,6 +117,22 @@ func Pack() cli.Command {
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, PackShow)
+				},
+			},
+			{
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a pack",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Pack ID or slug to delete",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, PackDelete)
 				},
 			},
 			{
@@ -204,22 +222,6 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:      "delete",
-				Aliases:   []string{"rm"},
-				Usage:     "Delete a pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to delete",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackDelete)
-				},
-			},
-			{
 				Name:      "create",
 				Usage:     "Create a pack",
 				ArgsUsage: " ",
@@ -291,207 +293,285 @@ func Pack() cli.Command {
 				},
 			},
 			{
-				Name:      "client-list",
-				Usage:     "List assigned clients",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to list clients",
+				Name:  "client",
+				Usage: "Client assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned clients",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to list clients",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplPackClientList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackClientList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplPackClientList,
-						Usage: "Custom output format",
+					{
+						Name:      "append",
+						Usage:     "Append a client to pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "client, c",
+								Value: "",
+								Usage: "Client ID or slug to append",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackClientAppend)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a client from pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "client, c",
+								Value: "",
+								Usage: "Client ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackClientRemove)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackClientList)
 				},
 			},
 			{
-				Name:      "client-append",
-				Usage:     "Append a client to pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to append to",
+				Name:  "user",
+				Usage: "User assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned users",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to list users",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplPackUserList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackUserList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "client, c",
-						Value: "",
-						Usage: "Client ID or slug to append",
+					{
+						Name:      "append",
+						Usage:     "Append a user to pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the user, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackUserAppend)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackClientAppend)
+					{
+						Name:      "perm",
+						Usage:     "Update pack user permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the user, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackUserPerm)
+						},
+					},
+					{
+						Name:      "remove",
+						Usage:     "Remove a user from pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackUserRemove)
+						},
+					},
 				},
 			},
 			{
-				Name:      "client-remove",
-				Usage:     "Remove a client from pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to remove from",
+				Name:  "team",
+				Usage: "Team assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned teams",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to list teams",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplPackTeamList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackTeamList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "client, c",
-						Value: "",
-						Usage: "Client ID or slug to remove",
+					{
+						Name:      "append",
+						Usage:     "Append a team to pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackTeamAppend)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackClientRemove)
-				},
-			},
-			{
-				Name:      "user-list",
-				Usage:     "List assigned users",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to list users",
+					{
+						Name:      "perm",
+						Usage:     "Update pack team permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackTeamPerm)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplPackUserList,
-						Usage: "Custom output format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a team from pack",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Pack ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, PackTeamRemove)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackUserList)
-				},
-			},
-			{
-				Name:      "user-append",
-				Usage:     "Append a user to pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "user, u",
-						Value: "",
-						Usage: "User ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackUserAppend)
-				},
-			},
-			{
-				Name:      "user-remove",
-				Usage:     "Remove a user from pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "user, u",
-						Value: "",
-						Usage: "User ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackUserRemove)
-				},
-			},
-			{
-				Name:      "team-list",
-				Usage:     "List assigned teams",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to list teams",
-					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplPackTeamList,
-						Usage: "Custom output format",
-					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackTeamList)
-				},
-			},
-			{
-				Name:      "team-append",
-				Usage:     "Append a team to pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "team, t",
-						Value: "",
-						Usage: "Team ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackTeamAppend)
-				},
-			},
-			{
-				Name:      "team-remove",
-				Usage:     "Remove a team from pack",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Pack ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "team, t",
-						Value: "",
-						Usage: "Team ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, PackTeamRemove)
 				},
 			},
 		},
@@ -1113,6 +1193,7 @@ func PackUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
 			User: GetUserParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -1121,6 +1202,24 @@ func PackUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to pack\n")
+	return nil
+}
+
+// PackUserPerm provides the sub-command to update pack user permissions.
+func PackUserPerm(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.PackUserPerm(
+		kleister.PackUserParams{
+			Pack: GetIdentifierParam(c),
+			User: GetUserParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 
@@ -1215,6 +1314,7 @@ func PackTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.PackTeamParams{
 			Pack: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -1223,6 +1323,24 @@ func PackTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	return nil
+}
+
+// PackTeamPerm provides the sub-command to update pack team permissions.
+func PackTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.PackTeamPerm(
+		kleister.PackTeamParams{
+			Pack: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 

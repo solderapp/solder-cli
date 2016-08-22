@@ -95,6 +95,22 @@ func Client() cli.Command {
 				},
 			},
 			{
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a client",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Client ID or slug to delete",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ClientDelete)
+				},
+			},
+			{
 				Name:      "update",
 				Usage:     "Update a client",
 				ArgsUsage: " ",
@@ -125,22 +141,6 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:      "delete",
-				Aliases:   []string{"rm"},
-				Usage:     "Delete a client",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Client ID or slug to delete",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, ClientDelete)
-				},
-			},
-			{
 				Name:      "create",
 				Usage:     "Create a client",
 				ArgsUsage: " ",
@@ -166,71 +166,77 @@ func Client() cli.Command {
 				},
 			},
 			{
-				Name:      "pack-list",
-				Usage:     "List assigned packs",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Client ID or slug to list packs",
+				Name:  "pack",
+				Usage: "Pack assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned packs",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Client ID or slug to list packs",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplClientPackList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, ClientPackList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplClientPackList,
-						Usage: "Custom output format",
+					{
+						Name:      "append",
+						Usage:     "Append a pack to client",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Client ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to append",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, ClientPackAppend)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a pack from client",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Client ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, ClientPackRemove)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, ClientPackList)
-				},
-			},
-			{
-				Name:      "pack-append",
-				Usage:     "Append a pack to client",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Client ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, ClientPackAppend)
-				},
-			},
-			{
-				Name:      "pack-remove",
-				Usage:     "Remove a pack from client",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Client ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, ClientPackRemove)
 				},
 			},
 		},

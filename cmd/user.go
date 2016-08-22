@@ -38,18 +38,21 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 var tmplUserModList = "Slug: \x1b[33m{{ .Mod.Slug }}\x1b[0m" + `
 ID: {{ .Mod.ID }}
 Name: {{ .Mod.Name }}
+Permission: {{ .Perm }}
 `
 
 // tmplUserPackList represents a row within user pack listing.
 var tmplUserPackList = "Slug: \x1b[33m{{ .Pack.Slug }}\x1b[0m" + `
 ID: {{ .Pack.ID }}
 Name: {{ .Pack.Name }}
+Permission: {{ .Perm }}
 `
 
 // tmplUserTeamList represents a row within user team listing.
 var tmplUserTeamList = "Slug: \x1b[33m{{ .Team.Slug }}\x1b[0m" + `
 ID: {{ .Team.ID }}
 Name: {{ .Team.Name }}
+Permission: {{ .Perm }}
 `
 
 // User provides the sub-command for the user API.
@@ -111,6 +114,22 @@ func User() cli.Command {
 				},
 			},
 			{
+				Name:      "delete",
+				Aliases:   []string{"rm"},
+				Usage:     "Delete a user",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to show",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserDelete)
+				},
+			},
+			{
 				Name:      "update",
 				Usage:     "Update a user",
 				ArgsUsage: " ",
@@ -162,22 +181,6 @@ func User() cli.Command {
 				},
 			},
 			{
-				Name:      "delete",
-				Aliases:   []string{"rm"},
-				Usage:     "Delete a user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to show",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserDelete)
-				},
-			},
-			{
 				Name:      "create",
 				Usage:     "Create a user",
 				ArgsUsage: " ",
@@ -224,207 +227,315 @@ func User() cli.Command {
 				},
 			},
 			{
-				Name:      "mod-list",
-				Usage:     "List assigned mods",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to list mods",
+				Name:  "mod",
+				Usage: "Mod assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned mods",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to list mods",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplUserModList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserModList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplUserModList,
-						Usage: "Custom output format",
+					{
+						Name:      "append",
+						Usage:     "Append a mod to user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "mod, m",
+								Value: "",
+								Usage: "Mod ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the mod, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserModAppend)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
+					{
+						Name:      "perm",
+						Usage:     "Update user mod permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "mod, u",
+								Value: "",
+								Usage: "Mod ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the mod, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserModPerm)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a mod from user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "mod, m",
+								Value: "",
+								Usage: "Mod ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserModRemove)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserModList)
 				},
 			},
 			{
-				Name:      "mod-append",
-				Usage:     "Append a mod to user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to append to",
+				Name:  "pack",
+				Usage: "Pack assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned packs",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to list packs",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplUserPackList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserPackList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "Mod ID or slug to append",
+					{
+						Name:      "append",
+						Usage:     "Append a pack to user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the pack, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserPackAppend)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserModAppend)
+					{
+						Name:      "perm",
+						Usage:     "Update user pack permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the pack, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserPackPerm)
+						},
+					},
+					{
+						Name:      "remove",
+						Usage:     "Remove a pack from user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "pack, p",
+								Value: "",
+								Usage: "Pack ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserPackRemove)
+						},
+					},
 				},
 			},
 			{
-				Name:      "mod-remove",
-				Usage:     "Remove a mod from user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to remove from",
+				Name:  "team",
+				Usage: "Team assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Usage:     "List assigned teams",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to list teams",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplUserTeamList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserTeamList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "mod, m",
-						Value: "",
-						Usage: "Mod ID or slug to remove",
+					{
+						Name:      "append",
+						Usage:     "Append a team to user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "team, p",
+								Value: "",
+								Usage: "Team ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserTeamAppend)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserModRemove)
-				},
-			},
-			{
-				Name:      "pack-list",
-				Usage:     "List assigned packs",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to list packs",
+					{
+						Name:      "perm",
+						Usage:     "Update user team permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "team, p",
+								Value: "",
+								Usage: "Team ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserTeamPerm)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplUserPackList,
-						Usage: "Custom output format",
+					{
+						Name:      "remove",
+						Usage:     "Remove a team from user",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "User ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "team, p",
+								Value: "",
+								Usage: "Team ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, UserTeamRemove)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserPackList)
-				},
-			},
-			{
-				Name:      "pack-append",
-				Usage:     "Append a pack to user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserPackAppend)
-				},
-			},
-			{
-				Name:      "pack-remove",
-				Usage:     "Remove a pack from user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "pack, p",
-						Value: "",
-						Usage: "Pack ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserPackRemove)
-				},
-			},
-			{
-				Name:      "team-list",
-				Usage:     "List assigned teams",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to list teams",
-					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplUserTeamList,
-						Usage: "Custom output format",
-					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserTeamList)
-				},
-			},
-			{
-				Name:      "team-append",
-				Usage:     "Append a team to user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "team, p",
-						Value: "",
-						Usage: "Team ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserTeamAppend)
-				},
-			},
-			{
-				Name:      "team-remove",
-				Usage:     "Remove a team from user",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "User ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "team, p",
-						Value: "",
-						Usage: "Team ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, UserTeamRemove)
 				},
 			},
 		},
@@ -775,6 +886,7 @@ func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -783,6 +895,24 @@ func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// UserModPerm provides the sub-command to update user mod permissions.
+func UserModPerm(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.UserModPerm(
+		kleister.UserModParams{
+			User: GetIdentifierParam(c),
+			Mod:  GetModParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 
@@ -877,6 +1007,7 @@ func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -885,6 +1016,24 @@ func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// UserPackPerm provides the sub-command to update user pack permissions.
+func UserPackPerm(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.UserPackPerm(
+		kleister.UserPackParams{
+			User: GetIdentifierParam(c),
+			Pack: GetPackParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 
@@ -979,6 +1128,7 @@ func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 		kleister.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -987,6 +1137,24 @@ func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// UserTeamPerm provides the sub-command to update user team permissions.
+func UserTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.UserTeamPerm(
+		kleister.UserTeamParams{
+			User: GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 
