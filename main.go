@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 
 	"github.com/kleister/kleister-cli/cmd"
 	"github.com/kleister/kleister-cli/config"
 	"github.com/urfave/cli"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
@@ -56,5 +59,8 @@ func main() {
 		Usage: "Print the current version of that tool",
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

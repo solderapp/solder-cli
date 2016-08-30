@@ -1,17 +1,19 @@
 vendors:
 - path: github.com/golang/protobuf
-  rev: f592bd283e9ef86337a432eb50e592278c3d534d
+  rev: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
+- path: github.com/joho/godotenv
+  rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
 - path: github.com/kleister/kleister-go
   rev: a3798bb419f9f4dafced717705b463deb224a8c4
 - path: github.com/urfave/cli
-  rev: 168c95418e66e019fe17b8f4f5c45aa62ff80e23
+  rev: 33bb4c121333cd8eb7d8cc8d74474f4ec156f371
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 7394c112eae4dba7e96bfcfe738e6373d61772b4
+  rev: 6250b412798208e6c90b03b7c4f226de5aa299e2
 - path: golang.org/x/oauth2
-  rev: 3b966c7f301c0c71c53d94dc632a62df0a682cd7
+  rev: 4d549c893be7d4011bab739cc585d091a7188d27
 - path: google.golang.org/appengine
-  rev: e951d3868b377b14f4e60efa3a301532ee3c1ebf
+  rev: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
