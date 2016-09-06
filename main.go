@@ -24,7 +24,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "server, s",
-			Value:  "",
+			Value:  "http://localhost:8080",
 			Usage:  "Kleister API server",
 			EnvVar: "KLEISTER_SERVER",
 		},
