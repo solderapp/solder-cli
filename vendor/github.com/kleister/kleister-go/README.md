@@ -5,7 +5,7 @@
 [![Go Doc](https://godoc.org/github.com/kleister/kleister-go?status.svg)](http://godoc.org/github.com/kleister/kleister-go)
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-go)](http://goreportcard.com/report/github.com/kleister/kleister-go)
 [![Join the chat at https://gitter.im/kleister/kleister](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kleister/kleister)
-![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
+[![Stories in Ready](https://badge.waffle.io/kleister/kleister-api.svg?label=ready&title=Ready)](http://waffle.io/kleister/kleister-api)
 
 **This project is under heavy development, it's not in a working state yet!**
 
