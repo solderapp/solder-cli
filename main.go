@@ -47,6 +47,7 @@ func main() {
 		cmd.Team(),
 		cmd.Client(),
 		cmd.Profile(),
+		cmd.Key(),
 	}
 
 	cli.HelpFlag = cli.BoolFlag{
