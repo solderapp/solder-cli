@@ -6,13 +6,13 @@ vendors:
 - path: github.com/joho/godotenv
   rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
 - path: github.com/kleister/kleister-go
-  rev: 5ce04b67a70fa759b2eeac6074da491f1007b948
+  rev: 1c5cb65fe530468e60301210351aa66a764b6f38
 - path: github.com/urfave/cli
-  rev: c723b19a84af34d905773672ffa1b8ead802e505
+  rev: 61f519fe5e57c2518c03627b194899a105838eba
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 9313baa13d9262e49d07b20ed57dceafcd7240cc
+  rev: 749a502dd1eaf3e5bfd4f8956748c502357c0bbe
 - path: golang.org/x/oauth2
   rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
 - path: google.golang.org/appengine
