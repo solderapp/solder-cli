@@ -1,8 +1,8 @@
 vendors:
 - path: github.com/davecgh/go-spew
-  rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  rev: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
 - path: github.com/golang/protobuf
-  rev: f6b4231c7fd7ac9df487f17759fc107fd61d98a0
+  rev: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/pmezard/go-difflib
@@ -14,8 +14,10 @@ vendors:
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 04557861f124410b768b1ba5bb3a91b705afbfc6
+  rev: 749a502dd1eaf3e5bfd4f8956748c502357c0bbe
 - path: golang.org/x/oauth2
-  rev: 65a8d08c6292395d47053be10b3c5e91960def76
+  rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
 - path: google.golang.org/appengine
-  rev: 267c27e7492265b84fc6719503b14a1e17975d79
+  rev: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
+- path: gopkg.in/guregu/null.v3
+  rev: 41961cea0328defc5f95c1c473f89ebf0d1813f6

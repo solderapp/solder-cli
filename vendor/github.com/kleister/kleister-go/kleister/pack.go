@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/vincent-petithory/dataurl"
+	"gopkg.in/guregu/null.v3"
 )
 
 // Pack represents a pack API response.
@@ -19,9 +20,9 @@ type Pack struct {
 	Icon          *Attachment   `json:"icon,omitempty"`
 	Logo          *Attachment   `json:"logo,omitempty"`
 	Background    *Attachment   `json:"background,omitempty"`
-	RecommendedID int64         `json:"recommended_id"`
+	RecommendedID null.Int      `json:"recommended_id"`
 	Recommended   *Build        `json:"recommended,omitempty"`
-	LatestID      int64         `json:"latest_id"`
+	LatestID      null.Int      `json:"latest_id"`
 	Latest        *Build        `json:"latest,omitempty"`
 	Website       string        `json:"website"`
 	Published     bool          `json:"published"`
