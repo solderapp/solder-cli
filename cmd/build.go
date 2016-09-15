@@ -11,6 +11,7 @@ import (
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
+	"gopkg.in/guregu/null.v3"
 )
 
 // buildFuncMap provides build template helper functions.
@@ -516,8 +517,8 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if c.IsSet("minecraft") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("minecraft")); match {
-			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID {
-				record.MinecraftID = val
+			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != record.MinecraftID.Int64 {
+				record.MinecraftID = null.NewInt(val, val > 0)
 				changed = true
 			}
 		} else {
@@ -530,8 +531,8 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.MinecraftID {
-					record.MinecraftID = related.ID
+				if related.ID != record.MinecraftID.Int64 {
+					record.MinecraftID = null.NewInt(related.ID, related.ID > 0)
 					changed = true
 				}
 			}
@@ -540,8 +541,8 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if c.IsSet("forge") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("forge")); match {
-			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID {
-				record.ForgeID = val
+			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != record.ForgeID.Int64 {
+				record.ForgeID = null.NewInt(val, val > 0)
 				changed = true
 			}
 		} else {
@@ -554,8 +555,8 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.ForgeID {
-					record.ForgeID = related.ID
+				if related.ID != record.ForgeID.Int64 {
+					record.ForgeID = null.NewInt(related.ID, related.ID > 0)
 					changed = true
 				}
 			}
@@ -661,7 +662,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if c.IsSet("minecraft") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("minecraft")); match {
 			if val, err := strconv.ParseInt(c.String("minecraft"), 10, 64); err == nil && val != 0 {
-				record.MinecraftID = val
+				record.MinecraftID = null.NewInt(val, val > 0)
 			}
 		} else {
 			if c.String("minecraft") != "" {
@@ -673,8 +674,8 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.MinecraftID {
-					record.MinecraftID = related.ID
+				if related.ID != record.MinecraftID.Int64 {
+					record.MinecraftID = null.NewInt(related.ID, related.ID > 0)
 				}
 			}
 		}
@@ -683,7 +684,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if c.IsSet("forge") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("forge")); match {
 			if val, err := strconv.ParseInt(c.String("forge"), 10, 64); err == nil && val != 0 {
-				record.ForgeID = val
+				record.ForgeID = null.NewInt(val, val > 0)
 			}
 		} else {
 			if c.String("forge") != "" {
@@ -695,8 +696,8 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.ForgeID {
-					record.ForgeID = related.ID
+				if related.ID != record.ForgeID.Int64 {
+					record.ForgeID = null.NewInt(related.ID, related.ID > 0)
 				}
 			}
 		}

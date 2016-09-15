@@ -11,6 +11,7 @@ import (
 
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
+	"gopkg.in/guregu/null.v3"
 )
 
 // PackFuncMap provides pack template helper functions.
@@ -729,8 +730,8 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if c.IsSet("recommended") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("recommended")); match {
-			if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID {
-				record.RecommendedID = val
+			if val, err := strconv.ParseInt(c.String("recommended"), 10, 64); err == nil && val != record.RecommendedID.Int64 {
+				record.RecommendedID = null.NewInt(val, val > 0)
 				changed = true
 			}
 		} else {
@@ -744,8 +745,8 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.RecommendedID {
-					record.RecommendedID = related.ID
+				if related.ID != record.RecommendedID.Int64 {
+					record.RecommendedID = null.NewInt(related.ID, related.ID > 0)
 					changed = true
 				}
 			}
@@ -754,8 +755,8 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if c.IsSet("latest") {
 		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("latest")); match {
-			if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID {
-				record.LatestID = val
+			if val, err := strconv.ParseInt(c.String("latest"), 10, 64); err == nil && val != record.LatestID.Int64 {
+				record.LatestID = null.NewInt(val, val > 0)
 				changed = true
 			}
 		} else {
@@ -769,8 +770,8 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 					return err
 				}
 
-				if related.ID != record.LatestID {
-					record.LatestID = related.ID
+				if related.ID != record.LatestID.Int64 {
+					record.LatestID = null.NewInt(related.ID, related.ID > 0)
 					changed = true
 				}
 			}
