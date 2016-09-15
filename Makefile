@@ -4,7 +4,7 @@ EXECUTABLE := kleister-cli
 IMPORT := github.com/kleister/kleister-cli
 SHA := $(shell git rev-parse --short HEAD)
 
-LDFLAGS += -extldflags "-static" -X "github.com/kleister/kleister-cli/config.VersionDev=$(SHA)"
+LDFLAGS += -s -w -extldflags "-static" -X "github.com/kleister/kleister-cli/config.VersionDev=$(SHA)"
 
 TARGETS ?= linux/*,darwin/*,windows/*
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
@@ -23,9 +23,22 @@ endif
 
 all: clean test build
 
+update:
+	@which glide > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/Masterminds/glide; \
+	fi
+	@which glide-vc > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/sgotti/glide-vc; \
+	fi
+	glide update --strip-vendor
+	glide-vc --only-code --no-tests --no-legal-files
+
 clean:
 	go clean -i ./...
 	rm -rf $(BIN) $(DIST)
+
+generate:
+	go generate $(PACKAGES)
 
 fmt:
 	go fmt $(PACKAGES)
@@ -48,7 +61,7 @@ install: $(BIN)/$(EXECUTABLE)
 build: $(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(wildcard *.go)
-	go build -tags '$(TAGS)' -ldflags '-s -w $(LDFLAGS)' -o $@
+	go build -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -o $@
 
 release: release-build release-copy release-check
 
@@ -56,7 +69,7 @@ release-build:
 	@which xgo > /dev/null; if [ $$? -ne 0 ]; then \
 		go get -u github.com/karalabe/xgo; \
 	fi
-	xgo -dest $(BIN) -tags '$(TAGS)' -ldflags '-s -w $(LDFLAGS)' -targets '$(TARGETS)' -out $(EXECUTABLE)-$(VERSION) $(IMPORT)
+	xgo -dest $(BIN) -tags '$(TAGS)' -ldflags '$(LDFLAGS)' -targets '$(TARGETS)' -out $(EXECUTABLE)-$(VERSION) $(IMPORT)
 
 release-copy:
 	mkdir -p $(DIST)/release
@@ -76,4 +89,4 @@ latest-check:
 
 publish: release latest
 
-.PHONY: all clean fmt vet lint test build release latest publish
+.PHONY: all update clean generate fmt vet lint test build release latest publish
