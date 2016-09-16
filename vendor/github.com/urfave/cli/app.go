@@ -62,6 +62,7 @@ type App struct {
 	// An action to execute after any subcommands are run, but after the subcommand has finished
 	// It is run even if Action() panics
 	After AfterFunc
+
 	// The action to execute when no subcommands are specified
 	// Expects a `cli.ActionFunc` but will accept the *deprecated* signature of `func(*cli.Context) {}`
 	// *Note*: support for the deprecated `Action` signature will be removed in a future version
@@ -160,6 +161,10 @@ func (a *App) Setup() {
 		a.categories = a.categories.AddCommand(command.Category, command)
 	}
 	sort.Sort(a.categories)
+
+	if a.Metadata == nil {
+		a.Metadata = make(map[string]interface{})
+	}
 }
 
 // Run is the entry point to the cli app. Parses the arguments slice and routes
@@ -468,7 +473,7 @@ func HandleAction(action interface{}, context *Context) (err error) {
 			// swallowing all panics that may happen when calling an Action func.
 			s := fmt.Sprintf("%v", r)
 			if strings.HasPrefix(s, "reflect: ") && strings.Contains(s, "too many input arguments") {
-				err = NewExitError(fmt.Sprintf("ERROR unknown Action error: %v.  See %s", r, appActionDeprecationURL), 2)
+				err = NewExitError(fmt.Sprintf("ERROR unknown Action error: %v.", r), 2)
 			} else {
 				panic(r)
 			}

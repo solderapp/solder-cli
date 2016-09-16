@@ -24,14 +24,10 @@ endif
 all: clean test build
 
 update:
-	@which glide > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/Masterminds/glide; \
+	@which govend > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/govend/govend; \
 	fi
-	@which glide-vc > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/sgotti/glide-vc; \
-	fi
-	glide update --strip-vendor
-	glide-vc --only-code --no-tests --no-legal-files
+	govend -vtlu --prune
 
 clean:
 	go clean -i ./...
