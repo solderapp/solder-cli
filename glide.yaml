@@ -1,0 +1,13 @@
+package: github.com/kleister/kleister-cli
+import:
+- package: github.com/joho/godotenv
+  version: ^1.0.0
+  subpackages:
+  - autoload
+- package: github.com/kleister/kleister-go
+  subpackages:
+  - kleister
+- package: github.com/urfave/cli
+  version: ^1.18.1
+- package: gopkg.in/guregu/null.v3
+  version: ^3.1.0
