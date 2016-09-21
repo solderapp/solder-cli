@@ -5,8 +5,11 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 	"text/template"
 
+	"github.com/Knetic/govaluate"
 	"github.com/kleister/kleister-go/kleister"
 	"github.com/urfave/cli"
 )
@@ -41,6 +44,11 @@ func Minecraft() cli.Command {
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
+						Name:  "sort",
+						Value: "slug",
+						Usage: "Sort by this field",
+					},
+					cli.StringFlag{
 						Name:  "format",
 						Value: tmplMinecraftList,
 						Usage: "Custom output format",
@@ -52,6 +60,18 @@ func Minecraft() cli.Command {
 					cli.BoolFlag{
 						Name:  "xml",
 						Usage: "Print in XML format",
+					},
+					cli.StringFlag{
+						Name:  "filter",
+						Usage: "Filter by values",
+					},
+					cli.BoolFlag{
+						Name:  "first",
+						Usage: "Return only first record",
+					},
+					cli.BoolFlag{
+						Name:  "last",
+						Usage: "Return only last record",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -159,6 +179,10 @@ func Minecraft() cli.Command {
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
 func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
+	var (
+		result []*kleister.Minecraft
+	)
+
 	records, err := client.MinecraftList()
 
 	if err != nil {
@@ -169,8 +193,78 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
 	}
 
+	if c.IsSet("first") && c.IsSet("last") {
+		return fmt.Errorf("Conflict, you can only use first or last at once!")
+	}
+
+	if c.IsSet("filter") {
+		expression, err := govaluate.NewEvaluableExpression(
+			c.String("filter"),
+		)
+
+		if err != nil {
+			return fmt.Errorf("Failed to parse filter. %s", err)
+		}
+
+		for _, record := range records {
+			params := make(map[string]interface{}, 3)
+			params["Slug"] = record.Slug
+			params["Version"] = record.Version
+			params["Type"] = record.Type
+
+			match, err := expression.Evaluate(
+				params,
+			)
+
+			if err != nil {
+				return fmt.Errorf("Failed to evaluate filter. %s", err)
+			}
+
+			if match.(bool) {
+				result = append(result, record)
+			}
+		}
+	} else {
+		result = records
+	}
+
+	switch strings.ToLower(c.String("sort")) {
+	case "slug":
+		sort.Sort(
+			kleister.MinecraftBySlug(
+				result,
+			),
+		)
+	case "version":
+		sort.Sort(
+			kleister.MinecraftByVersion(
+				result,
+			),
+		)
+	case "type":
+		sort.Sort(
+			kleister.MinecraftByType(
+				result,
+			),
+		)
+	default:
+		return fmt.Errorf("The sort value %s is invalid, can be Slug, Version or Type", c.String("sort"))
+	}
+
+	if c.Bool("first") {
+		result = []*kleister.Minecraft{
+			result[0],
+		}
+	}
+
+	if c.Bool("last") {
+		result = []*kleister.Minecraft{
+			result[len(result)-1],
+		}
+	}
+
 	if c.Bool("xml") {
-		res, err := xml.MarshalIndent(records, "", "  ")
+		res, err := xml.MarshalIndent(result, "", "  ")
 
 		if err != nil {
 			return err
@@ -181,7 +275,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.Bool("json") {
-		res, err := json.MarshalIndent(records, "", "  ")
+		res, err := json.MarshalIndent(result, "", "  ")
 
 		if err != nil {
 			return err
@@ -191,7 +285,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 		return nil
 	}
 
-	if len(records) == 0 {
+	if len(result) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
@@ -208,7 +302,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	for _, record := range records {
+	for _, record := range result {
 		err := tmpl.Execute(os.Stdout, record)
 
 		if err != nil {
