@@ -3,6 +3,8 @@ vendors:
   rev: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
 - path: github.com/golang/protobuf
   rev: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
+- path: github.com/hashicorp/go-version
+  rev: deeb027c13a95d56c7585df3fe29207208c6706e
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/pmezard/go-difflib
@@ -14,7 +16,7 @@ vendors:
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 71a035914f99bb58fe82eac0f1289f10963d876c
+  rev: f4fe4abe3c785295ddf81c7f1823bcd3bad391b6
 - path: golang.org/x/oauth2
   rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
 - path: google.golang.org/appengine
