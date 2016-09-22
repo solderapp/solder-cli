@@ -9,6 +9,7 @@ type Mod struct {
 	ID          int64      `json:"id"`
 	Slug        string     `json:"slug"`
 	Name        string     `json:"name"`
+	Side        string     `json:"side"`
 	Description string     `json:"description"`
 	Author      string     `json:"author"`
 	Website     string     `json:"website"`

@@ -23,7 +23,8 @@ Name: {{ .Name }}
 // tmplModShow represents a mod within details view.
 var tmplModShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
-Name: {{ .Name }}{{with .Description}}
+Name: {{ .Name }}{{with .Side}}
+Side: {{ . }}{{end}}{{with .Description}}
 Description: {{ . }}{{end}}{{with .Author}}
 Author: {{ . }}{{end}}{{with .Website}}
 Website: {{ . }}{{end}}{{with .Donate}}
@@ -143,6 +144,11 @@ func Mod() cli.Command {
 						Usage: "Provide a name",
 					},
 					cli.StringFlag{
+						Name:  "side",
+						Value: "both",
+						Usage: "Provide a side",
+					},
+					cli.StringFlag{
 						Name:  "description",
 						Value: "",
 						Usage: "Provide a description",
@@ -181,6 +187,11 @@ func Mod() cli.Command {
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
+					},
+					cli.StringFlag{
+						Name:  "side",
+						Value: "both",
+						Usage: "Provide a side",
 					},
 					cli.StringFlag{
 						Name:  "description",
@@ -576,6 +587,11 @@ func ModUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		changed = true
 	}
 
+	if val := c.String("side"); c.IsSet("side") && val != record.Side {
+		record.Side = val
+		changed = true
+	}
+
 	if val := c.String("description"); c.IsSet("description") && val != record.Description {
 		record.Description = val
 		changed = true
@@ -625,6 +641,10 @@ func ModCreate(c *cli.Context, client kleister.ClientAPI) error {
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
+	}
+
+	if val := c.String("side"); c.IsSet("side") && val != "" {
+		record.Side = val
 	}
 
 	if val := c.String("description"); c.IsSet("description") && val != "" {
