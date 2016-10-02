@@ -22,7 +22,11 @@ var globalFuncMap = template.FuncMap{
 		res := []string{}
 
 		for _, row := range s {
-			res = append(res, row.String())
+			if row.Pack != nil {
+				res = append(res, fmt.Sprintf("%s@%s", row.Pack.Slug, row.String()))
+			} else {
+				res = append(res, row.String())
+			}
 		}
 
 		return strings.Join(res, ", ")
@@ -76,7 +80,11 @@ var globalFuncMap = template.FuncMap{
 		res := []string{}
 
 		for _, row := range s {
-			res = append(res, row.String())
+			if row.Mod != nil {
+				res = append(res, fmt.Sprintf("%s@%s", row.Mod.Slug, row.String()))
+			} else {
+				res = append(res, row.String())
+			}
 		}
 
 		return strings.Join(res, ", ")
