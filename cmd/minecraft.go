@@ -190,11 +190,11 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.IsSet("first") && c.IsSet("last") {
-		return fmt.Errorf("Conflict, you can only use first or last at once!")
+		return fmt.Errorf("Conflict, you can only use first or last at once")
 	}
 
 	if c.IsSet("filter") {
@@ -338,7 +338,7 @@ func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
