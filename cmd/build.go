@@ -378,7 +378,7 @@ func BuildList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -445,7 +445,7 @@ func BuildShow(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -584,7 +584,7 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("published") && c.IsSet("hidden") {
-		return fmt.Errorf("Conflict, you can mark it only published OR hidden!")
+		return fmt.Errorf("Conflict, you can mark it only published OR hidden")
 	}
 
 	if c.IsSet("published") {
@@ -598,7 +598,7 @@ func BuildUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("private") && c.IsSet("public") {
-		return fmt.Errorf("Conflict, you can mark it only private OR public!")
+		return fmt.Errorf("Conflict, you can mark it only private OR public")
 	}
 
 	if c.IsSet("private") {
@@ -634,7 +634,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	record := &kleister.Build{}
 
 	if c.String("pack") == "" {
-		return fmt.Errorf("You must provide a pack ID or slug.")
+		return fmt.Errorf("You must provide a pack ID or slug")
 	}
 
 	if c.IsSet("pack") {
@@ -706,7 +706,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name.")
+		return fmt.Errorf("You must provide a name")
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
@@ -722,7 +722,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("published") && c.IsSet("hidden") {
-		return fmt.Errorf("Conflict, you can mark it only published OR hidden!")
+		return fmt.Errorf("Conflict, you can mark it only published OR hidden")
 	}
 
 	if c.IsSet("published") {
@@ -734,7 +734,7 @@ func BuildCreate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("private") && c.IsSet("public") {
-		return fmt.Errorf("Conflict, you can mark it only private OR public!")
+		return fmt.Errorf("Conflict, you can mark it only private OR public")
 	}
 
 	if c.IsSet("private") {
@@ -772,7 +772,7 @@ func BuildVersionList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {

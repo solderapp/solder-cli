@@ -320,7 +320,7 @@ func VersionList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -387,7 +387,7 @@ func VersionShow(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -473,7 +473,7 @@ func VersionUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode file.")
+			return fmt.Errorf("Failed to download and encode file")
 		}
 
 		changed = true
@@ -485,7 +485,7 @@ func VersionUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode file.")
+			return fmt.Errorf("Failed to encode file")
 		}
 
 		changed = true
@@ -514,7 +514,7 @@ func VersionCreate(c *cli.Context, client kleister.ClientAPI) error {
 	record := &kleister.Version{}
 
 	if c.String("mod") == "" {
-		return fmt.Errorf("You must provide a mod ID or slug.")
+		return fmt.Errorf("You must provide a mod ID or slug")
 	}
 
 	if c.IsSet("mod") {
@@ -542,7 +542,7 @@ func VersionCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name.")
+		return fmt.Errorf("You must provide a name")
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
@@ -555,7 +555,7 @@ func VersionCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode file.")
+			return fmt.Errorf("Failed to download and encode file")
 		}
 	}
 
@@ -565,7 +565,7 @@ func VersionCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode file.")
+			return fmt.Errorf("Failed to encode file")
 		}
 	}
 
@@ -596,7 +596,7 @@ func VersionBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
