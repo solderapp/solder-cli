@@ -1,9 +1,15 @@
 DIST := dist
-EXECUTABLE := kleister-cli
 IMPORT := github.com/kleister/kleister-cli
 
+ifeq ($(OS), Windows_NT)
+	EXECUTABLE := kleister-cli.exe
+else
+	EXECUTABLE := kleister-cli
+endif
+
 SHA := $(shell git rev-parse --short HEAD)
-LDFLAGS += -s -w -extldflags "-static" -X "github.com/kleister/kleister-cli/config.VersionDev=$(SHA)"
+DATE := $(shell date -u '+%Y%m%d')
+LDFLAGS += -s -w -extldflags "-static" -X "$(IMPORT)/config.VersionDev=$(SHA)" -X "$(IMPORT)/config.VersionDate=$(DATE)"
 
 TARGETS ?= linux/*,darwin/*,windows/*
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
