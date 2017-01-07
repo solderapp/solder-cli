@@ -1,25 +1,25 @@
 vendors:
 - path: github.com/Knetic/govaluate
-  rev: 2a90cfd3636a56e8ee0d720374e630e07e6be1df
+  rev: 3cc7c7de92e74a87c657e957e003600723db32f6
 - path: github.com/golang/protobuf
-  rev: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
+  rev: 8ee79997227bf9b34611aee7946ae64735e6fd93
 - path: github.com/hashicorp/go-version
-  rev: deeb027c13a95d56c7585df3fe29207208c6706e
+  rev: e96d3840402619007766590ecea8dd7af1292276
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/joho/godotenv
-  rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
+  rev: 726cc8b906e3d31c70a9671c90a13716a8d3f50d
 - path: github.com/kleister/kleister-go
-  rev: 88436178b102dc1472cdf59ae82f893c38b9ee62
+  rev: 60b3efc2d6a335239903bc0c8f690c1e20b812d5
 - path: github.com/urfave/cli
-  rev: d53eb991652b1d438abdd34ce4bfa3ef1539108e
+  rev: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 - path: github.com/vincent-petithory/dataurl
   rev: 9a301d65acbb728fcc3ace14f45f511a4cfeea9c
 - path: golang.org/x/net
-  rev: 6d3beaea10370160dea67f5c9327ed791afd5389
+  rev: ae05321a78c1401cec22ba7bc203b597ea372496
 - path: golang.org/x/oauth2
-  rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
+  rev: 314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd
 - path: google.golang.org/appengine
-  rev: 45688856612892bdabe348fff413e5075ac72f46
+  rev: 8758a385849434ba5eac8aeedcf5192c5a0f5f10
 - path: gopkg.in/guregu/null.v3
   rev: 41961cea0328defc5f95c1c473f89ebf0d1813f6

@@ -40,6 +40,11 @@ type evaluationStage struct {
 	typeErrorFormat string
 }
 
+var (
+	_true  = interface{}(true)
+	_false = interface{}(false)
+)
+
 func (this *evaluationStage) swapWith(other *evaluationStage) {
 
 	temp := *other
@@ -55,6 +60,10 @@ func (this *evaluationStage) setToNonStage(other evaluationStage) {
 	this.rightTypeCheck = other.rightTypeCheck
 	this.typeCheck = other.typeCheck
 	this.typeErrorFormat = other.typeErrorFormat
+}
+
+func noopStageRight(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	return right, nil
 }
 
 func addStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
@@ -82,34 +91,46 @@ func modulusStage(left interface{}, right interface{}, parameters Parameters) (i
 	return math.Mod(left.(float64), right.(float64)), nil
 }
 func gteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(float64) >= right.(float64), nil
+	if isString(left) && isString(right) {
+		return boolIface(left.(string) >= right.(string)), nil
+	}
+	return boolIface(left.(float64) >= right.(float64)), nil
 }
 func gtStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(float64) > right.(float64), nil
+	if isString(left) && isString(right) {
+		return boolIface(left.(string) > right.(string)), nil
+	}
+	return boolIface(left.(float64) > right.(float64)), nil
 }
 func lteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(float64) <= right.(float64), nil
+	if isString(left) && isString(right) {
+		return boolIface(left.(string) <= right.(string)), nil
+	}
+	return boolIface(left.(float64) <= right.(float64)), nil
 }
 func ltStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(float64) < right.(float64), nil
+	if isString(left) && isString(right) {
+		return boolIface(left.(string) < right.(string)), nil
+	}
+	return boolIface(left.(float64) < right.(float64)), nil
 }
 func equalStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left == right, nil
+	return boolIface(left == right), nil
 }
 func notEqualStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left != right, nil
+	return boolIface(left != right), nil
 }
 func andStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(bool) && right.(bool), nil
+	return boolIface(left.(bool) && right.(bool)), nil
 }
 func orStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return left.(bool) || right.(bool), nil
+	return boolIface(left.(bool) || right.(bool)), nil
 }
 func negateStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return -right.(float64), nil
 }
 func invertStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	return !right.(bool), nil
+	return boolIface(!right.(bool)), nil
 }
 func bitwiseNotStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(^int64(right.(float64))), nil
@@ -284,10 +305,36 @@ func additionTypeCheck(left interface{}, right interface{}) bool {
 	return true
 }
 
+/*
+	Comparison can either be between numbers, or lexicographic between two strings,
+	but never between the two.
+*/
+func comparatorTypeCheck(left interface{}, right interface{}) bool {
+
+	if isFloat64(left) && isFloat64(right) {
+		return true
+	}
+	if isString(left) && isString(right) {
+		return true
+	}
+	return false
+}
+
 func isArray(value interface{}) bool {
 	switch value.(type) {
 	case []interface{}:
 		return true
 	}
 	return false
+}
+
+/*
+	Converting a boolean to an interface{} requires an allocation.
+	We can use interned bools to avoid this cost.
+*/
+func boolIface(b bool) interface{} {
+	if b {
+		return _true
+	}
+	return _false
 }
