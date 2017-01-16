@@ -410,14 +410,14 @@ func NewClient(uri string) ClientAPI {
 func NewClientToken(uri, token string) ClientAPI {
 	config := oauth2.Config{}
 
-	auther := config.Client(
+	client := config.Client(
 		oauth2.NoContext,
 		&oauth2.Token{
 			AccessToken: token,
 		},
 	)
 
-	if trans, ok := auther.Transport.(*oauth2.Transport); ok {
+	if trans, ok := client.Transport.(*oauth2.Transport); ok {
 		trans.Base = &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			TLSClientConfig: &tls.Config{
@@ -427,7 +427,7 @@ func NewClientToken(uri, token string) ClientAPI {
 	}
 
 	return &DefaultClient{
-		client: auther,
+		client: client,
 		base:   uri,
 		token:  token,
 	}
@@ -466,11 +466,7 @@ func (c *DefaultClient) IsAuthenticated() bool {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusUnauthorized {
-		return false
-	}
-
-	return true
+	return resp.StatusCode == http.StatusUnauthorized
 }
 
 // SetClient sets the default http client. This should
@@ -523,7 +519,7 @@ func (c *DefaultClient) ProfilePatch(in *Profile) (*Profile, error) {
 	out := &Profile{}
 
 	uri := fmt.Sprintf(pathProfile, c.base)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -563,7 +559,7 @@ func (c *DefaultClient) KeyPatch(in *Key) (*Key, error) {
 	out := &Key{}
 
 	uri := fmt.Sprintf(pathKey, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -609,7 +605,7 @@ func (c *DefaultClient) ForgeGet(id string) (*Forge, error) {
 // ForgeRefresh refreshs the available Forge versions.
 func (c *DefaultClient) ForgeRefresh() error {
 	uri := fmt.Sprintf(pathForge, c.base)
-	err := c.patch(uri, nil, nil)
+	err := c.put(uri, nil, nil)
 
 	return err
 }
@@ -673,7 +669,7 @@ func (c *DefaultClient) MinecraftGet(id string) (*Minecraft, error) {
 // MinecraftRefresh refreshs the available Minecraft versions.
 func (c *DefaultClient) MinecraftRefresh() error {
 	uri := fmt.Sprintf(pathMinecraft, c.base)
-	err := c.patch(uri, nil, nil)
+	err := c.put(uri, nil, nil)
 
 	return err
 }
@@ -739,7 +735,7 @@ func (c *DefaultClient) PackPatch(in *Pack) (*Pack, error) {
 	out := &Pack{}
 
 	uri := fmt.Sprintf(pathPack, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -799,7 +795,7 @@ func (c *DefaultClient) PackUserAppend(opts PackUserParams) error {
 // PackUserPerm updates perms for pack team.
 func (c *DefaultClient) PackUserPerm(opts PackUserParams) error {
 	uri := fmt.Sprintf(pathPackUser, c.base, opts.Pack)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -833,7 +829,7 @@ func (c *DefaultClient) PackTeamAppend(opts PackTeamParams) error {
 // PackTeamPerm updates perms for pack team.
 func (c *DefaultClient) PackTeamPerm(opts PackTeamParams) error {
 	uri := fmt.Sprintf(pathPackTeam, c.base, opts.Pack)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -881,7 +877,7 @@ func (c *DefaultClient) BuildPatch(pack string, in *Build) (*Build, error) {
 	out := &Build{}
 
 	uri := fmt.Sprintf(pathBuild, c.base, pack, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -955,7 +951,7 @@ func (c *DefaultClient) ModPatch(in *Mod) (*Mod, error) {
 	out := &Mod{}
 
 	uri := fmt.Sprintf(pathMod, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -989,7 +985,7 @@ func (c *DefaultClient) ModUserAppend(opts ModUserParams) error {
 // ModUserPerm updates perms for mod user.
 func (c *DefaultClient) ModUserPerm(opts ModUserParams) error {
 	uri := fmt.Sprintf(pathModUser, c.base, opts.Mod)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1023,7 +1019,7 @@ func (c *DefaultClient) ModTeamAppend(opts ModTeamParams) error {
 // ModTeamPerm updates perms for mod team.
 func (c *DefaultClient) ModTeamPerm(opts ModTeamParams) error {
 	uri := fmt.Sprintf(pathModTeam, c.base, opts.Mod)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1071,7 +1067,7 @@ func (c *DefaultClient) VersionPatch(mod string, in *Version) (*Version, error) 
 	out := &Version{}
 
 	uri := fmt.Sprintf(pathVersion, c.base, mod, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -1145,7 +1141,7 @@ func (c *DefaultClient) ClientPatch(in *Client) (*Client, error) {
 	out := &Client{}
 
 	uri := fmt.Sprintf(pathClient, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -1219,7 +1215,7 @@ func (c *DefaultClient) UserPatch(in *User) (*User, error) {
 	out := &User{}
 
 	uri := fmt.Sprintf(pathUser, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -1253,7 +1249,7 @@ func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 // UserTeamPerm updates perms for user team.
 func (c *DefaultClient) UserTeamPerm(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1287,7 +1283,7 @@ func (c *DefaultClient) UserModAppend(opts UserModParams) error {
 // UserModPerm updates perms for user mod.
 func (c *DefaultClient) UserModPerm(opts UserModParams) error {
 	uri := fmt.Sprintf(pathUserMod, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1321,7 +1317,7 @@ func (c *DefaultClient) UserPackAppend(opts UserPackParams) error {
 // UserPackPerm updates perms for user pack.
 func (c *DefaultClient) UserPackPerm(opts UserPackParams) error {
 	uri := fmt.Sprintf(pathUserPack, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1369,7 +1365,7 @@ func (c *DefaultClient) TeamPatch(in *Team) (*Team, error) {
 	out := &Team{}
 
 	uri := fmt.Sprintf(pathTeam, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -1403,7 +1399,7 @@ func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 // TeamUserPerm updates perms for team user.
 func (c *DefaultClient) TeamUserPerm(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1437,7 +1433,7 @@ func (c *DefaultClient) TeamModAppend(opts TeamModParams) error {
 // TeamModPerm updates perms for team mod.
 func (c *DefaultClient) TeamModPerm(opts TeamModParams) error {
 	uri := fmt.Sprintf(pathTeamMod, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -1471,7 +1467,7 @@ func (c *DefaultClient) TeamPackAppend(opts TeamPackParams) error {
 // TeamPackPerm updates perms for team pack.
 func (c *DefaultClient) TeamPackPerm(opts TeamPackParams) error {
 	uri := fmt.Sprintf(pathTeamPack, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
