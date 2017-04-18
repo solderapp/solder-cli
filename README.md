@@ -1,7 +1,6 @@
 # Kleister: CLI client
 
 [![Build Status](http://github.dronehippie.de/api/badges/kleister/kleister-cli/status.svg)](http://github.dronehippie.de/kleister/kleister-cli)
-[![Coverage Status](http://coverage.dronehippie.de/badges/kleister/kleister-cli/coverage.svg)](http://coverage.dronehippie.de/kleister/kleister-cli)
 [![Go Doc](https://godoc.org/github.com/kleister/kleister-cli?status.svg)](http://godoc.org/github.com/kleister/kleister-cli)
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-cli)](http://goreportcard.com/report/github.com/kleister/kleister-cli)
 [![](https://images.microbadger.com/badges/image/kleister/kleister-cli.svg)](http://microbadger.com/images/kleister/kleister-cli "Get your own image badge on microbadger.com")
@@ -49,7 +48,7 @@ go get -d github.com/kleister/kleister-cli
 cd $GOPATH/src/github.com/kleister/kleister-cli
 make clean build
 
-bin/kleister-cli -h
+./kleister-cli -h
 ```
 
 
