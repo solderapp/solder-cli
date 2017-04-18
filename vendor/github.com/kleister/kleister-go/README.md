@@ -1,7 +1,6 @@
 # Kleister: SDK for Golang
 
 [![Build Status](http://github.dronehippie.de/api/badges/kleister/kleister-go/status.svg)](http://github.dronehippie.de/kleister/kleister-go)
-[![Coverage Status](http://coverage.dronehippie.de/badges/kleister/kleister-go/coverage.svg)](http://coverage.dronehippie.de/kleister/kleister-go)
 [![Go Doc](https://godoc.org/github.com/kleister/kleister-go?status.svg)](http://godoc.org/github.com/kleister/kleister-go)
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-go)](http://goreportcard.com/report/github.com/kleister/kleister-go)
 [![Join the chat at https://gitter.im/kleister/kleister](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kleister/kleister)
