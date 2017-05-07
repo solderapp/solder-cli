@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "uJOp8topHA4MKdLAf2D4X9Nwwyo=",
+			"path": "github.com/Knetic/govaluate",
+			"revision": "d216395917cc49052c7c7094cf57f09657ca08a8",
+			"revisionTime": "2017-05-01T02:28:28Z"
+		},
+		{
 			"checksumSHA1": "kBeNcaKk56FguvPSUCEaH6AxpRc=",
 			"origin": "github.com/kleister/kleister-go/vendor/github.com/golang/protobuf/proto",
 			"path": "github.com/golang/protobuf/proto",
