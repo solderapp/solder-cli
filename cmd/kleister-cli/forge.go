@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"encoding/json"
@@ -14,43 +14,43 @@ import (
 	"github.com/urfave/cli"
 )
 
-// minecraftFuncMap provides template helper functions.
-var minecraftFuncMap = template.FuncMap{}
+// forgeFuncMap provides template helper functions.
+var forgeFuncMap = template.FuncMap{}
 
-// tmplMinecraftList represents a row within forge listing.
-var tmplMinecraftList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+// tmplForgeList represents a row within forge listing.
+var tmplForgeList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Version: {{ .Version }}
-Type: {{ .Type }}
+Minecraft: {{ .Minecraft }}
 `
 
-// tmplMinecraftBuildList represents a row within minecraft build listing.
-var tmplMinecraftBuildList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
+// tmplForgeBuildList represents a row within forge build listing.
+var tmplForgeBuildList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
 Pack: {{with .Pack}}{{ . }}{{else}}n/a{{end}}
 `
 
-// Minecraft provides the sub-command for the Minecraft API.
-func Minecraft() cli.Command {
+// Forge provides the sub-command for the Forge API.
+func Forge() cli.Command {
 	return cli.Command{
-		Name:  "minecraft",
-		Usage: "Minecraft related sub-commands",
+		Name:  "forge",
+		Usage: "Forge related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all Minecraft versions",
+				Usage:     "List all Forge versions",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "sort",
-						Value: "slug",
+						Value: "Slug",
 						Usage: "Sort by this field",
 					},
 					cli.StringFlag{
 						Name:  "format",
-						Value: tmplMinecraftList,
+						Value: tmplForgeList,
 						Usage: "Custom output format",
 					},
 					cli.BoolFlag{
@@ -75,16 +75,16 @@ func Minecraft() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, MinecraftList)
+					return Handle(c, ForgeList)
 				},
 			},
 			{
 				Name:      "refresh",
 				Aliases:   []string{"ref"},
-				Usage:     "Refresh Minecraft versions",
+				Usage:     "Refresh Forge versions",
 				ArgsUsage: " ",
 				Action: func(c *cli.Context) error {
-					return Handle(c, MinecraftRefresh)
+					return Handle(c, ForgeRefresh)
 				},
 			},
 			{
@@ -100,11 +100,11 @@ func Minecraft() cli.Command {
 							cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Minecraft ID or slug to list builds",
+								Usage: "Forge ID or slug to list builds",
 							},
 							cli.StringFlag{
 								Name:  "format",
-								Value: tmplMinecraftBuildList,
+								Value: tmplForgeBuildList,
 								Usage: "Custom output format",
 							},
 							cli.BoolFlag{
@@ -117,18 +117,18 @@ func Minecraft() cli.Command {
 							},
 						},
 						Action: func(c *cli.Context) error {
-							return Handle(c, MinecraftBuildList)
+							return Handle(c, ForgeBuildList)
 						},
 					},
 					{
 						Name:      "append",
-						Usage:     "Append a build to Minecraft",
+						Usage:     "Append a build to Forge",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Minecraft ID or slug to append to",
+								Usage: "Forge ID or slug to append to",
 							},
 							cli.StringFlag{
 								Name:  "pack, p",
@@ -142,19 +142,19 @@ func Minecraft() cli.Command {
 							},
 						},
 						Action: func(c *cli.Context) error {
-							return Handle(c, MinecraftBuildAppend)
+							return Handle(c, ForgeBuildAppend)
 						},
 					},
 					{
 						Name:      "remove",
 						Aliases:   []string{"rm"},
-						Usage:     "Remove a build from Minecraft",
+						Usage:     "Remove a build from Forge",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Minecraft ID or slug to remove from",
+								Usage: "Forge ID or slug to remove from",
 							},
 							cli.StringFlag{
 								Name:  "pack, p",
@@ -168,7 +168,7 @@ func Minecraft() cli.Command {
 							},
 						},
 						Action: func(c *cli.Context) error {
-							return Handle(c, MinecraftBuildRemove)
+							return Handle(c, ForgeBuildRemove)
 						},
 					},
 				},
@@ -177,13 +177,13 @@ func Minecraft() cli.Command {
 	}
 }
 
-// MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
+// ForgeList provides the sub-command to list all Forge versions.
+func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 	var (
-		result []*kleister.Minecraft
+		result []*kleister.Forge
 	)
 
-	records, err := client.MinecraftList()
+	records, err := client.ForgeList()
 
 	if err != nil {
 		return err
@@ -210,7 +210,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 			params := make(map[string]interface{}, 3)
 			params["Slug"] = record.Slug
 			params["Version"] = record.Version
-			params["Type"] = record.Type
+			params["Minecraft"] = record.Minecraft
 
 			match, err := expression.Evaluate(
 				params,
@@ -231,34 +231,34 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	switch strings.ToLower(c.String("sort")) {
 	case "slug":
 		sort.Sort(
-			kleister.MinecraftBySlug(
+			kleister.ForgeBySlug(
 				result,
 			),
 		)
 	case "version":
 		sort.Sort(
-			kleister.MinecraftByVersion(
+			kleister.ForgeByVersion(
 				result,
 			),
 		)
-	case "type":
+	case "minecraft":
 		sort.Sort(
-			kleister.MinecraftByType(
+			kleister.ForgeByMinecraft(
 				result,
 			),
 		)
 	default:
-		return fmt.Errorf("The sort value %s is invalid, can be Slug, Version or Type", c.String("sort"))
+		return fmt.Errorf("The sort value %s is invalid, can be Slug, Version or Minecraft", c.String("sort"))
 	}
 
 	if c.Bool("first") {
-		result = []*kleister.Minecraft{
+		result = []*kleister.Forge{
 			result[0],
 		}
 	}
 
 	if c.Bool("last") {
-		result = []*kleister.Minecraft{
+		result = []*kleister.Forge{
 			result[len(result)-1],
 		}
 	}
@@ -293,7 +293,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		minecraftFuncMap,
+		forgeFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -313,9 +313,9 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	return nil
 }
 
-// MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
-	err := client.MinecraftRefresh()
+// ForgeRefresh provides the sub-command to refresh the Forge versions.
+func ForgeRefresh(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.ForgeRefresh()
 
 	if err != nil {
 		return err
@@ -325,11 +325,11 @@ func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
 	return nil
 }
 
-// MinecraftBuildList provides the sub-command to list builds of the Minecraft.
-func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
-	records, err := client.MinecraftBuildList(
-		kleister.MinecraftBuildParams{
-			Minecraft: GetIdentifierParam(c),
+// ForgeBuildList provides the sub-command to list builds of the Forge.
+func ForgeBuildList(c *cli.Context, client kleister.ClientAPI) error {
+	records, err := client.ForgeBuildList(
+		kleister.ForgeBuildParams{
+			Forge: GetIdentifierParam(c),
 		},
 	)
 
@@ -371,7 +371,7 @@ func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		minecraftFuncMap,
+		forgeFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -391,13 +391,13 @@ func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	return nil
 }
 
-// MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
-func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
-	err := client.MinecraftBuildAppend(
-		kleister.MinecraftBuildParams{
-			Minecraft: GetIdentifierParam(c),
-			Pack:      GetPackParam(c),
-			Build:     GetBuildParam(c),
+// ForgeBuildAppend provides the sub-command to append a build to the Forge.
+func ForgeBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.ForgeBuildAppend(
+		kleister.ForgeBuildParams{
+			Forge: GetIdentifierParam(c),
+			Pack:  GetPackParam(c),
+			Build: GetBuildParam(c),
 		},
 	)
 
@@ -405,17 +405,17 @@ func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to Minecraft\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to Forge\n")
 	return nil
 }
 
-// MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
-func MinecraftBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
-	err := client.MinecraftBuildDelete(
-		kleister.MinecraftBuildParams{
-			Minecraft: GetIdentifierParam(c),
-			Pack:      GetPackParam(c),
-			Build:     GetBuildParam(c),
+// ForgeBuildRemove provides the sub-command to remove a build from the Forge.
+func ForgeBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
+	err := client.ForgeBuildDelete(
+		kleister.ForgeBuildParams{
+			Forge: GetIdentifierParam(c),
+			Pack:  GetPackParam(c),
+			Build: GetBuildParam(c),
 		},
 	)
 
@@ -423,6 +423,6 @@ func MinecraftBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from Minecraft\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from Forge\n")
 	return nil
 }

@@ -6,7 +6,6 @@ import (
 	"runtime"
 
 	"github.com/joho/godotenv"
-	"github.com/kleister/kleister-cli/cmd"
 	"github.com/kleister/kleister-cli/config"
 	"github.com/urfave/cli"
 )
@@ -40,17 +39,17 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		cmd.Pack(),
-		cmd.Build(),
-		cmd.Mod(),
-		cmd.Version(),
-		cmd.Minecraft(),
-		cmd.Forge(),
-		cmd.User(),
-		cmd.Team(),
-		cmd.Client(),
-		cmd.Profile(),
-		cmd.Key(),
+		Pack(),
+		Build(),
+		Mod(),
+		Version(),
+		Minecraft(),
+		Forge(),
+		User(),
+		Team(),
+		Client(),
+		Profile(),
+		Key(),
 	}
 
 	cli.HelpFlag = cli.BoolFlag{
