@@ -11,7 +11,7 @@ import (
 
 	"github.com/Knetic/govaluate"
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // minecraftFuncMap provides template helper functions.
@@ -32,45 +32,50 @@ Pack: {{with .Pack}}{{ . }}{{else}}n/a{{end}}
 `
 
 // Minecraft provides the sub-command for the Minecraft API.
-func Minecraft() cli.Command {
-	return cli.Command{
+func Minecraft() *cli.Command {
+	return &cli.Command{
 		Name:  "minecraft",
 		Usage: "Minecraft related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all Minecraft versions",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "sort",
 						Value: "slug",
 						Usage: "Sort by this field",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplMinecraftList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "filter",
+						Value: "",
 						Usage: "Filter by values",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "first",
+						Value: false,
 						Usage: "Return only first record",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "last",
+						Value: false,
 						Usage: "Return only last record",
 					},
 				},
@@ -90,29 +95,31 @@ func Minecraft() cli.Command {
 			{
 				Name:  "build",
 				Usage: "Build assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned builds",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Minecraft ID or slug to list builds",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplMinecraftBuildList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -125,17 +132,17 @@ func Minecraft() cli.Command {
 						Usage:     "Append a build to Minecraft",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Minecraft ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "Pack ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "build, b",
 								Value: "",
 								Usage: "Build ID or slug to append",
@@ -151,17 +158,17 @@ func Minecraft() cli.Command {
 						Usage:     "Remove a build from Minecraft",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Minecraft ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "Pack ID or slug to remove",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "build, b",
 								Value: "",
 								Usage: "Build ID or slug to remove",

@@ -10,8 +10,8 @@ import (
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // PackFuncMap provides pack template helper functions.
@@ -63,28 +63,30 @@ Permission: {{ .Perm }}
 `
 
 // Pack provides the sub-command for the pack API.
-func Pack() cli.Command {
-	return cli.Command{
+func Pack() *cli.Command {
+	return &cli.Command{
 		Name:  "pack",
 		Usage: "Pack related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all packs",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplPackList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -97,22 +99,24 @@ func Pack() cli.Command {
 				Usage:     "Display a pack",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplPackShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -126,7 +130,7 @@ func Pack() cli.Command {
 				Usage:     "Delete a pack",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to delete",
@@ -141,80 +145,84 @@ func Pack() cli.Command {
 				Usage:     "Update a pack",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Pack ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "website",
 						Value: "",
 						Usage: "Provide a website",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "recommended",
 						Value: "",
 						Usage: "Recommended build ID or slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "latest",
 						Value: "",
 						Usage: "Latest build ID or slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "icon-url",
 						Value: "",
 						Usage: "Provide an icon URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "icon-path",
 						Value: "",
 						Usage: "Provide an icon path",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "logo-url",
 						Value: "",
 						Usage: "Provide a logo URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "logo-path",
 						Value: "",
 						Usage: "Provide a logo path",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "bg-url",
 						Value: "",
 						Usage: "Provide a background URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "bg-path",
 						Value: "",
 						Usage: "Provide a background path",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "published",
+						Value: false,
 						Usage: "Mark pack published",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "hidden",
+						Value: false,
 						Usage: "Mark pack hidden",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "private",
+						Value: false,
 						Usage: "Mark pack private",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "public",
+						Value: false,
 						Usage: "Mark pack public",
 					},
 				},
@@ -227,65 +235,69 @@ func Pack() cli.Command {
 				Usage:     "Create a pack",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "website",
 						Value: "",
 						Usage: "Provide a website",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "icon-url",
 						Value: "",
 						Usage: "Provide an icon URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "icon-path",
 						Value: "",
 						Usage: "Provide an icon path",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "logo-url",
 						Value: "",
 						Usage: "Provide a logo URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "logo-path",
 						Value: "",
 						Usage: "Provide a logo path",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "bg-url",
 						Value: "",
 						Usage: "Provide a background URL",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "bg-path",
 						Value: "",
 						Usage: "Provide a background path",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "published",
+						Value: false,
 						Usage: "Mark pack published",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "hidden",
+						Value: false,
 						Usage: "Mark pack hidden",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "private",
+						Value: false,
 						Usage: "Mark pack private",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "public",
+						Value: false,
 						Usage: "Mark pack public",
 					},
 				},
@@ -296,29 +308,31 @@ func Pack() cli.Command {
 			{
 				Name:  "client",
 				Usage: "Client assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned clients",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to list clients",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplPackClientList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -331,12 +345,12 @@ func Pack() cli.Command {
 						Usage:     "Append a client to pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "client, c",
 								Value: "",
 								Usage: "Client ID or slug to append",
@@ -352,12 +366,12 @@ func Pack() cli.Command {
 						Usage:     "Remove a client from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "client, c",
 								Value: "",
 								Usage: "Client ID or slug to remove",
@@ -372,29 +386,31 @@ func Pack() cli.Command {
 			{
 				Name:  "user",
 				Usage: "User assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned users",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to list users",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplPackUserList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -407,17 +423,17 @@ func Pack() cli.Command {
 						Usage:     "Append a user to pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the user, can be user, admin or owner",
@@ -432,17 +448,17 @@ func Pack() cli.Command {
 						Usage:     "Update pack user permissions",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the user, can be user, admin or owner",
@@ -458,12 +474,12 @@ func Pack() cli.Command {
 						Usage:     "Remove a user from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to remove",
@@ -478,29 +494,31 @@ func Pack() cli.Command {
 			{
 				Name:  "team",
 				Usage: "Team assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned teams",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to list teams",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplPackTeamList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -513,17 +531,17 @@ func Pack() cli.Command {
 						Usage:     "Append a team to pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the team, can be user, admin or owner",
@@ -538,17 +556,17 @@ func Pack() cli.Command {
 						Usage:     "Update pack team permissions",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the team, can be user, admin or owner",
@@ -564,12 +582,12 @@ func Pack() cli.Command {
 						Usage:     "Remove a team from pack",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Pack ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to remove",
