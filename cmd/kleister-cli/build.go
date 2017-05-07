@@ -10,8 +10,8 @@ import (
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // buildFuncMap provides build template helper functions.
@@ -47,33 +47,35 @@ Mod: {{with .Version.Mod}}{{ . }}{{else}}n/a{{end}}
 `
 
 // Build provides the sub-command for the build API.
-func Build() cli.Command {
-	return cli.Command{
+func Build() *cli.Command {
+	return &cli.Command{
 		Name:  "build",
 		Usage: "Build related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all builds",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplBuildList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -86,27 +88,29 @@ func Build() cli.Command {
 				Usage:     "Display a build",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplBuildShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -120,12 +124,12 @@ func Build() cli.Command {
 				Usage:     "Delete a build",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to delete",
@@ -140,60 +144,64 @@ func Build() cli.Command {
 				Usage:     "Update a build",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Build ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "min-java",
 						Value: "",
 						Usage: "Minimal Java version",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "min-memory",
 						Value: "",
 						Usage: "Minimal memory alloc",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "minecraft",
 						Value: "",
 						Usage: "Provide a Minecraft ID or slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "forge",
 						Value: "",
 						Usage: "Provide a Forge ID or slug",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "published",
+						Value: false,
 						Usage: "Mark build published",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "hidden",
+						Value: false,
 						Usage: "Mark pack hidden",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "private",
+						Value: false,
 						Usage: "Mark build private",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "public",
+						Value: false,
 						Usage: "Mark pack public",
 					},
 				},
@@ -206,55 +214,59 @@ func Build() cli.Command {
 				Usage:     "Create a build",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "pack, p",
 						Value: "",
 						Usage: "ID or slug of the related pack",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "min-java",
 						Value: "",
 						Usage: "Minimal Java version",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "min-memory",
 						Value: "",
 						Usage: "Minimal memory alloc",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "minecraft",
 						Value: "",
 						Usage: "Provide a Minecraft ID or slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "forge",
 						Value: "",
 						Usage: "Provide a Forge ID or slug",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "published",
+						Value: false,
 						Usage: "Mark build published",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "hidden",
+						Value: false,
 						Usage: "Mark pack hidden",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "private",
+						Value: false,
 						Usage: "Mark build private",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "public",
+						Value: false,
 						Usage: "Mark pack public",
 					},
 				},
@@ -265,34 +277,36 @@ func Build() cli.Command {
 			{
 				Name:  "version",
 				Usage: "Version assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned versions",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "ID or slug of the related pack",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Build ID or slug to list versions",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplBuildVersionList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -305,22 +319,22 @@ func Build() cli.Command {
 						Usage:     "Append a version to build",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "ID or slug of the related pack",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Build ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "mod, m",
 								Value: "",
 								Usage: "Mod ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "version, V",
 								Value: "",
 								Usage: "Version ID or slug to append",
@@ -336,22 +350,22 @@ func Build() cli.Command {
 						Usage:     "Remove a version from build",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "ID or slug of the related pack",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Build ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "mod, m",
 								Value: "",
 								Usage: "Mod ID or slug to remove",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "version, V",
 								Value: "",
 								Usage: "Version ID or slug to remove",

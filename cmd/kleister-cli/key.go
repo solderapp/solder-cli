@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // keyFuncMap provides key template helper functions.
@@ -30,28 +30,30 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // Key provides the sub-command for the key API.
-func Key() cli.Command {
-	return cli.Command{
+func Key() *cli.Command {
+	return &cli.Command{
 		Name:  "key",
 		Usage: "Key related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all keys",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplKeyList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -64,22 +66,24 @@ func Key() cli.Command {
 				Usage:     "Display a key",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplKeyShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -93,7 +97,7 @@ func Key() cli.Command {
 				Usage:     "Delete a key",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to delete",
@@ -108,22 +112,22 @@ func Key() cli.Command {
 				Usage:     "Update a key",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Key ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "key",
 						Value: "",
 						Usage: "Provide a key",
@@ -138,17 +142,17 @@ func Key() cli.Command {
 				Usage:     "Create a key",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "key",
 						Value: "",
 						Usage: "Provide a key",

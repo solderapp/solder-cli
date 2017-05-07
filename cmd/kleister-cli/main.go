@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kleister/kleister-cli/config"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 func main() {
@@ -17,53 +17,62 @@ func main() {
 		godotenv.Load(env)
 	}
 
-	app := cli.NewApp()
-	app.Name = "kleister-cli"
-	app.Version = config.Version
-	app.Author = "Thomas Boerger <thomas@webhippie.de>"
-	app.Usage = "Manage mod packs for Minecraft"
+	app := &cli.App{
+		Name:     "kleister-cli",
+		Version:  config.Version,
+		Usage:    "Manage mod packs for Minecraft",
+		Compiled: time.Now(),
 
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "server, s",
-			Value:  "http://localhost:8080",
-			Usage:  "Kleister API server",
-			EnvVar: "KLEISTER_SERVER",
+		Authors: []*cli.Author{
+			{
+				Name:  "Thomas Boerger",
+				Email: "thomas@webhippie.de",
+			},
 		},
-		cli.StringFlag{
-			Name:   "token, t",
-			Value:  "",
-			Usage:  "Kleister API token",
-			EnvVar: "KLEISTER_TOKEN",
+
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "server, s",
+				Value:   "http://localhost:8080",
+				Usage:   "Kleister API server",
+				EnvVars: []string{"KLEISTER_SERVER"},
+			},
+			&cli.StringFlag{
+				Name:    "token, t",
+				Value:   "",
+				Usage:   "Kleister API token",
+				EnvVars: []string{"KLEISTER_TOKEN"},
+			},
+		},
+
+		Commands: []*cli.Command{
+			Pack(),
+			Build(),
+			Mod(),
+			Version(),
+			Minecraft(),
+			Forge(),
+			User(),
+			Team(),
+			Client(),
+			Profile(),
+			Key(),
 		},
 	}
 
-	app.Commands = []cli.Command{
-		Pack(),
-		Build(),
-		Mod(),
-		Version(),
-		Minecraft(),
-		Forge(),
-		User(),
-		Team(),
-		Client(),
-		Profile(),
-		Key(),
+	cli.HelpFlag = &cli.BoolFlag{
+		Name:    "help",
+		Aliases: []string{"h"},
+		Usage:   "Show the help, so what you see now",
 	}
 
-	cli.HelpFlag = cli.BoolFlag{
-		Name:  "help, h",
-		Usage: "Show the help, so what you see now",
-	}
-
-	cli.VersionFlag = cli.BoolFlag{
-		Name:  "version, v",
-		Usage: "Print the current version of that tool",
+	cli.VersionFlag = &cli.BoolFlag{
+		Name:    "version",
+		Aliases: []string{"v"},
+		Usage:   "Print the current version of that tool",
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }

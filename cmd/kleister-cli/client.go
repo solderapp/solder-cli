@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/kleister/kleister-go/kleister"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // clientFuncMap provides client template helper functions.
@@ -37,28 +37,30 @@ Name: {{ .Pack.Name }}
 `
 
 // Client provides the sub-command for the client API.
-func Client() cli.Command {
-	return cli.Command{
+func Client() *cli.Command {
+	return &cli.Command{
 		Name:  "client",
 		Usage: "Client related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all clients",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplClientList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -71,22 +73,24 @@ func Client() cli.Command {
 				Usage:     "Display a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplClientShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -100,7 +104,7 @@ func Client() cli.Command {
 				Usage:     "Delete a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to delete",
@@ -115,22 +119,22 @@ func Client() cli.Command {
 				Usage:     "Update a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Client ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "uuid",
 						Value: "",
 						Usage: "Provide a UUID",
@@ -145,17 +149,17 @@ func Client() cli.Command {
 				Usage:     "Create a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "uuid",
 						Value: "",
 						Usage: "Provide a UUID",
@@ -168,29 +172,31 @@ func Client() cli.Command {
 			{
 				Name:  "pack",
 				Usage: "Pack assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned packs",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Client ID or slug to list packs",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplClientPackList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -203,12 +209,12 @@ func Client() cli.Command {
 						Usage:     "Append a pack to client",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Client ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "Pack ID or slug to append",
@@ -224,12 +230,12 @@ func Client() cli.Command {
 						Usage:     "Remove a pack from client",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Client ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
 								Usage: "Pack ID or slug to remove",
