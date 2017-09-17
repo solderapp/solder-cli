@@ -8,6 +8,12 @@
   version = "v3.0.0"
 
 [[projects]]
+  name = "github.com/coreos/go-semver"
+  packages = ["semver"]
+  revision = "8ab6407b697782a06568d4b7f1db25550ec2e4c6"
+  version = "v0.2.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
@@ -76,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a4c5a740fa4ec12bd46308118425719667793ea678caf15b98236cabd58fa922"
+  inputs-digest = "d22b8a2539fe5a2902f1371f67dcd0ce60df96337bd360ba1c9263c7b3f7cc08"
   solver-name = "gps-cdcl"
   solver-version = 1
