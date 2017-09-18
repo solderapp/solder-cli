@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/kleister/kleister-cli/config"
+	"github.com/kleister/kleister-cli/pkg/version"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "kleister-cli",
-		Version:  config.Version,
+		Version:  version.Version.String(),
 		Usage:    "Manage mod packs for Minecraft",
 		Compiled: time.Now(),
 
