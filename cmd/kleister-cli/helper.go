@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/kleister/kleister-go/kleister"
+	"github.com/kleister/kleister-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,7 +18,7 @@ var globalFuncMap = template.FuncMap{
 	"toLower":  strings.ToLower,
 	"contains": strings.Contains,
 	"replace":  strings.Replace,
-	"buildList": func(s []*kleister.Build) string {
+	"buildList": func(s []*sdk.Build) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -31,7 +31,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"clientList": func(s []*kleister.Client) string {
+	"clientList": func(s []*sdk.Client) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -40,7 +40,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"modList": func(s []*kleister.Mod) string {
+	"modList": func(s []*sdk.Mod) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -49,7 +49,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"packList": func(s []*kleister.Pack) string {
+	"packList": func(s []*sdk.Pack) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -58,7 +58,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"teamList": func(s []*kleister.Team) string {
+	"teamList": func(s []*sdk.Team) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -67,7 +67,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"userList": func(s []*kleister.User) string {
+	"userList": func(s []*sdk.User) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -76,7 +76,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"versionList": func(s []*kleister.Version) string {
+	"versionList": func(s []*sdk.Version) string {
 		res := []string{}
 
 		for _, row := range s {

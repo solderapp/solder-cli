@@ -26,12 +26,28 @@
   version = "3.0.0"
 
 [[constraint]]
-  name = "github.com/joho/godotenv"
-  version = "1.1.0"
+  name = "github.com/coreos/go-semver"
+  version = "0.2.0"
 
 [[constraint]]
   branch = "master"
-  name = "github.com/kleister/kleister-go"
+  name = "github.com/hashicorp/go-version"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/jackspirou/syscerts"
+
+[[constraint]]
+  name = "github.com/joho/godotenv"
+  version = "1.2.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/vincent-petithory/dataurl"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
 
 [[constraint]]
   name = "gopkg.in/guregu/null.v3"

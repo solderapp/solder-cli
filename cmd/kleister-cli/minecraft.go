@@ -10,7 +10,7 @@ import (
 	"text/template"
 
 	"github.com/Knetic/govaluate"
-	"github.com/kleister/kleister-go/kleister"
+	"github.com/kleister/kleister-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -185,9 +185,9 @@ func Minecraft() *cli.Command {
 }
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
+func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
 	var (
-		result []*kleister.Minecraft
+		result []*sdk.Minecraft
 	)
 
 	records, err := client.MinecraftList()
@@ -238,19 +238,19 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	switch strings.ToLower(c.String("sort")) {
 	case "slug":
 		sort.Sort(
-			kleister.MinecraftBySlug(
+			sdk.MinecraftBySlug(
 				result,
 			),
 		)
 	case "version":
 		sort.Sort(
-			kleister.MinecraftByVersion(
+			sdk.MinecraftByVersion(
 				result,
 			),
 		)
 	case "type":
 		sort.Sort(
-			kleister.MinecraftByType(
+			sdk.MinecraftByType(
 				result,
 			),
 		)
@@ -259,13 +259,13 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.Bool("first") {
-		result = []*kleister.Minecraft{
+		result = []*sdk.Minecraft{
 			result[0],
 		}
 	}
 
 	if c.Bool("last") {
-		result = []*kleister.Minecraft{
+		result = []*sdk.Minecraft{
 			result[len(result)-1],
 		}
 	}
@@ -321,7 +321,7 @@ func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
+func MinecraftRefresh(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.MinecraftRefresh()
 
 	if err != nil {
@@ -333,9 +333,9 @@ func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // MinecraftBuildList provides the sub-command to list builds of the Minecraft.
-func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
+func MinecraftBuildList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.MinecraftBuildList(
-		kleister.MinecraftBuildParams{
+		sdk.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 		},
 	)
@@ -399,9 +399,9 @@ func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
-func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
+func MinecraftBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.MinecraftBuildAppend(
-		kleister.MinecraftBuildParams{
+		sdk.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),
@@ -417,9 +417,9 @@ func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
-func MinecraftBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
+func MinecraftBuildRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.MinecraftBuildDelete(
-		kleister.MinecraftBuildParams{
+		sdk.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),

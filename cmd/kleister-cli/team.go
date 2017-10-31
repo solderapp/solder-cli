@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-go/kleister"
+	"github.com/kleister/kleister-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -508,7 +508,7 @@ func Team() *cli.Command {
 }
 
 // TeamList provides the sub-command to list all teams.
-func TeamList(c *cli.Context, client kleister.ClientAPI) error {
+func TeamList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamList()
 
 	if err != nil {
@@ -572,7 +572,7 @@ func TeamList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamShow provides the sub-command to show team details.
-func TeamShow(c *cli.Context, client kleister.ClientAPI) error {
+func TeamShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -625,7 +625,7 @@ func TeamShow(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamDelete provides the sub-command to delete a team.
-func TeamDelete(c *cli.Context, client kleister.ClientAPI) error {
+func TeamDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamDelete(
 		GetIdentifierParam(c),
 	)
@@ -639,7 +639,7 @@ func TeamDelete(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamUpdate provides the sub-command to update a team.
-func TeamUpdate(c *cli.Context, client kleister.ClientAPI) error {
+func TeamUpdate(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -678,8 +678,8 @@ func TeamUpdate(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamCreate provides the sub-command to create a team.
-func TeamCreate(c *cli.Context, client kleister.ClientAPI) error {
-	record := &kleister.Team{}
+func TeamCreate(c *cli.Context, client sdk.ClientAPI) error {
+	record := &sdk.Team{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -704,9 +704,9 @@ func TeamCreate(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamUserList provides the sub-command to list users of the team.
-func TeamUserList(c *cli.Context, client kleister.ClientAPI) error {
+func TeamUserList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamUserList(
-		kleister.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -772,9 +772,9 @@ func TeamUserList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamUserAppend provides the sub-command to append a user to the team.
-func TeamUserAppend(c *cli.Context, client kleister.ClientAPI) error {
+func TeamUserAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserAppend(
-		kleister.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -790,9 +790,9 @@ func TeamUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamUserPerm provides the sub-command to update team user permissions.
-func TeamUserPerm(c *cli.Context, client kleister.ClientAPI) error {
+func TeamUserPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserPerm(
-		kleister.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -808,9 +808,9 @@ func TeamUserPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamUserRemove provides the sub-command to remove a user from the team.
-func TeamUserRemove(c *cli.Context, client kleister.ClientAPI) error {
+func TeamUserRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserDelete(
-		kleister.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -825,9 +825,9 @@ func TeamUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamPackList provides the sub-command to list packs of the team.
-func TeamPackList(c *cli.Context, client kleister.ClientAPI) error {
+func TeamPackList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamPackList(
-		kleister.TeamPackParams{
+		sdk.TeamPackParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -893,9 +893,9 @@ func TeamPackList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamPackAppend provides the sub-command to append a pack to the team.
-func TeamPackAppend(c *cli.Context, client kleister.ClientAPI) error {
+func TeamPackAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamPackAppend(
-		kleister.TeamPackParams{
+		sdk.TeamPackParams{
 			Team: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -911,9 +911,9 @@ func TeamPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamPackPerm provides the sub-command to update team pack permissions.
-func TeamPackPerm(c *cli.Context, client kleister.ClientAPI) error {
+func TeamPackPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamPackPerm(
-		kleister.TeamPackParams{
+		sdk.TeamPackParams{
 			Team: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -929,9 +929,9 @@ func TeamPackPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamPackRemove provides the sub-command to remove a pack from the team.
-func TeamPackRemove(c *cli.Context, client kleister.ClientAPI) error {
+func TeamPackRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamPackDelete(
-		kleister.TeamPackParams{
+		sdk.TeamPackParams{
 			Team: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 		},
@@ -946,9 +946,9 @@ func TeamPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamModList provides the sub-command to list mods of the team.
-func TeamModList(c *cli.Context, client kleister.ClientAPI) error {
+func TeamModList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamModList(
-		kleister.TeamModParams{
+		sdk.TeamModParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -1014,9 +1014,9 @@ func TeamModList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamModAppend provides the sub-command to append a mod to the team.
-func TeamModAppend(c *cli.Context, client kleister.ClientAPI) error {
+func TeamModAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamModAppend(
-		kleister.TeamModParams{
+		sdk.TeamModParams{
 			Team: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -1032,9 +1032,9 @@ func TeamModAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamModPerm provides the sub-command to update team mod permissions.
-func TeamModPerm(c *cli.Context, client kleister.ClientAPI) error {
+func TeamModPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamModPerm(
-		kleister.TeamModParams{
+		sdk.TeamModParams{
 			Team: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -1050,9 +1050,9 @@ func TeamModPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // TeamModRemove provides the sub-command to remove a mod from the team.
-func TeamModRemove(c *cli.Context, client kleister.ClientAPI) error {
+func TeamModRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamModDelete(
-		kleister.TeamModParams{
+		sdk.TeamModParams{
 			Team: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 		},

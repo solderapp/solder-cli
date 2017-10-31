@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-go/kleister"
+	"github.com/kleister/kleister-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -567,7 +567,7 @@ func User() *cli.Command {
 }
 
 // UserList provides the sub-command to list all users.
-func UserList(c *cli.Context, client kleister.ClientAPI) error {
+func UserList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.UserList()
 
 	if err != nil {
@@ -631,7 +631,7 @@ func UserList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserShow provides the sub-command to show user details.
-func UserShow(c *cli.Context, client kleister.ClientAPI) error {
+func UserShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -684,7 +684,7 @@ func UserShow(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserDelete provides the sub-command to delete a user.
-func UserDelete(c *cli.Context, client kleister.ClientAPI) error {
+func UserDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserDelete(
 		GetIdentifierParam(c),
 	)
@@ -698,7 +698,7 @@ func UserDelete(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserUpdate provides the sub-command to update a user.
-func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
+func UserUpdate(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -775,8 +775,8 @@ func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserCreate provides the sub-command to create a user.
-func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
-	record := &kleister.User{}
+func UserCreate(c *cli.Context, client sdk.ClientAPI) error {
+	record := &sdk.User{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -837,9 +837,9 @@ func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserModList provides the sub-command to list mods of the user.
-func UserModList(c *cli.Context, client kleister.ClientAPI) error {
+func UserModList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.UserModList(
-		kleister.UserModParams{
+		sdk.UserModParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -905,9 +905,9 @@ func UserModList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserModAppend provides the sub-command to append a mod to the user.
-func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
+func UserModAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserModAppend(
-		kleister.UserModParams{
+		sdk.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -923,9 +923,9 @@ func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserModPerm provides the sub-command to update user mod permissions.
-func UserModPerm(c *cli.Context, client kleister.ClientAPI) error {
+func UserModPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserModPerm(
-		kleister.UserModParams{
+		sdk.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -941,9 +941,9 @@ func UserModPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserModRemove provides the sub-command to remove a mod from the user.
-func UserModRemove(c *cli.Context, client kleister.ClientAPI) error {
+func UserModRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserModDelete(
-		kleister.UserModParams{
+		sdk.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 		},
@@ -958,9 +958,9 @@ func UserModRemove(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserPackList provides the sub-command to list packs of the user.
-func UserPackList(c *cli.Context, client kleister.ClientAPI) error {
+func UserPackList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.UserPackList(
-		kleister.UserPackParams{
+		sdk.UserPackParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -1026,9 +1026,9 @@ func UserPackList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserPackAppend provides the sub-command to append a pack to the user.
-func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
+func UserPackAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserPackAppend(
-		kleister.UserPackParams{
+		sdk.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -1044,9 +1044,9 @@ func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserPackPerm provides the sub-command to update user pack permissions.
-func UserPackPerm(c *cli.Context, client kleister.ClientAPI) error {
+func UserPackPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserPackPerm(
-		kleister.UserPackParams{
+		sdk.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -1062,9 +1062,9 @@ func UserPackPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserPackRemove provides the sub-command to remove a pack from the user.
-func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
+func UserPackRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserPackDelete(
-		kleister.UserPackParams{
+		sdk.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 		},
@@ -1079,9 +1079,9 @@ func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserTeamList provides the sub-command to list teams of the user.
-func UserTeamList(c *cli.Context, client kleister.ClientAPI) error {
+func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.UserTeamList(
-		kleister.UserTeamParams{
+		sdk.UserTeamParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -1147,9 +1147,9 @@ func UserTeamList(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserTeamAppend provides the sub-command to append a team to the user.
-func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
+func UserTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserTeamAppend(
-		kleister.UserTeamParams{
+		sdk.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1165,9 +1165,9 @@ func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserTeamPerm provides the sub-command to update user team permissions.
-func UserTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
+func UserTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserTeamPerm(
-		kleister.UserTeamParams{
+		sdk.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1183,9 +1183,9 @@ func UserTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
 }
 
 // UserTeamRemove provides the sub-command to remove a team from the user.
-func UserTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
+func UserTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.UserTeamDelete(
-		kleister.UserTeamParams{
+		sdk.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},

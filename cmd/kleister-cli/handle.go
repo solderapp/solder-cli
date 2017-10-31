@@ -5,12 +5,12 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/kleister/kleister-go/kleister"
+	"github.com/kleister/kleister-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
 // HandleFunc is the real handle implementation.
-type HandleFunc func(c *cli.Context, client kleister.ClientAPI) error
+type HandleFunc func(c *cli.Context, client sdk.ClientAPI) error
 
 // Handle wraps the command function handler.
 func Handle(c *cli.Context, fn HandleFunc) error {
@@ -18,7 +18,7 @@ func Handle(c *cli.Context, fn HandleFunc) error {
 		server = c.String("server")
 		token  = c.String("token")
 
-		client kleister.ClientAPI
+		client sdk.ClientAPI
 	)
 
 	if server == "" {
@@ -32,11 +32,11 @@ func Handle(c *cli.Context, fn HandleFunc) error {
 	}
 
 	if token == "" {
-		client = kleister.NewClient(
+		client = sdk.NewClient(
 			server,
 		)
 	} else {
-		client = kleister.NewClientToken(
+		client = sdk.NewClientToken(
 			server,
 			token,
 		)
