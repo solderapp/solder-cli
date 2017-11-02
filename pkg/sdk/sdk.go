@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"net/http"
@@ -398,7 +399,7 @@ type Default struct {
 // NewClient returns a client for the specified URL.
 func NewClient(uri string) ClientAPI {
 	return &Default{
-		client: http.Default,
+		client: http.DefaultClient,
 		base:   uri,
 	}
 }
@@ -409,7 +410,7 @@ func NewClientToken(uri, token string) ClientAPI {
 	config := oauth2.Config{}
 
 	client := config.Client(
-		oauth2.NoContext,
+		context.Background(),
 		&oauth2.Token{
 			AccessToken: token,
 		},
