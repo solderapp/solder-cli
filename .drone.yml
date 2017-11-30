@@ -17,6 +17,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make clean
       - make retool
@@ -29,6 +30,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make vet
 
@@ -39,6 +41,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make megacheck
 
@@ -49,6 +52,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make lint
 
@@ -59,6 +63,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make test
 
@@ -128,24 +133,118 @@ pipeline:
       event: [ push, tag ]
       branch: [ master, release/* ]
 
-  docker-publish:
+  docker-amd64:
     image: plugins/docker:17.05
     pull: true
+    group: docker
     secrets: [ docker_username, docker_password ]
     repo: kleister/kleister-cli
-    tags: [ 'latest' ]
+    tags: [ latest ]
+    build_args:
+      - VERSION=master
     when:
-      event: [ push ]
-      branch: [ master ]
+      event: push
+      branch: master
 
-  docker-publish:
+  # docker-386:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.i386
+  #   tags: [ latest-386 ]
+  #   build_args:
+  #     - VERSION=master
+  #   when:
+  #     event: push
+  #     branch: master
+
+  # docker-arm:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.arm
+  #   tags: [ latest-arm ]
+  #   build_args:
+  #     - VERSION=master
+  #   when:
+  #     event: push
+  #     branch: master
+
+  # docker-arm64:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.arm64
+  #   tags: [ latest-arm64 ]
+  #   build_args:
+  #     - VERSION=master
+  #   when:
+  #     event: push
+  #     branch: master
+
+  docker-amd64:
     image: plugins/docker:17.05
     pull: true
+    group: docker
     secrets: [ docker_username, docker_password ]
     repo: kleister/kleister-cli
     auto_tag: true
+    build_args:
+      - VERSION=${DRONE_TAG##v}
     when:
-      event: [ tag ]
+      event: tag
+      branch: [ master, release/* ]
+
+  # docker-386:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.i386
+  #   auto_tag: true
+  #   auto_tag_suffix: i386
+  #   build_args:
+  #     - VERSION=${DRONE_TAG##v}
+  #   when:
+  #     event: tag
+  #     branch: [ master, release/* ]
+
+  # docker-arm:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.arm
+  #   auto_tag: true
+  #   auto_tag_suffix: arm
+  #   build_args:
+  #     - VERSION=${DRONE_TAG##v}
+  #   when:
+  #     event: tag
+  #     branch: [ master, release/* ]
+
+  # docker-arm64:
+  #   image: plugins/docker:17.05
+  #   pull: true
+  #   group: docker
+  #   secrets: [ docker_username, docker_password ]
+  #   repo: kleister/kleister-cli
+  #   dockerfile: Dockerfile.arm64
+  #   auto_tag: true
+  #   auto_tag_suffix: arm64
+  #   build_args:
+  #     - VERSION=${DRONE_TAG##v}
+  #   when:
+  #     event: tag
+  #     branch: [ master, release/* ]
 
   docker-microbadger:
     image: plugins/webhook:1
@@ -186,12 +285,12 @@ pipeline:
     pull: true
     secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
     source: dist/release/*
-    target: /kleister/cli/master
+    target: /kleister/cli/${DRONE_TAG##v}
     strip_prefix: dist/release/
     path_style: true
     when:
-      event: [ push ]
-      branch: [ master ]
+      event: [ tag ]
+      branch: [ master, release/* ]
 
   archive-release:
     image: plugins/s3:1
@@ -210,13 +309,14 @@ pipeline:
     pull: true
     secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
     source: dist/release/*
-    target: /kleister/cli/${DRONE_TAG##v}
+    target: /kleister/cli/master
     strip_prefix: dist/release/
     path_style: true
     when:
-      event: [ tag ]
+      event: [ push ]
+      branch: [ master ]
 
-  github:
+  github-release:
     image: plugins/github-release:1
     pull: true
     secrets: [ github_token ]
@@ -224,8 +324,9 @@ pipeline:
       - dist/release/*
     when:
       event: [ tag ]
+      branch: [ master, release/* ]
 
-  gitter:
+  notify-gitter:
     image: plugins/gitter:1
     pull: true
     secrets: [ gitter_webhook ]

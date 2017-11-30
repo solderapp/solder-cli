@@ -17,7 +17,7 @@ RUN apk update && \
     kleister
 
 ARG VERSION
-COPY dist/binaries/kleister-cli-$VERSION-linux-amd64 /usr/bin/
+COPY dist/binaries/kleister-cli-$VERSION-linux-arm64 /usr/bin/
 
 LABEL maintainer="Thomas Boerger <thomas@webhippie.de>"
 LABEL org.label-schema.version=$VERSION
