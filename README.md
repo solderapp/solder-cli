@@ -3,6 +3,7 @@
 [![Build Status](http://github.dronehippie.de/api/badges/kleister/kleister-cli/status.svg)](http://github.dronehippie.de/kleister/kleister-cli)
 [![Go Doc](https://godoc.org/github.com/kleister/kleister-cli?status.svg)](http://godoc.org/github.com/kleister/kleister-cli)
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-cli)](http://goreportcard.com/report/github.com/kleister/kleister-cli)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9833f3cc84c146a2a13cb8fa5543c11e)](https://www.codacy.com/app/tboerger/kleister-cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kleister/kleister-cli&amp;utm_campaign=Badge_Grade)
 [![](https://images.microbadger.com/badges/image/kleister/kleister-cli.svg)](http://microbadger.com/images/kleister/kleister-cli "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/kleister/kleister](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kleister/kleister)
 [![Stories in Ready](https://badge.waffle.io/kleister/kleister-api.svg?label=ready&title=Ready)](http://waffle.io/kleister/kleister-api)

@@ -1,12 +1,12 @@
+# escape=`
 FROM microsoft/nanoserver:10.0.14393.1593
 
-LABEL maintainer="Thomas Boerger <thomas@webhippie.de>"
-LABEL org.label-schema.version=latest-windows
-LABEL org.label-schema.name="Umschlag CLI"
-LABEL org.label-schema.vendor="Thomas Boerger"
-LABEL org.label-schema.schema-version="1.0"
+LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
+  org.label-schema.name="Kleister CLI" `
+  org.label-schema.vendor="Thomas Boerger" `
+  org.label-schema.schema-version="1.0"
 
-COPY umschlag-cli.exe /umschlag-cli.exe
-
-ENTRYPOINT ["\\umschlag-cli.exe"]
+ENTRYPOINT ["\\kleister-cli.exe"]
 CMD ["help"]
+
+COPY kleister-cli.exe /kleister-cli.exe
