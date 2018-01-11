@@ -6,7 +6,7 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
   org.label-schema.vendor="Thomas Boerger" `
   org.label-schema.schema-version="1.0"
 
-ENTRYPOINT ["\\kleister-cli.exe"]
+ENTRYPOINT ["c:\\kleister-cli.exe"]
 CMD ["help"]
 
-COPY kleister-cli.exe /kleister-cli.exe
+COPY kleister-cli.exe c:\kleister-cli.exe
