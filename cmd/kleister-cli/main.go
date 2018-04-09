@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"runtime"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -11,8 +10,6 @@ import (
 )
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
 	if env := os.Getenv("KLEISTER_ENV_FILE"); env != "" {
 		godotenv.Load(env)
 	}
@@ -20,7 +17,7 @@ func main() {
 	app := &cli.App{
 		Name:     "kleister-cli",
 		Version:  version.Version.String(),
-		Usage:    "Manage mod packs for Minecraft",
+		Usage:    "manage mod packs for minecraft",
 		Compiled: time.Now(),
 
 		Authors: []*cli.Author{
@@ -34,13 +31,13 @@ func main() {
 			&cli.StringFlag{
 				Name:    "server, s",
 				Value:   "http://localhost:8080",
-				Usage:   "Kleister API server",
+				Usage:   "api server",
 				EnvVars: []string{"KLEISTER_SERVER"},
 			},
 			&cli.StringFlag{
 				Name:    "token, t",
 				Value:   "",
-				Usage:   "Kleister API token",
+				Usage:   "api token",
 				EnvVars: []string{"KLEISTER_TOKEN"},
 			},
 		},
@@ -63,13 +60,13 @@ func main() {
 	cli.HelpFlag = &cli.BoolFlag{
 		Name:    "help",
 		Aliases: []string{"h"},
-		Usage:   "Show the help, so what you see now",
+		Usage:   "show the help, so what you see now",
 	}
 
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Aliases: []string{"v"},
-		Usage:   "Print the current version of that tool",
+		Usage:   "print the current version of that tool",
 	}
 
 	if err := app.Run(os.Args); err != nil {

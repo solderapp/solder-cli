@@ -3,16 +3,12 @@
   version = "3.0.0"
 
 [[constraint]]
+  branch = "master"
+  name = "github.com/Masterminds/sprig"
+
+[[constraint]]
   name = "github.com/coreos/go-semver"
   version = "0.2.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/hashicorp/go-version"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/jackspirou/syscerts"
 
 [[constraint]]
   name = "github.com/joho/godotenv"
@@ -20,16 +16,16 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/vincent-petithory/dataurl"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/oauth2"
+  name = "github.com/kleister/kleister-go"
 
 [[constraint]]
   name = "gopkg.in/guregu/null.v3"
-  version = "3.2.0"
+  version = "3.3.0"
 
 [[constraint]]
   branch = "v2"
   name = "gopkg.in/urfave/cli.v2"
+
+[prune]
+  go-tests = true
+  unused-packages = true

@@ -9,12 +9,9 @@ import (
 	"strconv"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// VersionFuncMap provides version template helper functions.
-var versionFuncMap = template.FuncMap{}
 
 // tmplVersionList represents a row within forge listing.
 var tmplVersionList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -28,7 +25,7 @@ ID: {{ .ID }}
 Name: {{ .Name }}{{with .Mod}}
 Mod: {{ . }}{{end}}{{with .File}}
 File: {{ . }}{{end}}{{with .Builds}}
-Builds: {{ buildList . }}{{end}}
+Builds: {{ buildlist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -316,7 +313,7 @@ func Version() *cli.Command {
 }
 
 // VersionList provides the sub-command to list all versions.
-func VersionList(c *cli.Context, client sdk.ClientAPI) error {
+func VersionList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.VersionList(
 		GetModParam(c),
 	)
@@ -361,7 +358,7 @@ func VersionList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		versionFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -382,7 +379,7 @@ func VersionList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionShow provides the sub-command to show version details.
-func VersionShow(c *cli.Context, client sdk.ClientAPI) error {
+func VersionShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.VersionGet(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -423,7 +420,7 @@ func VersionShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		versionFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -436,7 +433,7 @@ func VersionShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionDelete provides the sub-command to delete a version.
-func VersionDelete(c *cli.Context, client sdk.ClientAPI) error {
+func VersionDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.VersionDelete(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -451,7 +448,7 @@ func VersionDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionUpdate provides the sub-command to update a version.
-func VersionUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func VersionUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.VersionGet(
 		GetModParam(c),
 		GetIdentifierParam(c),
@@ -516,8 +513,8 @@ func VersionUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionCreate provides the sub-command to create a version.
-func VersionCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Version{}
+func VersionCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Version{}
 
 	if c.String("mod") == "" {
 		return fmt.Errorf("You must provide a mod ID or slug")
@@ -589,9 +586,9 @@ func VersionCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionBuildList provides the sub-command to list builds of the version.
-func VersionBuildList(c *cli.Context, client sdk.ClientAPI) error {
+func VersionBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.VersionBuildList(
-		sdk.VersionBuildParams{
+		kleister.VersionBuildParams{
 			Mod:     GetModParam(c),
 			Version: GetIdentifierParam(c),
 		},
@@ -637,7 +634,7 @@ func VersionBuildList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		versionFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -658,9 +655,9 @@ func VersionBuildList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionBuildAppend provides the sub-command to append a build to the version.
-func VersionBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
+func VersionBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.VersionBuildAppend(
-		sdk.VersionBuildParams{
+		kleister.VersionBuildParams{
 			Mod:     GetModParam(c),
 			Version: GetIdentifierParam(c),
 			Pack:    GetPackParam(c),
@@ -677,9 +674,9 @@ func VersionBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // VersionBuildRemove provides the sub-command to remove a build from the version.
-func VersionBuildRemove(c *cli.Context, client sdk.ClientAPI) error {
+func VersionBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.VersionBuildDelete(
-		sdk.VersionBuildParams{
+		kleister.VersionBuildParams{
 			Mod:     GetModParam(c),
 			Version: GetIdentifierParam(c),
 			Pack:    GetPackParam(c),

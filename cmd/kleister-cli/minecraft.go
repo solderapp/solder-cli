@@ -10,12 +10,9 @@ import (
 	"text/template"
 
 	"github.com/Knetic/govaluate"
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// minecraftFuncMap provides template helper functions.
-var minecraftFuncMap = template.FuncMap{}
 
 // tmplMinecraftList represents a row within forge listing.
 var tmplMinecraftList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -185,9 +182,9 @@ func Minecraft() *cli.Command {
 }
 
 // MinecraftList provides the sub-command to list all Minecraft versions.
-func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
+func MinecraftList(c *cli.Context, client kleister.ClientAPI) error {
 	var (
-		result []*sdk.Minecraft
+		result []*kleister.Minecraft
 	)
 
 	records, err := client.MinecraftList()
@@ -238,19 +235,19 @@ func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
 	switch strings.ToLower(c.String("sort")) {
 	case "slug":
 		sort.Sort(
-			sdk.MinecraftBySlug(
+			kleister.MinecraftBySlug(
 				result,
 			),
 		)
 	case "version":
 		sort.Sort(
-			sdk.MinecraftByVersion(
+			kleister.MinecraftByVersion(
 				result,
 			),
 		)
 	case "type":
 		sort.Sort(
-			sdk.MinecraftByType(
+			kleister.MinecraftByType(
 				result,
 			),
 		)
@@ -259,13 +256,13 @@ func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
 	}
 
 	if c.Bool("first") {
-		result = []*sdk.Minecraft{
+		result = []*kleister.Minecraft{
 			result[0],
 		}
 	}
 
 	if c.Bool("last") {
-		result = []*sdk.Minecraft{
+		result = []*kleister.Minecraft{
 			result[len(result)-1],
 		}
 	}
@@ -300,7 +297,9 @@ func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		minecraftFuncMap,
+		globalFuncMap,
+	).Funcs(
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -321,7 +320,7 @@ func MinecraftList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // MinecraftRefresh provides the sub-command to refresh the Minecraft versions.
-func MinecraftRefresh(c *cli.Context, client sdk.ClientAPI) error {
+func MinecraftRefresh(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftRefresh()
 
 	if err != nil {
@@ -333,9 +332,9 @@ func MinecraftRefresh(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // MinecraftBuildList provides the sub-command to list builds of the Minecraft.
-func MinecraftBuildList(c *cli.Context, client sdk.ClientAPI) error {
+func MinecraftBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.MinecraftBuildList(
-		sdk.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 		},
 	)
@@ -378,7 +377,9 @@ func MinecraftBuildList(c *cli.Context, client sdk.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		minecraftFuncMap,
+		globalFuncMap,
+	).Funcs(
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -399,9 +400,9 @@ func MinecraftBuildList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // MinecraftBuildAppend provides the sub-command to append a build to the Minecraft.
-func MinecraftBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
+func MinecraftBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftBuildAppend(
-		sdk.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),
@@ -417,9 +418,9 @@ func MinecraftBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // MinecraftBuildRemove provides the sub-command to remove a build from the Minecraft.
-func MinecraftBuildRemove(c *cli.Context, client sdk.ClientAPI) error {
+func MinecraftBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.MinecraftBuildDelete(
-		sdk.MinecraftBuildParams{
+		kleister.MinecraftBuildParams{
 			Minecraft: GetIdentifierParam(c),
 			Pack:      GetPackParam(c),
 			Build:     GetBuildParam(c),

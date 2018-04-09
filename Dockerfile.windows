@@ -9,4 +9,4 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
 ENTRYPOINT ["c:\\kleister-cli.exe"]
 CMD ["help"]
 
-COPY kleister-cli.exe c:\kleister-cli.exe
+COPY bin/kleister-cli.exe c:\kleister-cli.exe

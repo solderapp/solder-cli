@@ -8,12 +8,11 @@
 [![Go Report](http://goreportcard.com/badge/github.com/kleister/kleister-cli)](http://goreportcard.com/report/github.com/kleister/kleister-cli)
 [![](https://images.microbadger.com/badges/image/kleister/kleister-cli.svg)](http://microbadger.com/images/kleister/kleister-cli "Get your own image badge on microbadger.com")
 
-
 **This project is under heavy development, it's not in a working state yet!**
 
 Where does this name come from or what does it mean? It's quite simple, it's one german word for paste/glue, I thought it's a good match as it glues together the modpacks for Minecraft.
 
-This project acts as a CLI client implementation to interact with an alternative Kleister API implementation. You can find the sources of the Kleister API at https://github.com/kleister/kleister-api.
+Within this repository we are building the command-line client to interact with the [Kleister API](https://github.com/kleister/kleister-api) server, for further information take a look at our [documentation](https://kleister.webhippie.de).
 
 The structure of the code base is heavily inspired by Drone, so those credits are getting to [bradrydzewski](https://github.com/bradrydzewski), thank you for this awesome project!
 
@@ -25,12 +24,12 @@ You can download prebuilt binaries from the GitHub releases or from our [downloa
 
 ## Development
 
-Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). As this project relies on vendoring of the dependencies you have to use a Go version `>= 1.6`. It is also possible to just simply execute the `go get github.com/kleister/kleister-cli/cmd/kleister-cli` command, but we prefer to use our `Makefile`:
+Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.8.
 
 ```bash
 go get -d github.com/kleister/kleister-cli
 cd $GOPATH/src/github.com/kleister/kleister-cli
-make clean build
+make clean generate build
 
 ./kleister-cli -h
 ```
@@ -38,7 +37,7 @@ make clean build
 
 ## Security
 
-If you find a security issue please contact thomas@webhippie.de first.
+If you find a security issue please contact kleister@webhippie.de first.
 
 
 ## Contributing
@@ -59,5 +58,5 @@ Apache-2.0
 ## Copyright
 
 ```
-Copyright (c) 2016 Thomas Boerger <http://www.webhippie.de>
+Copyright (c) 2018 Thomas Boerger <thomas@webhippie.de>
 ```

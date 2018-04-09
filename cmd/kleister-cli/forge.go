@@ -10,12 +10,9 @@ import (
 	"text/template"
 
 	"github.com/Knetic/govaluate"
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// forgeFuncMap provides template helper functions.
-var forgeFuncMap = template.FuncMap{}
 
 // tmplForgeList represents a row within forge listing.
 var tmplForgeList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -185,9 +182,9 @@ func Forge() *cli.Command {
 }
 
 // ForgeList provides the sub-command to list all Forge versions.
-func ForgeList(c *cli.Context, client sdk.ClientAPI) error {
+func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 	var (
-		result []*sdk.Forge
+		result []*kleister.Forge
 	)
 
 	records, err := client.ForgeList()
@@ -238,19 +235,19 @@ func ForgeList(c *cli.Context, client sdk.ClientAPI) error {
 	switch strings.ToLower(c.String("sort")) {
 	case "slug":
 		sort.Sort(
-			sdk.ForgeBySlug(
+			kleister.ForgeBySlug(
 				result,
 			),
 		)
 	case "version":
 		sort.Sort(
-			sdk.ForgeByVersion(
+			kleister.ForgeByVersion(
 				result,
 			),
 		)
 	case "minecraft":
 		sort.Sort(
-			sdk.ForgeByMinecraft(
+			kleister.ForgeByMinecraft(
 				result,
 			),
 		)
@@ -259,13 +256,13 @@ func ForgeList(c *cli.Context, client sdk.ClientAPI) error {
 	}
 
 	if c.Bool("first") {
-		result = []*sdk.Forge{
+		result = []*kleister.Forge{
 			result[0],
 		}
 	}
 
 	if c.Bool("last") {
-		result = []*sdk.Forge{
+		result = []*kleister.Forge{
 			result[len(result)-1],
 		}
 	}
@@ -300,7 +297,9 @@ func ForgeList(c *cli.Context, client sdk.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		forgeFuncMap,
+		globalFuncMap,
+	).Funcs(
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -321,7 +320,7 @@ func ForgeList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ForgeRefresh provides the sub-command to refresh the Forge versions.
-func ForgeRefresh(c *cli.Context, client sdk.ClientAPI) error {
+func ForgeRefresh(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeRefresh()
 
 	if err != nil {
@@ -333,9 +332,9 @@ func ForgeRefresh(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ForgeBuildList provides the sub-command to list builds of the Forge.
-func ForgeBuildList(c *cli.Context, client sdk.ClientAPI) error {
+func ForgeBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ForgeBuildList(
-		sdk.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 		},
 	)
@@ -378,7 +377,9 @@ func ForgeBuildList(c *cli.Context, client sdk.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
-		forgeFuncMap,
+		globalFuncMap,
+	).Funcs(
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -399,9 +400,9 @@ func ForgeBuildList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ForgeBuildAppend provides the sub-command to append a build to the Forge.
-func ForgeBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
+func ForgeBuildAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeBuildAppend(
-		sdk.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 			Pack:  GetPackParam(c),
 			Build: GetBuildParam(c),
@@ -417,9 +418,9 @@ func ForgeBuildAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ForgeBuildRemove provides the sub-command to remove a build from the Forge.
-func ForgeBuildRemove(c *cli.Context, client sdk.ClientAPI) error {
+func ForgeBuildRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ForgeBuildDelete(
-		sdk.ForgeBuildParams{
+		kleister.ForgeBuildParams{
 			Forge: GetIdentifierParam(c),
 			Pack:  GetPackParam(c),
 			Build: GetBuildParam(c),

@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// modFuncMap provides mod template helper functions.
-var modFuncMap = template.FuncMap{}
 
 // tmplModList represents a row within forge listing.
 var tmplModList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -29,8 +26,8 @@ Description: {{ . }}{{end}}{{with .Author}}
 Author: {{ . }}{{end}}{{with .Website}}
 Website: {{ . }}{{end}}{{with .Donate}}
 Donate: {{ . }}{{end}}{{with .Users}}
-Users: {{ userList . }}{{end}}{{with .Teams}}
-Teams: {{ teamList . }}{{end}}
+Users: {{ userlist . }}{{end}}{{with .Teams}}
+Teams: {{ teamlist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -443,7 +440,7 @@ func Mod() *cli.Command {
 }
 
 // ModList provides the sub-command to list all mods.
-func ModList(c *cli.Context, client sdk.ClientAPI) error {
+func ModList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ModList()
 
 	if err != nil {
@@ -486,7 +483,7 @@ func ModList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		modFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -507,7 +504,7 @@ func ModList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModShow provides the sub-command to show mod details.
-func ModShow(c *cli.Context, client sdk.ClientAPI) error {
+func ModShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -547,7 +544,7 @@ func ModShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		modFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -560,7 +557,7 @@ func ModShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModDelete provides the sub-command to delete a mod.
-func ModDelete(c *cli.Context, client sdk.ClientAPI) error {
+func ModDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModDelete(
 		GetIdentifierParam(c),
 	)
@@ -574,7 +571,7 @@ func ModDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModUpdate provides the sub-command to update a mod.
-func ModUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func ModUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ModGet(
 		GetIdentifierParam(c),
 	)
@@ -638,8 +635,8 @@ func ModUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModCreate provides the sub-command to create a mod.
-func ModCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Mod{}
+func ModCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Mod{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
@@ -684,9 +681,9 @@ func ModCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModUserList provides the sub-command to list users of the mod.
-func ModUserList(c *cli.Context, client sdk.ClientAPI) error {
+func ModUserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ModUserList(
-		sdk.ModUserParams{
+		kleister.ModUserParams{
 			Mod: GetIdentifierParam(c),
 		},
 	)
@@ -731,7 +728,7 @@ func ModUserList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		modFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -752,9 +749,9 @@ func ModUserList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModUserAppend provides the sub-command to append a user to the mod.
-func ModUserAppend(c *cli.Context, client sdk.ClientAPI) error {
+func ModUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModUserAppend(
-		sdk.ModUserParams{
+		kleister.ModUserParams{
 			Mod:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -770,9 +767,9 @@ func ModUserAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModUserPerm provides the sub-command to update mod user permissions.
-func ModUserPerm(c *cli.Context, client sdk.ClientAPI) error {
+func ModUserPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModUserPerm(
-		sdk.ModUserParams{
+		kleister.ModUserParams{
 			Mod:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -788,9 +785,9 @@ func ModUserPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModUserRemove provides the sub-command to remove a user from the mod.
-func ModUserRemove(c *cli.Context, client sdk.ClientAPI) error {
+func ModUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModUserDelete(
-		sdk.ModUserParams{
+		kleister.ModUserParams{
 			Mod:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -805,9 +802,9 @@ func ModUserRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModTeamList provides the sub-command to list teams of the mod.
-func ModTeamList(c *cli.Context, client sdk.ClientAPI) error {
+func ModTeamList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ModTeamList(
-		sdk.ModTeamParams{
+		kleister.ModTeamParams{
 			Mod: GetIdentifierParam(c),
 		},
 	)
@@ -852,7 +849,7 @@ func ModTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		modFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -873,9 +870,9 @@ func ModTeamList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModTeamAppend provides the sub-command to append a team to the mod.
-func ModTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
+func ModTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModTeamAppend(
-		sdk.ModTeamParams{
+		kleister.ModTeamParams{
 			Mod:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -891,9 +888,9 @@ func ModTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModTeamPerm provides the sub-command to update mod team permissions.
-func ModTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
+func ModTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModTeamPerm(
-		sdk.ModTeamParams{
+		kleister.ModTeamParams{
 			Mod:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -909,9 +906,9 @@ func ModTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ModTeamRemove provides the sub-command to remove a team from the mod.
-func ModTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
+func ModTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ModTeamDelete(
-		sdk.ModTeamParams{
+		kleister.ModTeamParams{
 			Mod:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},

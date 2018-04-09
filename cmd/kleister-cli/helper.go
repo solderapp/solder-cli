@@ -6,19 +6,17 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/Masterminds/sprig"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
 
+// sprigFuncMap provides template helpers provided by sprig.
+var sprigFuncMap = sprig.TxtFuncMap()
+
 // globalFuncMap provides global template helper functions.
 var globalFuncMap = template.FuncMap{
-	"split":    strings.Split,
-	"join":     strings.Join,
-	"toUpper":  strings.ToUpper,
-	"toLower":  strings.ToLower,
-	"contains": strings.Contains,
-	"replace":  strings.Replace,
-	"buildList": func(s []*sdk.Build) string {
+	"buildlist": func(s []*kleister.Build) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -31,7 +29,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"clientList": func(s []*sdk.Client) string {
+	"clientlist": func(s []*kleister.Client) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -40,7 +38,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"modList": func(s []*sdk.Mod) string {
+	"modlist": func(s []*kleister.Mod) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -49,7 +47,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"packList": func(s []*sdk.Pack) string {
+	"packlist": func(s []*kleister.Pack) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -58,7 +56,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"teamList": func(s []*sdk.Team) string {
+	"teamlist": func(s []*kleister.Team) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -67,7 +65,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"userList": func(s []*sdk.User) string {
+	"userlist": func(s []*kleister.User) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -76,7 +74,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"versionList": func(s []*sdk.Version) string {
+	"versionlist": func(s []*kleister.Version) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -96,7 +94,7 @@ func GetIdentifierParam(c *cli.Context) string {
 	val := c.String("id")
 
 	if val == "" {
-		fmt.Println("Error: You must provide an ID or a slug.")
+		fmt.Println("error: you must provide an id or a slug.")
 		os.Exit(1)
 	}
 
@@ -108,7 +106,7 @@ func GetModParam(c *cli.Context) string {
 	val := c.String("mod")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a mod ID or slug.")
+		fmt.Println("error: you must provide a mod id or slug.")
 		os.Exit(1)
 	}
 
@@ -120,7 +118,7 @@ func GetVersionParam(c *cli.Context) string {
 	val := c.String("version")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a version ID or slug.")
+		fmt.Println("error: you must provide a version id or slug.")
 		os.Exit(1)
 	}
 
@@ -132,7 +130,7 @@ func GetPackParam(c *cli.Context) string {
 	val := c.String("pack")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a pack ID or slug.")
+		fmt.Println("error: you must provide a pack id or slug.")
 		os.Exit(1)
 	}
 
@@ -144,7 +142,7 @@ func GetBuildParam(c *cli.Context) string {
 	val := c.String("build")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a build ID or slug.")
+		fmt.Println("error: you must provide a build id or slug.")
 		os.Exit(1)
 	}
 
@@ -156,7 +154,7 @@ func GetClientParam(c *cli.Context) string {
 	val := c.String("client")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a client ID or slug.")
+		fmt.Println("error: you must provide a client id or slug.")
 		os.Exit(1)
 	}
 
@@ -168,7 +166,7 @@ func GetUserParam(c *cli.Context) string {
 	val := c.String("user")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a user ID or slug.")
+		fmt.Println("error: you must provide a user id or slug.")
 		os.Exit(1)
 	}
 
@@ -180,7 +178,7 @@ func GetTeamParam(c *cli.Context) string {
 	val := c.String("team")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a team ID or slug.")
+		fmt.Println("error: you must provide a team id or slug.")
 		os.Exit(1)
 	}
 
@@ -192,7 +190,7 @@ func GetPermParam(c *cli.Context) string {
 	val := c.String("perm")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a permission.")
+		fmt.Println("error: you must provide a permission.")
 		os.Exit(1)
 	}
 
@@ -202,7 +200,7 @@ func GetPermParam(c *cli.Context) string {
 		}
 	}
 
-	fmt.Println("Error: Invalid permission, can be user, admin or owner.")
+	fmt.Println("error: invalid permission, can be user, admin or owner.")
 	os.Exit(1)
 
 	return ""

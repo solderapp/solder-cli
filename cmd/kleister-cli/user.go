@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// userFuncMap provides user template helper functions.
-var userFuncMap = template.FuncMap{}
 
 // tmplUserList represents a row within forge listing.
 var tmplUserList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -27,9 +24,9 @@ Username: {{ .Username }}
 Email: {{ .Email }}
 Active: {{ .Active }}
 Admin: {{ .Admin }}{{with .Teams}}
-Teams: {{ teamList . }}{{end}}{{with .Packs}}
-Packs: {{ packList . }}{{end}}{{with .Mods}}
-Mods: {{ modList . }}{{end}}
+Teams: {{ teamlist . }}{{end}}{{with .Packs}}
+Packs: {{ packlist . }}{{end}}{{with .Mods}}
+Mods: {{ modlist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -567,7 +564,7 @@ func User() *cli.Command {
 }
 
 // UserList provides the sub-command to list all users.
-func UserList(c *cli.Context, client sdk.ClientAPI) error {
+func UserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserList()
 
 	if err != nil {
@@ -610,7 +607,7 @@ func UserList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -631,7 +628,7 @@ func UserList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserShow provides the sub-command to show user details.
-func UserShow(c *cli.Context, client sdk.ClientAPI) error {
+func UserShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -671,7 +668,7 @@ func UserShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -684,7 +681,7 @@ func UserShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserDelete provides the sub-command to delete a user.
-func UserDelete(c *cli.Context, client sdk.ClientAPI) error {
+func UserDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserDelete(
 		GetIdentifierParam(c),
 	)
@@ -698,7 +695,7 @@ func UserDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserUpdate provides the sub-command to update a user.
-func UserUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func UserUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -775,8 +772,8 @@ func UserUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserCreate provides the sub-command to create a user.
-func UserCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.User{}
+func UserCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.User{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -837,9 +834,9 @@ func UserCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserModList provides the sub-command to list mods of the user.
-func UserModList(c *cli.Context, client sdk.ClientAPI) error {
+func UserModList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserModList(
-		sdk.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -884,7 +881,7 @@ func UserModList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -905,9 +902,9 @@ func UserModList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserModAppend provides the sub-command to append a mod to the user.
-func UserModAppend(c *cli.Context, client sdk.ClientAPI) error {
+func UserModAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserModAppend(
-		sdk.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -923,9 +920,9 @@ func UserModAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserModPerm provides the sub-command to update user mod permissions.
-func UserModPerm(c *cli.Context, client sdk.ClientAPI) error {
+func UserModPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserModPerm(
-		sdk.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 			Perm: GetPermParam(c),
@@ -941,9 +938,9 @@ func UserModPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserModRemove provides the sub-command to remove a mod from the user.
-func UserModRemove(c *cli.Context, client sdk.ClientAPI) error {
+func UserModRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserModDelete(
-		sdk.UserModParams{
+		kleister.UserModParams{
 			User: GetIdentifierParam(c),
 			Mod:  GetModParam(c),
 		},
@@ -958,9 +955,9 @@ func UserModRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserPackList provides the sub-command to list packs of the user.
-func UserPackList(c *cli.Context, client sdk.ClientAPI) error {
+func UserPackList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserPackList(
-		sdk.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -1005,7 +1002,7 @@ func UserPackList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -1026,9 +1023,9 @@ func UserPackList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserPackAppend provides the sub-command to append a pack to the user.
-func UserPackAppend(c *cli.Context, client sdk.ClientAPI) error {
+func UserPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserPackAppend(
-		sdk.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -1044,9 +1041,9 @@ func UserPackAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserPackPerm provides the sub-command to update user pack permissions.
-func UserPackPerm(c *cli.Context, client sdk.ClientAPI) error {
+func UserPackPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserPackPerm(
-		sdk.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 			Perm: GetPermParam(c),
@@ -1062,9 +1059,9 @@ func UserPackPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserPackRemove provides the sub-command to remove a pack from the user.
-func UserPackRemove(c *cli.Context, client sdk.ClientAPI) error {
+func UserPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserPackDelete(
-		sdk.UserPackParams{
+		kleister.UserPackParams{
 			User: GetIdentifierParam(c),
 			Pack: GetPackParam(c),
 		},
@@ -1079,9 +1076,9 @@ func UserPackRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamList provides the sub-command to list teams of the user.
-func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.UserTeamList(
-		sdk.UserTeamParams{
+		kleister.UserTeamParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -1126,7 +1123,7 @@ func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -1147,9 +1144,9 @@ func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamAppend provides the sub-command to append a team to the user.
-func UserTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserTeamAppend(
-		sdk.UserTeamParams{
+		kleister.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1165,9 +1162,9 @@ func UserTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamPerm provides the sub-command to update user team permissions.
-func UserTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserTeamPerm(
-		sdk.UserTeamParams{
+		kleister.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1183,9 +1180,9 @@ func UserTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamRemove provides the sub-command to remove a team from the user.
-func UserTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.UserTeamDelete(
-		sdk.UserTeamParams{
+		kleister.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},

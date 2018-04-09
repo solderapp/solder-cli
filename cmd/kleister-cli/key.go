@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// keyFuncMap provides key template helper functions.
-var keyFuncMap = template.FuncMap{}
 
 // tmplKeyList represents a row within key listing.
 var tmplKeyList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -167,7 +164,7 @@ func Key() *cli.Command {
 }
 
 // KeyList provides the sub-command to list all keys.
-func KeyList(c *cli.Context, client sdk.ClientAPI) error {
+func KeyList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.KeyList()
 
 	if err != nil {
@@ -210,7 +207,7 @@ func KeyList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		keyFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -231,7 +228,7 @@ func KeyList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // KeyShow provides the sub-command to show key details.
-func KeyShow(c *cli.Context, client sdk.ClientAPI) error {
+func KeyShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -271,7 +268,7 @@ func KeyShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		keyFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -284,7 +281,7 @@ func KeyShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // KeyDelete provides the sub-command to delete a key.
-func KeyDelete(c *cli.Context, client sdk.ClientAPI) error {
+func KeyDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.KeyDelete(
 		GetIdentifierParam(c),
 	)
@@ -298,7 +295,7 @@ func KeyDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // KeyUpdate provides the sub-command to update a key.
-func KeyUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func KeyUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.KeyGet(
 		GetIdentifierParam(c),
 	)
@@ -342,8 +339,8 @@ func KeyUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // KeyCreate provides the sub-command to create a key.
-func KeyCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Key{}
+func KeyCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Key{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val

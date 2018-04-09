@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// clientFuncMap provides client template helper functions.
-var clientFuncMap = template.FuncMap{}
 
 // tmplClientList represents a row within client listing.
 var tmplClientList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -25,7 +22,7 @@ var tmplClientShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
 UUID: {{ .Value }}{{with .Packs}}
-Packs: {{ packList . }}{{end}}
+Packs: {{ packlist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -252,7 +249,7 @@ func Client() *cli.Command {
 }
 
 // ClientList provides the sub-command to list all clients.
-func ClientList(c *cli.Context, client sdk.ClientAPI) error {
+func ClientList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ClientList()
 
 	if err != nil {
@@ -295,7 +292,7 @@ func ClientList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		clientFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -316,7 +313,7 @@ func ClientList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientShow provides the sub-command to show client details.
-func ClientShow(c *cli.Context, client sdk.ClientAPI) error {
+func ClientShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ClientGet(
 		GetIdentifierParam(c),
 	)
@@ -356,7 +353,7 @@ func ClientShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		clientFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -369,7 +366,7 @@ func ClientShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientDelete provides the sub-command to delete a client.
-func ClientDelete(c *cli.Context, client sdk.ClientAPI) error {
+func ClientDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ClientDelete(
 		GetIdentifierParam(c),
 	)
@@ -383,7 +380,7 @@ func ClientDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientUpdate provides the sub-command to update a client.
-func ClientUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func ClientUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.ClientGet(
 		GetIdentifierParam(c),
 	)
@@ -427,8 +424,8 @@ func ClientUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientCreate provides the sub-command to create a client.
-func ClientCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Client{}
+func ClientCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Client{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
@@ -459,9 +456,9 @@ func ClientCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientPackList provides the sub-command to list packs of the client.
-func ClientPackList(c *cli.Context, client sdk.ClientAPI) error {
+func ClientPackList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.ClientPackList(
-		sdk.ClientPackParams{
+		kleister.ClientPackParams{
 			Client: GetIdentifierParam(c),
 		},
 	)
@@ -506,7 +503,7 @@ func ClientPackList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		clientFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -527,9 +524,9 @@ func ClientPackList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientPackAppend provides the sub-command to append a pack to the client.
-func ClientPackAppend(c *cli.Context, client sdk.ClientAPI) error {
+func ClientPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ClientPackAppend(
-		sdk.ClientPackParams{
+		kleister.ClientPackParams{
 			Client: GetIdentifierParam(c),
 			Pack:   GetPackParam(c),
 		},
@@ -544,9 +541,9 @@ func ClientPackAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ClientPackRemove provides the sub-command to remove a pack from the client.
-func ClientPackRemove(c *cli.Context, client sdk.ClientAPI) error {
+func ClientPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.ClientPackDelete(
-		sdk.ClientPackParams{
+		kleister.ClientPackParams{
 			Client: GetIdentifierParam(c),
 			Pack:   GetPackParam(c),
 		},

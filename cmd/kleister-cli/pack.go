@@ -9,13 +9,10 @@ import (
 	"strconv"
 	"text/template"
 
-	"github.com/kleister/kleister-cli/pkg/sdk"
+	"github.com/kleister/kleister-go/kleister"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// PackFuncMap provides pack template helper functions.
-var packFuncMap = template.FuncMap{}
 
 // tmplPackList represents a row within forge listing.
 var tmplPackList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
@@ -35,9 +32,9 @@ Logo: {{ . }}{{end}}{{with .Background}}
 Background: {{ . }}{{end}}
 Published: {{ .Published }}
 Private: {{ .Private }}{{with .Clients}}
-Clients: {{ clientList . }}{{end}}{{with .Users}}
-Users: {{ userList . }}{{end}}{{with .Teams}}
-Teams: {{ teamList . }}{{end}}
+Clients: {{ clientlist . }}{{end}}{{with .Users}}
+Users: {{ userlist . }}{{end}}{{with .Teams}}
+Teams: {{ teamlist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -604,7 +601,7 @@ func Pack() *cli.Command {
 }
 
 // PackList provides the sub-command to list all packs.
-func PackList(c *cli.Context, client sdk.ClientAPI) error {
+func PackList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.PackList()
 
 	if err != nil {
@@ -647,7 +644,7 @@ func PackList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		packFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -668,7 +665,7 @@ func PackList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackShow provides the sub-command to show pack details.
-func PackShow(c *cli.Context, client sdk.ClientAPI) error {
+func PackShow(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.PackGet(
 		GetIdentifierParam(c),
 	)
@@ -708,7 +705,7 @@ func PackShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		packFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -721,7 +718,7 @@ func PackShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackDelete provides the sub-command to delete a pack.
-func PackDelete(c *cli.Context, client sdk.ClientAPI) error {
+func PackDelete(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackDelete(
 		GetIdentifierParam(c),
 	)
@@ -735,7 +732,7 @@ func PackDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackUpdate provides the sub-command to update a pack.
-func PackUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	record, err := client.PackGet(
 		GetIdentifierParam(c),
 	)
@@ -929,8 +926,8 @@ func PackUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackCreate provides the sub-command to create a pack.
-func PackCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Pack{}
+func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
+	record := &kleister.Pack{}
 
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
@@ -1043,9 +1040,9 @@ func PackCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackClientList provides the sub-command to list packs of the pack.
-func PackClientList(c *cli.Context, client sdk.ClientAPI) error {
+func PackClientList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.PackClientList(
-		sdk.PackClientParams{
+		kleister.PackClientParams{
 			Pack: GetIdentifierParam(c),
 		},
 	)
@@ -1090,7 +1087,7 @@ func PackClientList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		packFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -1111,9 +1108,9 @@ func PackClientList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackClientAppend provides the sub-command to append a client to the pack.
-func PackClientAppend(c *cli.Context, client sdk.ClientAPI) error {
+func PackClientAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackClientAppend(
-		sdk.PackClientParams{
+		kleister.PackClientParams{
 			Pack:   GetIdentifierParam(c),
 			Client: GetClientParam(c),
 		},
@@ -1128,9 +1125,9 @@ func PackClientAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackClientRemove provides the sub-command to remove a client from the pack.
-func PackClientRemove(c *cli.Context, client sdk.ClientAPI) error {
+func PackClientRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackClientDelete(
-		sdk.PackClientParams{
+		kleister.PackClientParams{
 			Pack:   GetIdentifierParam(c),
 			Client: GetClientParam(c),
 		},
@@ -1145,9 +1142,9 @@ func PackClientRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackUserList provides the sub-command to list users of the pack.
-func PackUserList(c *cli.Context, client sdk.ClientAPI) error {
+func PackUserList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.PackUserList(
-		sdk.PackUserParams{
+		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
 		},
 	)
@@ -1192,7 +1189,7 @@ func PackUserList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		packFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -1213,9 +1210,9 @@ func PackUserList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackUserAppend provides the sub-command to append a user to the pack.
-func PackUserAppend(c *cli.Context, client sdk.ClientAPI) error {
+func PackUserAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackUserAppend(
-		sdk.PackUserParams{
+		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -1231,9 +1228,9 @@ func PackUserAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackUserPerm provides the sub-command to update pack user permissions.
-func PackUserPerm(c *cli.Context, client sdk.ClientAPI) error {
+func PackUserPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackUserPerm(
-		sdk.PackUserParams{
+		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -1249,9 +1246,9 @@ func PackUserPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackUserRemove provides the sub-command to remove a user from the pack.
-func PackUserRemove(c *cli.Context, client sdk.ClientAPI) error {
+func PackUserRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackUserDelete(
-		sdk.PackUserParams{
+		kleister.PackUserParams{
 			Pack: GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -1266,9 +1263,9 @@ func PackUserRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackTeamList provides the sub-command to list teams of the pack.
-func PackTeamList(c *cli.Context, client sdk.ClientAPI) error {
+func PackTeamList(c *cli.Context, client kleister.ClientAPI) error {
 	records, err := client.PackTeamList(
-		sdk.PackTeamParams{
+		kleister.PackTeamParams{
 			Pack: GetIdentifierParam(c),
 		},
 	)
@@ -1313,7 +1310,7 @@ func PackTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		packFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -1334,9 +1331,9 @@ func PackTeamList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackTeamAppend provides the sub-command to append a team to the pack.
-func PackTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
+func PackTeamAppend(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackTeamAppend(
-		sdk.PackTeamParams{
+		kleister.PackTeamParams{
 			Pack: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1352,9 +1349,9 @@ func PackTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackTeamPerm provides the sub-command to update pack team permissions.
-func PackTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
+func PackTeamPerm(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackTeamPerm(
-		sdk.PackTeamParams{
+		kleister.PackTeamParams{
 			Pack: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -1370,9 +1367,9 @@ func PackTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // PackTeamRemove provides the sub-command to remove a team from the pack.
-func PackTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
+func PackTeamRemove(c *cli.Context, client kleister.ClientAPI) error {
 	err := client.PackTeamDelete(
-		sdk.PackTeamParams{
+		kleister.PackTeamParams{
 			Pack: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},
