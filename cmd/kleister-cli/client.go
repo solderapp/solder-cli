@@ -21,8 +21,8 @@ Name: {{ .Name }}
 var tmplClientShow = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
-UUID: {{ .Value }}{{with .Packs}}
-Packs: {{ packlist . }}{{end}}
+UUID: {{ .Value }}{{ with .Packs }}
+Packs: {{ packlist . }}{{ end }}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -37,28 +37,23 @@ Name: {{ .Pack.Name }}
 func Client() *cli.Command {
 	return &cli.Command{
 		Name:  "client",
-		Usage: "Client related sub-commands",
+		Usage: "client related sub-commands",
 		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all clients",
+				Usage:     "list all clients",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplClientList,
-						Usage: "Custom output format",
+						Usage: "custom output format",
 					},
-					&cli.BoolFlag{
-						Name:  "json",
-						Value: false,
-						Usage: "Print in JSON format",
-					},
-					&cli.BoolFlag{
-						Name:  "xml",
-						Value: false,
-						Usage: "Print in XML format",
+					&cli.StringFlag{
+						Name:  "output",
+						Value: "text",
+						Usage: "output as format, json or xml",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -67,28 +62,23 @@ func Client() *cli.Command {
 			},
 			{
 				Name:      "show",
-				Usage:     "Display a client",
+				Usage:     "display a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Client ID or slug to show",
+						Usage: "client id or slug to show",
 					},
 					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplClientShow,
-						Usage: "Custom output format",
+						Usage: "custom output format",
 					},
-					&cli.BoolFlag{
-						Name:  "json",
-						Value: false,
-						Usage: "Print in JSON format",
-					},
-					&cli.BoolFlag{
-						Name:  "xml",
-						Value: false,
-						Usage: "Print in XML format",
+					&cli.StringFlag{
+						Name:  "output",
+						Value: "text",
+						Usage: "output as format, json or xml",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -98,13 +88,13 @@ func Client() *cli.Command {
 			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
-				Usage:     "Delete a client",
+				Usage:     "delete a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Client ID or slug to delete",
+						Usage: "client id or slug to delete",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -113,28 +103,28 @@ func Client() *cli.Command {
 			},
 			{
 				Name:      "update",
-				Usage:     "Update a client",
+				Usage:     "update a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Client ID or slug to update",
+						Usage: "client id or slug to update",
 					},
 					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Provide a slug",
+						Usage: "provide a slug",
 					},
 					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Provide a name",
+						Usage: "provide a name",
 					},
 					&cli.StringFlag{
 						Name:  "uuid",
 						Value: "",
-						Usage: "Provide a UUID",
+						Usage: "provide a uuid",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -143,23 +133,23 @@ func Client() *cli.Command {
 			},
 			{
 				Name:      "create",
-				Usage:     "Create a client",
+				Usage:     "create a client",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
-						Usage: "Provide a slug",
+						Usage: "provide a slug",
 					},
 					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
-						Usage: "Provide a name",
+						Usage: "provide a name",
 					},
 					&cli.StringFlag{
 						Name:  "uuid",
 						Value: "",
-						Usage: "Provide a UUID",
+						Usage: "provide a uuid",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -168,33 +158,28 @@ func Client() *cli.Command {
 			},
 			{
 				Name:  "pack",
-				Usage: "Pack assignments",
+				Usage: "pack assignments",
 				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
-						Usage:     "List assigned packs",
+						Usage:     "list assigned packs",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Client ID or slug to list packs",
+								Usage: "client id or slug to list packs",
 							},
 							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplClientPackList,
-								Usage: "Custom output format",
+								Usage: "custom output format",
 							},
-							&cli.BoolFlag{
-								Name:  "json",
-								Value: false,
-								Usage: "Print in JSON format",
-							},
-							&cli.BoolFlag{
-								Name:  "xml",
-								Value: false,
-								Usage: "Print in XML format",
+							&cli.StringFlag{
+								Name:  "output",
+								Value: "text",
+								Usage: "output as format, json or xml",
 							},
 						},
 						Action: func(c *cli.Context) error {
@@ -203,18 +188,18 @@ func Client() *cli.Command {
 					},
 					{
 						Name:      "append",
-						Usage:     "Append a pack to client",
+						Usage:     "append a pack to client",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Client ID or slug to append to",
+								Usage: "client id or slug to append to",
 							},
 							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
-								Usage: "Pack ID or slug to append",
+								Usage: "pack id or slug to append",
 							},
 						},
 						Action: func(c *cli.Context) error {
@@ -224,18 +209,18 @@ func Client() *cli.Command {
 					{
 						Name:      "remove",
 						Aliases:   []string{"rm"},
-						Usage:     "Remove a pack from client",
+						Usage:     "remove a pack from client",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Client ID or slug to remove from",
+								Usage: "client id or slug to remove from",
 							},
 							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
-								Usage: "Pack ID or slug to remove",
+								Usage: "pack id or slug to remove",
 							},
 						},
 						Action: func(c *cli.Context) error {
@@ -256,22 +241,8 @@ func ClientList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
-	}
-
-	if c.Bool("xml") {
-		res, err := xml.MarshalIndent(records, "", "  ")
-
-		if err != nil {
-			return err
-		}
-
-		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
-	}
-
-	if c.Bool("json") {
+	switch c.String("output") {
+	case "json":
 		res, err := json.MarshalIndent(records, "", "  ")
 
 		if err != nil {
@@ -279,34 +250,43 @@ func ClientList(c *cli.Context, client kleister.ClientAPI) error {
 		}
 
 		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
-	}
-
-	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Empty result\n")
-		return nil
-	}
-
-	tmpl, err := template.New(
-		"_",
-	).Funcs(
-		globalFuncMap,
-	).Funcs(
-		sprigFuncMap,
-	).Parse(
-		fmt.Sprintf("%s\n", c.String("format")),
-	)
-
-	if err != nil {
-		return err
-	}
-
-	for _, record := range records {
-		err := tmpl.Execute(os.Stdout, record)
+	case "xml":
+		res, err := xml.MarshalIndent(records, "", "  ")
 
 		if err != nil {
 			return err
 		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+	case "text":
+		if len(records) == 0 {
+			fmt.Fprintf(os.Stderr, "empty result\n")
+			return nil
+		}
+
+		tmpl, err := template.New(
+			"_",
+		).Funcs(
+			globalFuncMap,
+		).Funcs(
+			sprigFuncMap,
+		).Parse(
+			fmt.Sprintf("%s\n", c.String("format")),
+		)
+
+		if err != nil {
+			return err
+		}
+
+		for _, record := range records {
+			err := tmpl.Execute(os.Stdout, record)
+
+			if err != nil {
+				return err
+			}
+		}
+	default:
+		return fmt.Errorf("invalid output type")
 	}
 
 	return nil
@@ -322,22 +302,8 @@ func ClientShow(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
-	}
-
-	if c.Bool("xml") {
-		res, err := xml.MarshalIndent(record, "", "  ")
-
-		if err != nil {
-			return err
-		}
-
-		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
-	}
-
-	if c.Bool("json") {
+	switch c.String("output") {
+	case "json":
 		res, err := json.MarshalIndent(record, "", "  ")
 
 		if err != nil {
@@ -345,24 +311,35 @@ func ClientShow(c *cli.Context, client kleister.ClientAPI) error {
 		}
 
 		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
+	case "xml":
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+	case "text":
+		tmpl, err := template.New(
+			"_",
+		).Funcs(
+			globalFuncMap,
+		).Funcs(
+			sprigFuncMap,
+		).Parse(
+			fmt.Sprintf("%s\n", c.String("format")),
+		)
+
+		if err != nil {
+			return err
+		}
+
+		return tmpl.Execute(os.Stdout, record)
+	default:
+		return fmt.Errorf("invalid output type")
 	}
 
-	tmpl, err := template.New(
-		"_",
-	).Funcs(
-		globalFuncMap,
-	).Funcs(
-		sprigFuncMap,
-	).Parse(
-		fmt.Sprintf("%s\n", c.String("format")),
-	)
-
-	if err != nil {
-		return err
-	}
-
-	return tmpl.Execute(os.Stdout, record)
+	return nil
 }
 
 // ClientDelete provides the sub-command to delete a client.
@@ -375,7 +352,7 @@ func ClientDelete(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully delete\n")
+	fmt.Fprintf(os.Stderr, "successfully deleted\n")
 	return nil
 }
 
@@ -415,9 +392,9 @@ func ClientUpdate(c *cli.Context, client kleister.ClientAPI) error {
 			return patch
 		}
 
-		fmt.Fprintf(os.Stderr, "Successfully updated\n")
+		fmt.Fprintf(os.Stderr, "successfully updated\n")
 	} else {
-		fmt.Fprintf(os.Stderr, "Nothing to update...\n")
+		fmt.Fprintf(os.Stderr, "nothing to update!\n")
 	}
 
 	return nil
@@ -430,13 +407,13 @@ func ClientCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name")
+		return fmt.Errorf("you must provide a name")
 	}
 
 	if val := c.String("uuid"); c.IsSet("uuid") && val != "" {
 		record.Value = val
 	} else {
-		return fmt.Errorf("You must provide a UUID")
+		return fmt.Errorf("you must provide a uuid")
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
@@ -451,7 +428,7 @@ func ClientCreate(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully created\n")
+	fmt.Fprintf(os.Stderr, "successfully created\n")
 	return nil
 }
 
@@ -467,22 +444,8 @@ func ClientPackList(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
-	}
-
-	if c.Bool("xml") {
-		res, err := xml.MarshalIndent(records, "", "  ")
-
-		if err != nil {
-			return err
-		}
-
-		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
-	}
-
-	if c.Bool("json") {
+	switch c.String("output") {
+	case "json":
 		res, err := json.MarshalIndent(records, "", "  ")
 
 		if err != nil {
@@ -490,34 +453,43 @@ func ClientPackList(c *cli.Context, client kleister.ClientAPI) error {
 		}
 
 		fmt.Fprintf(os.Stdout, "%s\n", res)
-		return nil
-	}
-
-	if len(records) == 0 {
-		fmt.Fprintf(os.Stderr, "Empty result\n")
-		return nil
-	}
-
-	tmpl, err := template.New(
-		"_",
-	).Funcs(
-		globalFuncMap,
-	).Funcs(
-		sprigFuncMap,
-	).Parse(
-		fmt.Sprintf("%s\n", c.String("format")),
-	)
-
-	if err != nil {
-		return err
-	}
-
-	for _, record := range records {
-		err := tmpl.Execute(os.Stdout, record)
+	case "xml":
+		res, err := xml.MarshalIndent(records, "", "  ")
 
 		if err != nil {
 			return err
 		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+	case "text":
+		if len(records) == 0 {
+			fmt.Fprintf(os.Stderr, "empty result\n")
+			return nil
+		}
+
+		tmpl, err := template.New(
+			"_",
+		).Funcs(
+			globalFuncMap,
+		).Funcs(
+			sprigFuncMap,
+		).Parse(
+			fmt.Sprintf("%s\n", c.String("format")),
+		)
+
+		if err != nil {
+			return err
+		}
+
+		for _, record := range records {
+			err := tmpl.Execute(os.Stdout, record)
+
+			if err != nil {
+				return err
+			}
+		}
+	default:
+		return fmt.Errorf("invalid output type")
 	}
 
 	return nil
@@ -536,7 +508,7 @@ func ClientPackAppend(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to client\n")
+	fmt.Fprintf(os.Stderr, "successfully appended to client\n")
 	return nil
 }
 
@@ -553,6 +525,6 @@ func ClientPackRemove(c *cli.Context, client kleister.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from client\n")
+	fmt.Fprintf(os.Stderr, "successfully removed from client\n")
 	return nil
 }

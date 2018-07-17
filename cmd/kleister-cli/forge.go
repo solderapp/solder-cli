@@ -25,7 +25,7 @@ Minecraft: {{ .Minecraft }}
 var tmplForgeBuildList = "Slug: \x1b[33m{{ .Slug }}\x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
-Pack: {{with .Pack}}{{ . }}{{else}}n/a{{end}}
+Pack: {{ with .Pack }}{{ . }}{{ else }}n/a{{ end }}
 `
 
 // Forge provides the sub-command for the Forge API.
@@ -37,43 +37,38 @@ func Forge() *cli.Command {
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all Forge versions",
+				Usage:     "list all forge versions",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  "sort",
 						Value: "Slug",
-						Usage: "Sort by this field",
+						Usage: "sort by this field",
 					},
 					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplForgeList,
-						Usage: "Custom output format",
+						Usage: "custom output format",
 					},
-					&cli.BoolFlag{
-						Name:  "json",
-						Value: false,
-						Usage: "Print in JSON format",
-					},
-					&cli.BoolFlag{
-						Name:  "xml",
-						Value: false,
-						Usage: "Print in XML format",
+					&cli.StringFlag{
+						Name:  "output",
+						Value: "text",
+						Usage: "output as format, json or xml",
 					},
 					&cli.StringFlag{
 						Name:  "filter",
 						Value: "",
-						Usage: "Filter by values",
+						Usage: "filter by values",
 					},
 					&cli.BoolFlag{
 						Name:  "first",
 						Value: false,
-						Usage: "Return only first record",
+						Usage: "return only first record",
 					},
 					&cli.BoolFlag{
 						Name:  "last",
 						Value: false,
-						Usage: "Return only last record",
+						Usage: "return only last record",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -83,7 +78,7 @@ func Forge() *cli.Command {
 			{
 				Name:      "refresh",
 				Aliases:   []string{"ref"},
-				Usage:     "Refresh Forge versions",
+				Usage:     "refresh forge versions",
 				ArgsUsage: " ",
 				Action: func(c *cli.Context) error {
 					return Handle(c, ForgeRefresh)
@@ -91,33 +86,28 @@ func Forge() *cli.Command {
 			},
 			{
 				Name:  "build",
-				Usage: "Build assignments",
+				Usage: "build assignments",
 				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
-						Usage:     "List assigned builds",
+						Usage:     "list assigned builds",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Forge ID or slug to list builds",
+								Usage: "forge id or slug to list builds",
 							},
 							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplForgeBuildList,
-								Usage: "Custom output format",
+								Usage: "custom output format",
 							},
-							&cli.BoolFlag{
-								Name:  "json",
-								Value: false,
-								Usage: "Print in JSON format",
-							},
-							&cli.BoolFlag{
-								Name:  "xml",
-								Value: false,
-								Usage: "Print in XML format",
+							&cli.StringFlag{
+								Name:  "output",
+								Value: "text",
+								Usage: "output as format, json or xml",
 							},
 						},
 						Action: func(c *cli.Context) error {
@@ -126,23 +116,23 @@ func Forge() *cli.Command {
 					},
 					{
 						Name:      "append",
-						Usage:     "Append a build to Forge",
+						Usage:     "append a build to forge",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Forge ID or slug to append to",
+								Usage: "forge id or slug to append to",
 							},
 							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
-								Usage: "Pack ID or slug to append",
+								Usage: "pack id or slug to append",
 							},
 							&cli.StringFlag{
 								Name:  "build, b",
 								Value: "",
-								Usage: "Build ID or slug to append",
+								Usage: "build id or slug to append",
 							},
 						},
 						Action: func(c *cli.Context) error {
@@ -152,23 +142,23 @@ func Forge() *cli.Command {
 					{
 						Name:      "remove",
 						Aliases:   []string{"rm"},
-						Usage:     "Remove a build from Forge",
+						Usage:     "remove a build from forge",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
-								Usage: "Forge ID or slug to remove from",
+								Usage: "forge id or slug to remove from",
 							},
 							&cli.StringFlag{
 								Name:  "pack, p",
 								Value: "",
-								Usage: "Pack ID or slug to remove",
+								Usage: "pack id or slug to remove",
 							},
 							&cli.StringFlag{
 								Name:  "build, b",
 								Value: "",
-								Usage: "Build ID or slug to remove",
+								Usage: "build id or slug to remove",
 							},
 						},
 						Action: func(c *cli.Context) error {
