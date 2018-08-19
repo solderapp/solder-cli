@@ -6,9 +6,9 @@ clone_folder: 'c:\gopath\src\github.com\kleister\kleister-cli'
 environment:
   GOPATH: c:\gopath
   DOCKER_USERNAME:
-    secure: '4YzzahbEiMZQJpOCOd1LAw=='
+    secure: 'hiAQ2emetxm9/e0jpCnVjw=='
   DOCKER_PASSWORD:
-    secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
+    secure: 'K63dhBlHES6R/tOVKDhP/vpv0sRNeM2JIWlsfHUrE8Y='
 
 install:
   - ps: |
@@ -29,11 +29,11 @@ build_script:
   - cmd: |
       make build
   - cmd: |
-      docker build -f Dockerfile.windows -t kleister/kleister-cli:windows .
+      docker build -f docker/Dockerfile.windows.amd64 -t kleister/kleister-cli:windows-amd64 .
 
 test_script:
   - cmd: |
-      docker run --rm kleister/kleister-cli:windows --help
+      docker run --rm kleister/kleister-cli:windows-amd64 --help
 
 deploy_script:
   - ps: |
@@ -45,19 +45,19 @@ deploy_script:
         if ( $env:APPVEYOR_REPO_TAG -eq 'true' ) {
           $major,$minor,$patch = $env:APPVEYOR_REPO_TAG_NAME.substring(1).split('.')
 
-          docker push kleister/kleister-cli:windows
+          docker push kleister/kleister-cli:windows-amd64
 
-          docker tag kleister/kleister-cli:windows kleister/kleister-cli:$major.$minor.$patch-windows
-          docker push kleister/kleister-cli:$major.$minor.$patch-windows
+          docker tag kleister/kleister-cli:windows-amd64 kleister/kleister-cli:$major.$minor.$patch-windows-amd64
+          docker push kleister/kleister-cli:$major.$minor.$patch-windows-amd64
 
-          docker tag kleister/kleister-cli:windows kleister/kleister-cli:$major.$minor-windows
-          docker push kleister/kleister-cli:$major.$minor-windows
+          docker tag kleister/kleister-cli:windows-amd64 kleister/kleister-cli:$major.$minor-windows-amd64
+          docker push kleister/kleister-cli:$major.$minor-windows-amd64
 
-          docker tag kleister/kleister-cli:windows kleister/kleister-cli:$major-windows
-          docker push kleister/kleister-cli:$major-windows
+          docker tag kleister/kleister-cli:windows-amd64 kleister/kleister-cli:$major-windows-amd64
+          docker push kleister/kleister-cli:$major-windows-amd64
         } else {
           if ( $env:APPVEYOR_REPO_BRANCH -eq 'master' ) {
-            docker push kleister/kleister-cli:windows
+            docker push kleister/kleister-cli:windows-amd64
           } else {
             Write-Host Ignoring feature branch.
           }
