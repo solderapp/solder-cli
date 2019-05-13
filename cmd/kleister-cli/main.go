@@ -16,7 +16,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "kleister-cli",
-		Version:  version.Version.String(),
+		Version:  version.String,
 		Usage:    "manage mod packs for minecraft",
 		Compiled: time.Now(),
 
