@@ -131,25 +131,23 @@ func Team() *cli.Command {
 				Name:      "update",
 				Usage:     "Update a team",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						&cli.StringFlag{
-							Name:  "id, i",
-							Value: "",
-							Usage: "Team ID or slug to update",
-						},
-						&cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						&cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide a name",
-						},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Team ID or slug to update",
 					},
-				),
+					&cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					&cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, TeamUpdate)
 				},
@@ -158,20 +156,18 @@ func Team() *cli.Command {
 				Name:      "create",
 				Usage:     "Create a team",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						&cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						&cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide a name",
-						},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
 					},
-				),
+					&cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, TeamCreate)
 				},
@@ -513,7 +509,7 @@ func TeamList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -579,7 +575,7 @@ func TeamShow(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -685,7 +681,7 @@ func TeamCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name")
+		return fmt.Errorf("you must provide a name")
 	}
 
 	_, err := client.TeamPost(
@@ -713,7 +709,7 @@ func TeamUserList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -834,7 +830,7 @@ func TeamPackList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -955,7 +951,7 @@ func TeamModList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {

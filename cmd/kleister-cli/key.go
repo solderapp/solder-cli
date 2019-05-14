@@ -172,7 +172,7 @@ func KeyList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -238,7 +238,7 @@ func KeyShow(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -345,13 +345,13 @@ func KeyCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name")
+		return fmt.Errorf("you must provide a name")
 	}
 
 	if val := c.String("key"); c.IsSet("key") && val != "" {
 		record.Value = val
 	} else {
-		return fmt.Errorf("You must provide a key")
+		return fmt.Errorf("you must provide a key")
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {

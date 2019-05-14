@@ -10,6 +10,7 @@ require (
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/kleister/kleister-go v0.0.0-20190507072323-f243df717ba2
+	github.com/mitchellh/gox v1.0.1 // indirect
 	gopkg.in/guregu/null.v3 v3.4.0
 	gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8
 )

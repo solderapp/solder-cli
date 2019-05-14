@@ -609,7 +609,7 @@ func PackList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -675,7 +675,7 @@ func PackShow(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -814,7 +814,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode icon")
+			return fmt.Errorf("failed to download and encode icon")
 		}
 
 		changed = true
@@ -826,7 +826,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode icon")
+			return fmt.Errorf("failed to encode icon")
 		}
 
 		changed = true
@@ -838,7 +838,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode logo")
+			return fmt.Errorf("failed to download and encode logo")
 		}
 
 		changed = true
@@ -850,7 +850,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode logo")
+			return fmt.Errorf("failed to encode logo")
 		}
 
 		changed = true
@@ -862,7 +862,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode background")
+			return fmt.Errorf("failed to download and encode background")
 		}
 
 		changed = true
@@ -874,14 +874,14 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode background")
+			return fmt.Errorf("failed to encode background")
 		}
 
 		changed = true
 	}
 
 	if c.IsSet("published") && c.IsSet("hidden") {
-		return fmt.Errorf("Conflict, you can mark it only published OR hidden")
+		return fmt.Errorf("conflict, you can mark it only published or hidden")
 	}
 
 	if c.IsSet("published") {
@@ -895,7 +895,7 @@ func PackUpdate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("private") && c.IsSet("public") {
-		return fmt.Errorf("Conflict, you can mark it only private OR public")
+		return fmt.Errorf("conflict, you can mark it only private or public")
 	}
 
 	if c.IsSet("private") {
@@ -932,7 +932,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name")
+		return fmt.Errorf("you must provide a name")
 	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
@@ -949,7 +949,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode icon")
+			return fmt.Errorf("failed to download and encode icon")
 		}
 	}
 
@@ -959,7 +959,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode icon")
+			return fmt.Errorf("failed to encode icon")
 		}
 	}
 
@@ -969,7 +969,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode logo")
+			return fmt.Errorf("failed to download and encode logo")
 		}
 	}
 
@@ -979,7 +979,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode logo")
+			return fmt.Errorf("failed to encode logo")
 		}
 	}
 
@@ -989,7 +989,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to download and encode background")
+			return fmt.Errorf("failed to download and encode background")
 		}
 	}
 
@@ -999,12 +999,12 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to encode background")
+			return fmt.Errorf("failed to encode background")
 		}
 	}
 
 	if c.IsSet("published") && c.IsSet("hidden") {
-		return fmt.Errorf("Conflict, you can mark it only published OR hidden")
+		return fmt.Errorf("conflict, you can mark it only published or hidden")
 	}
 
 	if c.IsSet("published") {
@@ -1016,7 +1016,7 @@ func PackCreate(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("private") && c.IsSet("public") {
-		return fmt.Errorf("Conflict, you can mark it only private OR public")
+		return fmt.Errorf("conflict, you can mark it only private or public")
 	}
 
 	if c.IsSet("private") {
@@ -1052,7 +1052,7 @@ func PackClientList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -1154,7 +1154,7 @@ func PackUserList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -1275,7 +1275,7 @@ func PackTeamList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {

@@ -184,11 +184,11 @@ func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.IsSet("first") && c.IsSet("last") {
-		return fmt.Errorf("Conflict, you can only use first or last at once")
+		return fmt.Errorf("conflict, you can only use first or last at once")
 	}
 
 	if c.IsSet("filter") {
@@ -197,7 +197,7 @@ func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 		)
 
 		if err != nil {
-			return fmt.Errorf("Failed to parse filter. %s", err)
+			return fmt.Errorf("failed to parse filter. %s", err)
 		}
 
 		for _, record := range records {
@@ -211,7 +211,7 @@ func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 			)
 
 			if err != nil {
-				return fmt.Errorf("Failed to evaluate filter. %s", err)
+				return fmt.Errorf("failed to evaluate filter. %s", err)
 			}
 
 			if match.(bool) {
@@ -242,7 +242,7 @@ func ForgeList(c *cli.Context, client kleister.ClientAPI) error {
 			),
 		)
 	default:
-		return fmt.Errorf("The sort value %s is invalid, can be Slug, Version or Minecraft", c.String("sort"))
+		return fmt.Errorf("the sort value %s is invalid, can be slug, version or minecraft", c.String("sort"))
 	}
 
 	if c.Bool("first") {
@@ -334,7 +334,7 @@ func ForgeBuildList(c *cli.Context, client kleister.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
